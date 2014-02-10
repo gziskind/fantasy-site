@@ -1,7 +1,7 @@
-#! /usr/local/rvm/rubies/ruby-1.9.3-p392/bin/ruby
+#! /usr/bin/env ruby
 
 require 'trollop'
-require 'fantasy_server'
+require_relative '../fantasy_server'
 
 options = Trollop::options do
 	opt :port, "Server port", :default => 8080
