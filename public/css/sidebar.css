@@ -2,6 +2,7 @@
 	background-color: #222;
   	border-color: #080808;
   	border-radius: 4px;
+  	padding: 0;
 }
 
 .sidebar-inverse .nav > li > a:hover,
@@ -17,7 +18,11 @@
   background-color: #080808;
 }
 
+.sidebar-inverse .nav > li > a{
+	padding-left: 30px;
+}
+
 .sidebar-inverse .nav > li > a.header{
-	padding-left: 0px;
+	padding-left: 15px;
 	font-weight:bold;
 }

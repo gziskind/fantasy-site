@@ -19,8 +19,11 @@
 
     <script src="/lib/angular.js"></script>
     <script src="/lib/angular-route.js"></script>
+    <script src="/lib/angular-resource.js"></script>
 
     <script src="/js/aepiFantasy.js"></script>
+    <script src="/js/homeController.js"></script>
+    <script src="/js/resultsController.js"></script>
   </head>
 
   <body ng-app="aepi-fantasy" ng-controller="HomeController">
@@ -35,7 +38,7 @@
             <ul class="nav">
               <li><a class="header" href="#/overall">Seasons</a></li>
               <% for season in @seasons %>
-                <li><a href="#/season/<%= season %>"><%= season %></a></li>
+                <li class="{{isActive(<%= season %>)}}"><a href="#/<%= season %>"><%= season %></a></li>
               <% end %>
             </ul>
           </div>

@@ -1,0 +1,25 @@
+<div>
+	<h1>{{year}} - League Name</h1>
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th>Place</th>
+				<th>Team Name</th>
+				<th>Owner</th>
+				<th>Wins</th>
+				<th>Losses</th>
+				<th>Ties</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="result in results">
+				<td>{{$index + 1}}</td>
+				<td>{{result.name}}</td>
+				<td>{{result.owner}}</td>
+				<td>{{result.wins}}</td>
+				<td>{{result.losses}}</td>
+				<td>{{result.ties}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
