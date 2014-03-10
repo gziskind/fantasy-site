@@ -9,9 +9,17 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 			return ''
 		}
 	}
-	$scope.isActiveUser = function(user) {
+	$scope.isActiveRecordsUser = function(user) {
 		var url = extractUrlAfterBang();
 		if('records/' + user == url) {
+			return 'active';
+		} else {
+			return ''
+		}
+	}
+	$scope.isActiveTeamsUser = function(user) {
+		var url = extractUrlAfterBang();
+		if('names/' + user == url) {
 			return 'active';
 		} else {
 			return ''

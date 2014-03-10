@@ -80,6 +80,32 @@ class FantasyServer < Sinatra::Base
 		}].to_json
 	end
 
+	get '/api/:sport/names' do
+		[{
+			owner: 'Greg',
+			teamName: "Greg's #{params[:sport].capitalize} Team"
+		},{
+			owner: 'Carrie',
+			teamName: "Carrie's Team"
+		},{
+			owner: 'Someone Else',
+			teamName:"Else's Team"
+		}].to_json
+	end
+
+	get '/api/:sport/names/:user' do
+		[{
+			year:2013,
+			teamName: "#{params[:user]}'s #{params[:sport].capitalize} Team"
+		},{
+			year: 2012,
+			teamName: 'Team 2'
+		}, {
+			year: 2011,
+			teamName: 'Team 3'
+		}].to_json
+	end
+
 	helpers do
 		def isBaseballActive
 			if @sport == 'baseball'

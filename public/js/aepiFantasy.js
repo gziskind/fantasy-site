@@ -19,6 +19,16 @@ angular.module('aepi-fantasy',['ngRoute','ngResource'], function($routeProvider)
 		templateUrl: '/pages/records.html'
 	})
 
+	$routeProvider.when('/names', {
+		controller: 'NamesController',
+		templateUrl: '/pages/currentNames.html'
+	})
+
+	$routeProvider.when('/names/:user',{
+		controller: 'NamesController',
+		templateUrl: '/pages/userNames.html'
+	})
+
 	// $routeProvider.otherwise({
 	// 	redirectTo: '/home'
 	// });

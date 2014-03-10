@@ -39,7 +39,7 @@
             <ul class="nav">
               <li><a class="header" href="#/records">All Records</a></li>
               <% for user in @users %>
-                <li class="{{isActiveUser('<%= user %>')}}"><a href="#/records/<%= user %>"><%= user %></a></li>
+                <li class="{{isActiveRecordsUser('<%= user %>')}}"><a href="#/records/<%= user %>"><%= user %></a></li>
               <% end %>
             </ul>
           </div>

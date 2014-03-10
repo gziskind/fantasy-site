@@ -19,8 +19,11 @@
 
     <script src="/lib/angular.js"></script>
     <script src="/lib/angular-route.js"></script>
+    <script src="/lib/angular-resource.js"></script>
 
     <script src="/js/aepiFantasy.js"></script>
+    <script src="/js/homeController.js"></script>
+    <script src="/js/namesController.js"></script>
   </head>
 
   <body ng-app="aepi-fantasy" ng-controller="HomeController">
@@ -33,9 +36,9 @@
         <div class="row">
           <div class="col-sm-3 col-md-2 sidebar-inverse">
             <ul class="nav">
-              <li><a class="header" href="#/overall">Current Names</a></li>
+              <li><a class="header" href="#/names">Current Names</a></li>
               <% for user in @users %>
-                <li><a href="#/user/<%= user %>"><%= user %></a></li>
+                <li class="{{isActiveTeamsUser('<%= user %>')}}"><a href="#/names/<%= user %>"><%= user %></a></li>
               <% end %>
             </ul>
           </div>
