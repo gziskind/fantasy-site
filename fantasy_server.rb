@@ -32,9 +32,9 @@ class FantasyServer < Sinatra::Base
 		erb :names
 	end
 
-	get'/api/results/:year' do
+	get '/api/:sport/results/:year' do
 		[{
-			name: "Greg's Team",
+			name: "Greg's #{params[:sport].capitalize} Team",
 			owner: 'Greg',
 			wins: 125,
 			losses: 70,
@@ -51,6 +51,32 @@ class FantasyServer < Sinatra::Base
 			wins: 80,
 			losses: 95,
 			ties: 8
+		}].to_json
+	end
+
+	get '/api/:sport/records' do
+		[{
+			record:'Most Wins',
+			name: "Greg's #{params[:sport]} Team",
+			owner: 'Greg',
+			value: 56,
+			year: 2013
+		},{
+			record:'Most Loses',
+			name: "Carrie's Team",
+			owner: 'Carrie',
+			value: 54,
+			year: 2013
+		}].to_json
+	end
+
+	get '/api/:sport/records/:user' do
+		[{
+			record:'Most Wins',
+			name: "Greg's #{params[:sport]} Team",
+			owner: params[:user],
+			value: 56,
+			year: 2013
 		}].to_json
 	end
 

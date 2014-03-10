@@ -1,28 +1,23 @@
 angular.module('aepi-fantasy',['ngRoute','ngResource'], function($routeProvider) {
-	$routeProvider.when('/overall', {
+	$routeProvider.when('/results/overall', {
 		controller: 'ResultsController',
 		templateUrl: '/pages/results.html'
 	});
 
-	$routeProvider.when('/:year', {
+	$routeProvider.when('/results/:year', {
 		controller: 'ResultsController',
 		templateUrl: '/pages/resultsYear.html'
 	});
 
-	// $routeProvider.when('/home',{
-	// 	controller: 'HomeController',
-	// 	templateUrl: 'pages/home.html'
-	// })
-	
-	// $routeProvider.when('/baseball', {
-	// 	controller: 'BaseballController',
-	// 	templateUrl: 'pages/baseball.html'
-	// });
+	$routeProvider.when('/records', {
+		controller: 'RecordsController',
+		templateUrl: '/pages/records.html'
+	})
 
-	// $routeProvider.when('/football', {
-	// 	controller: 'FootballController',
-	// 	templateUrl: 'pages/football.html'
-	// })
+	$routeProvider.when('/records/:user', {
+		controller: 'RecordsController',
+		templateUrl: '/pages/records.html'
+	})
 
 	// $routeProvider.otherwise({
 	// 	redirectTo: '/home'

@@ -38,7 +38,7 @@
             <ul class="nav">
               <li><a class="header" href="#/overall">Seasons</a></li>
               <% for season in @seasons %>
-                <li class="{{isActive(<%= season %>)}}"><a href="#/<%= season %>"><%= season %></a></li>
+                <li class="{{isActiveYear(<%= season %>)}}"><a href="#/results/<%= season %>"><%= season %></a></li>
               <% end %>
             </ul>
           </div>
