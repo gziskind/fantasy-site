@@ -1,0 +1,17 @@
+<div>
+	<h1>{{sport}} Team Names - {{user}}</h1>
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th>Year</th>
+				<th>Team Name</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="name in names">
+				<td>{{name.year}}</td>
+				<td>{{name.teamName}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

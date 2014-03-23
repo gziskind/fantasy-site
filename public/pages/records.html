@@ -1,0 +1,23 @@
+<div>
+	<h1>{{sport}} Records <span ng-if="user"> - {{user}} </span></h1>
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th>Record</th>
+				<th>Team</th>
+				<th>Owner</th>
+				<th>Value</th>
+				<th>Year</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="record in records">
+				<td>{{record.record}}</td>
+				<td>{{record.name}}</td>
+				<td>{{record.owner}}</td>
+				<td>{{record.value}}</td>
+				<td>{{record.year}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
