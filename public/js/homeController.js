@@ -26,6 +26,15 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 		}
 	}
 
+	$scope.isActivePoll = function(pollId) {
+		var url = extractUrlAfterBang();
+		if('polls/' + pollId == url) {
+			return 'active'
+		} else {
+			return ''
+		}
+	}
+
 	$scope.getSportType = function() {
 		var path = window.location.pathname;
 		if(path.indexOf('football') != -1) {
@@ -34,6 +43,7 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 			return 'baseball';
 		}
 	}
+
 
 	// Private functions
 	function extractUrlAfterBang() {

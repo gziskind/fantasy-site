@@ -12,7 +12,7 @@
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li class="dropdown <%= isBaseballActive %>">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Baseball <b class="caret"></b></a>
+          <a class="dropdown-toggle" data-toggle="dropdown">Baseball <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="/baseball/champions">Champions</a></li>
             <li><a href="/baseball/results">Season Results</a></li>
@@ -24,13 +24,22 @@
       </ul>
       <ul class="nav navbar-nav">
         <li class="dropdown <%= isFootballActive %>">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Football <b class="caret"></b></a>
+          <a class="dropdown-toggle" data-toggle="dropdown">Football <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="/football/champions">Champions</a></li>
             <li><a href="/football/results">Season Results</a></li>
             <li><a href="/football/names">Team Names</a></li>
             <li><a href="/football/records">Records</a></li>
             <li><a href="/football/facts">Fantasy Facts</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav">
+        <li class="dropdown <%= isPollActive %>">
+          <a class="dropdown-toggle" data-toggle="dropdown">Polls <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="/polls/current">Current Polls</a></li>
+            <li><a href="/polls/result">Poll Results</a></li>
           </ul>
         </li>
       </ul>

@@ -13,6 +13,7 @@ class FantasyServer < Sinatra::Base
 
 	get '/:sport/results' do
 		@sport = params[:sport];
+		@header_index = @sport;
 		@seasons = [2013,2012,2011,2010];
 
 		erb :results
@@ -20,6 +21,7 @@ class FantasyServer < Sinatra::Base
 
 	get '/:sport/records' do
 		@sport = params[:sport];
+		@header_index = @sport;
 		@users = ['Greg','Greg2','Greg3'];
 
 		erb :records
@@ -27,10 +29,39 @@ class FantasyServer < Sinatra::Base
 
 	get '/:sport/names' do 
 		@sport = params[:sport];
+		@header_index = @sport;
 		@users = ['Greg','Greg2','Greg3','Greg4'];
 
 		erb :names
 	end
+
+	get '/polls/:type' do 
+		@header_index = 'polls'
+		@poll_type = params[:type]
+
+		if(@poll_type == 'current') 
+			@polls = [{
+				id: 1,
+				name: 'Current Poll'
+			}]
+		else 
+			@polls = [{
+					id: 2,
+					name: 'Poll 2'
+				},{
+					id: 3,
+					name: 'Poll 3'
+				}, {
+					id: 4,
+					name: 'Poll 4'
+				}
+			];
+		end
+
+		erb :polls
+	end
+
+
 
 	get '/api/:sport/results/:year' do
 		[{
@@ -106,9 +137,54 @@ class FantasyServer < Sinatra::Base
 		}].to_json
 	end
 
+	get '/api/polls/:poll_id' do
+		if(params[:poll_id] == '1') 
+			{
+				name: 'Current Poll',
+				results: false,
+				questions: [
+					{
+						question: 'What would you choose?',
+						type: 'multipleChoice',
+						options: {
+							'Option A' => nil,
+							'Option B' => nil,
+							'Option C' => nil,
+							'Option D' => nil
+						}
+					}, {
+						question: 'What about this time?',
+						type: 'multipleChoice',
+						options: {
+							'Answer A' => nil,
+							'Answer B' => nil
+						}
+					}
+				]
+			}.to_json
+		else
+			{
+				name: 'Poll 2',
+				results: true,
+				questions: [
+					{
+						question: 'What would you choose?',
+						type: 'multipleChoice',
+						options: {
+							'Option A' => 9,
+							'Option B' => 2,
+							'Option C' => 0,
+							'Option D' => 1
+						}
+					}
+				]
+			}.to_json
+		end
+	end
+
 	helpers do
 		def isBaseballActive
-			if @sport == 'baseball'
+			if @header_index == 'baseball'
 				return 'active'
 			else
 				return ''
@@ -116,7 +192,15 @@ class FantasyServer < Sinatra::Base
 		end
 
 		def isFootballActive 
-			if @sport == 'football'
+			if @header_index == 'football'
+				return 'active'
+			else
+				return ''
+			end
+		end
+
+		def isPollActive
+			if @header_index == 'polls'
 				return 'active'
 			else
 				return ''

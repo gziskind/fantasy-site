@@ -1,0 +1,10 @@
+<div>
+	<h1>{{poll.name}}</h1>
+	<div ng-repeat="question in poll.questions">
+		<h2>{{$index + 1}}. {{question.question}}</h2>
+		<div ng-repeat="(option,result) in question.options">
+			<span ng-show="poll.results">{{option}} : {{result}} Votes</span>
+			<span ng-hide="poll.results"><input type="radio" name="question.question"/> {{option}} </span>
+		</div>
+	</div>
+</div>

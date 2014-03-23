@@ -29,6 +29,11 @@ angular.module('aepi-fantasy',['ngRoute','ngResource'], function($routeProvider)
 		templateUrl: '/pages/userNames.html'
 	})
 
+	$routeProvider.when('/polls/:pollId',{
+		controller: 'PollsController',
+		templateUrl: '/pages/poll.html'
+	})
+
 	// $routeProvider.otherwise({
 	// 	redirectTo: '/home'
 	// });
