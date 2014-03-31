@@ -1,10 +1,18 @@
 require 'sinatra/base'
 require 'json'
+require_relative 'model'
 
 class FantasyServer < Sinatra::Base
 
 	def self.start
+		init_db
+
 		run!
+	end
+
+	def self.init_db
+		MongoMapper.connection = Mongo::Connection.new('localhost')
+		MongoMapper.database = 'test_database'
 	end
 
 	get '/' do 
@@ -14,7 +22,13 @@ class FantasyServer < Sinatra::Base
 	get '/:sport/results' do
 		@sport = params[:sport];
 		@header_index = @sport;
-		@seasons = [2013,2012,2011,2010];
+
+		seasons = Season.find_all_by_sport(@sport);
+		@seasons = seasons.map {|season|
+			season.year
+		}
+
+		@seasons.sort!.reverse!
 
 		erb :results
 	end
@@ -30,7 +44,12 @@ class FantasyServer < Sinatra::Base
 	get '/:sport/names' do 
 		@sport = params[:sport];
 		@header_index = @sport;
-		@users = ['Greg','Greg2','Greg3','Greg4'];
+
+		users = User.all
+
+		@users = users.map {|user|
+			user.username
+		}
 
 		erb :names
 	end
@@ -64,25 +83,22 @@ class FantasyServer < Sinatra::Base
 
 
 	get '/api/:sport/results/:year' do
-		[{
-			name: "Greg's #{params[:sport].capitalize} Team",
-			owner: 'Greg',
-			wins: 125,
-			losses: 70,
-			ties: 15
-		},{
-			name: "Carrie's Team",
-			owner: 'Carrie',
-			wins: 101,
-			losses: 97,
-			ties: 12
-		},{
-			name: "Albus's Team(#{params[:year]})",
-			owner: 'Albus',
-			wins: 80,
-			losses: 95,
-			ties: 8
-		}].to_json
+		season = Season.find_by_sport_and_year(params[:sport], params[:year].to_i);
+
+		results = season.results.map {|result|
+			{
+				name: result.team_name,
+				owner: result.user.username,
+				wins: result.wins,
+				losses: result.losses,
+				ties: result.ties,
+				place: result.place
+			}
+		}
+
+		results.sort_by! {|result| result[:place]}
+
+		results.to_json
 	end
 
 	get '/api/:sport/records' do
@@ -125,16 +141,19 @@ class FantasyServer < Sinatra::Base
 	end
 
 	get '/api/:sport/names/:user' do
-		[{
-			year:2013,
-			teamName: "#{params[:user]}'s #{params[:sport].capitalize} Team"
-		},{
-			year: 2012,
-			teamName: 'Team 2'
-		}, {
-			year: 2011,
-			teamName: 'Team 3'
-		}].to_json
+		user = User.find_by_username(params[:user]);
+		names = TeamName.find_all_by_sport_and_owner_id(params[:sport], user._id);
+
+		names.sort_by! {|name| name.created_at}
+
+		names.map! {|name|
+			{
+				year: name.created_at.year,
+				teamName: name.name
+			}
+		}
+
+		names.to_json
 	end
 
 	get '/api/polls/:poll_id' do

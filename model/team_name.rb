@@ -12,4 +12,6 @@ class TeamName
 	belongs_to :hall_of_names
 	many :likes, :class_name => 'User', :in => :likes_ids
 	many :dislikes, :class_name => 'User', :in => :dislikes_ids
+
+	timestamps!
 end
