@@ -102,29 +102,40 @@ class FantasyServer < Sinatra::Base
 	end
 
 	get '/api/:sport/records' do
-		[{
-			record:'Most Wins',
-			name: "Greg's #{params[:sport]} Team",
-			owner: 'Greg',
-			value: 56,
-			year: 2013
-		},{
-			record:'Most Loses',
-			name: "Carrie's Team",
-			owner: 'Carrie',
-			value: 54,
-			year: 2013
-		}].to_json
+		records = FantasyRecord.find_all_by_sport(params[:sport]);
+
+		results = records.map {|result|
+			{
+				record: result.record,
+				name: result.team_name,
+				owner: result.owner.username,
+				value: result.value,
+				year: result.season
+			}
+		}
+
+		results.to_json
 	end
 
 	get '/api/:sport/records/:user' do
-		[{
-			record:'Most Wins',
-			name: "Greg's #{params[:sport]} Team",
-			owner: params[:user],
-			value: 56,
-			year: 2013
-		}].to_json
+		owner = User.find_by_username(params[:user]);
+		records = FantasyRecord.find_all_by_sport(params[:sport]);
+
+		records.select! {|item| 
+			item.owner.username == owner.username
+		}
+
+		results = records.map {|result|
+			{
+				record: result.record,
+				name: result.team_name,
+				owner: result.owner.username,
+				value: result.value,
+				year: result.season
+			}
+		}
+
+		results.to_json
 	end
 
 	get '/api/:sport/names' do
