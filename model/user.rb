@@ -8,4 +8,11 @@ class User
 
 	belongs_to :role
 	many :team_names
+
+	def public_user
+		{
+			username: username,
+			id: id
+		}.to_json
+	end
 end

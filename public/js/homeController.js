@@ -1,6 +1,24 @@
-angular.module('aepi-fantasy').controller('HomeController', function($scope, $location) {
+angular.module('aepi-fantasy').controller('HomeController', function($scope, $location, $resource, $cookieStore) {
 	
+	$scope.currentUser = $cookieStore.get('currentUser');
+
 	// Public functions
+	$scope.signIn = function() {
+		var Login = $resource('/api/login');
+		Login.save($scope.user, function(response) {
+			if(response.error) {
+				console.info(response.error);
+			} else {
+				$scope.currentUser = {
+					id: response.id,
+					username: response.username
+				};
+
+				$cookieStore.put('currentUser', $scope.currentUser);
+			}
+		})
+	}
+
 	$scope.isActiveYear = function(year) {
 		var url = extractUrlAfterBang();
 		if('results/' + year == url) {

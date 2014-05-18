@@ -34,7 +34,7 @@
           </ul>
         </li>
       </ul>
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav" ng-show="currentUser">
         <li class="dropdown <%= isPollActive %>">
           <a class="dropdown-toggle" data-toggle="dropdown">Polls <b class="caret"></b></a>
           <ul class="dropdown-menu">
@@ -44,11 +44,16 @@
         </li>
       </ul>
 
-      <form class="navbar-form pull-right" style="padding-top:2px;">
-              <input class="span2 form-control" type="text" style="height:30px; width:130px" placeholder="Username">
-              <input class="span2 form-control" type="password" style="height:30px; width:130px" placeholder="Password">
-              <button type="submit" class="btn btn-sm">Sign in</button>
-            </form>
-    </div><!--/.nav-collapse -->
-  </div><!--/.container-fluid -->
+      <form class="navbar-form pull-right" style="padding-top:2px;" ng-hide="currentUser">
+        <input class="span2 form-control" type="text" style="height:30px; width:130px" placeholder="Username" ng-model="user.name">
+        <input class="span2 form-control" type="password" style="height:30px; width:130px" placeholder="Password" ng-model=" user.password">
+        <button type="submit" class="btn btn-sm" ng-click="signIn()">Sign in</button>
+      </form>
+      <ul class="nav navbar-nav pull-right" ng-show="currentUser">
+        <li>
+          <a>Logged in as: {{currentUser.username}}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>

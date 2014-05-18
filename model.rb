@@ -18,3 +18,12 @@ def test_connect
 	MongoMapper.connection = Mongo::Connection.new('localhost')
 	MongoMapper.database = 'test_database'
 end
+
+def create_user(username, password)
+
+	require 'digest/md5'
+
+	password_digest = Digest::MD5.hexdigest(password);
+	user = User.new({username: username, password: password_digest});
+	user.save!
+end

@@ -1,4 +1,4 @@
-angular.module('aepi-fantasy',['ngRoute','ngResource'], function($routeProvider) {
+angular.module('aepi-fantasy',['ngRoute','ngResource','ngCookies'], function($routeProvider) {
 	$routeProvider.when('/results/overall', {
 		controller: 'ResultsController',
 		templateUrl: '/pages/results.html'

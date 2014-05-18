@@ -1,8 +1,41 @@
 require 'sinatra/base'
 require 'json'
+require 'digest/md5'
 require_relative 'model'
 
 class FantasyServer < Sinatra::Base
+
+	set :sessions => true
+
+	register do
+		def auth(type) 
+			condition do
+				redirect '/unauthorized' unless send("is_#{type}?")
+			end
+		end
+	end
+
+	before do
+		@user = User.find_by_id(session[:user_id])
+	end
+
+	post '/api/login' do
+		login = JSON.parse(request.body.read)
+
+		username = login["name"]
+		password = Digest::MD5.hexdigest(login["password"]);
+
+		user = User.find_by_username_and_password(username, password);
+		
+		if(user)
+			session[:user_id] = user.id
+			user.public_user
+		else
+			{
+				error:"Invalid Login"
+			}.to_json
+		end
+	end
 
 	def self.start
 		init_db
@@ -235,6 +268,10 @@ class FantasyServer < Sinatra::Base
 			else
 				return ''
 			end
+		end
+
+		def is_user?
+			@user != nil
 		end
 	end
 end
