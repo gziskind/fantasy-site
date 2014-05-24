@@ -44,14 +44,21 @@
         </li>
       </ul>
 
-      <form class="navbar-form pull-right" style="padding-top:2px;" ng-hide="currentUser">
+      <form class="navbar-form pull-right" style="padding-top:2px;" ng-hide="loginSubmitted">
+        <span class="login-failed" ng-show="loginFailed">Login Failed</span>
         <input class="span2 form-control" type="text" style="height:30px; width:130px" placeholder="Username" ng-model="user.name">
         <input class="span2 form-control" type="password" style="height:30px; width:130px" placeholder="Password" ng-model=" user.password">
         <button type="submit" class="btn btn-sm" ng-click="signIn()">Sign in</button>
       </form>
-      <ul class="nav navbar-nav pull-right" ng-show="currentUser">
-        <li>
-          <a>Logged in as: {{currentUser.username}}</a>
+      <ul class="nav navbar-nav pull-right" ng-show="loginSubmitted">
+        <li ng-show="currentUser">
+          <a class="dropdown-toggle" data-toggle="dropdown">Logged in as: {{currentUser.username}}</a>
+          <ul class="dropdown-menu">
+            <li><a ng-click="logout()">Logout</a></li>
+          </ul>
+        </li>
+        <li ng-hide="currentUser || loginFailed">
+          <div class="loading"> </div>
         </li>
       </ul>
     </div>

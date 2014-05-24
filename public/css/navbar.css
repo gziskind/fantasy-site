@@ -6,3 +6,17 @@ body {
 .navbar {
   margin-bottom: 20px;
 }
+
+.loading {
+	background-image:url('/img/loading.gif');
+	width:220px;
+	height:19px;
+	position:relative;
+	top:14px;
+	right:60px;
+}
+
+.login-failed {
+	color:red;
+	margin-right:10px;
+}

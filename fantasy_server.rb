@@ -23,7 +23,7 @@ class FantasyServer < Sinatra::Base
 		login = JSON.parse(request.body.read)
 
 		username = login["name"]
-		password = Digest::MD5.hexdigest(login["password"]);
+		password = Digest::MD5.hexdigest(login["password"]) if login["password"]
 
 		user = User.find_by_username_and_password(username, password);
 		
@@ -47,6 +47,8 @@ class FantasyServer < Sinatra::Base
 		MongoMapper.connection = Mongo::Connection.new('localhost')
 		MongoMapper.database = 'test_database'
 	end
+
+	# Home pages
 
 	get '/' do 
 		erb :index
@@ -113,7 +115,7 @@ class FantasyServer < Sinatra::Base
 		erb :polls
 	end
 
-
+	# AJAX Calls
 
 	get '/api/:sport/results/:year' do
 		season = Season.find_by_sport_and_year(params[:sport], params[:year].to_i);

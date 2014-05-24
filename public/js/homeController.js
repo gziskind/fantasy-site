@@ -1,22 +1,39 @@
 angular.module('aepi-fantasy').controller('HomeController', function($scope, $location, $resource, $cookieStore) {
-	
-	$scope.currentUser = $cookieStore.get('currentUser');
+	var CURRENT_USER = "currentUser";
+
+	$scope.currentUser = $cookieStore.get(CURRENT_USER);
+	if($scope.currentUser) {
+		$scope.loginSubmitted = true;
+	} else {
+		$scope.loginSubmitted = false;
+	}
 
 	// Public functions
 	$scope.signIn = function() {
+		$scope.loginSubmitted = true;
+		$scope.loginFailed = false;
 		var Login = $resource('/api/login');
 		Login.save($scope.user, function(response) {
 			if(response.error) {
 				console.info(response.error);
+				$scope.loginFailed = true;
+				$scope.loginSubmitted = false;
 			} else {
 				$scope.currentUser = {
 					id: response.id,
 					username: response.username
 				};
 
-				$cookieStore.put('currentUser', $scope.currentUser);
+				$cookieStore.put(CURRENT_USER, $scope.currentUser);
 			}
 		})
+	}
+
+	$scope.logout = function() {
+		$cookieStore.remove(CURRENT_USER);
+		$scope.currentUser = false;
+		$scope.loginSubmitted = false;
+		$scope.loginFailed = false;
 	}
 
 	$scope.isActiveYear = function(year) {
