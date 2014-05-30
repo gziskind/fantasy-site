@@ -37,6 +37,37 @@ class FantasyServer < Sinatra::Base
 		end
 	end
 
+	post '/api/logout', :auth => :user do
+		puts "Logging out #{@user.username}"
+		@user = nil
+		session[:user_id] = nil
+	end
+
+	post '/api/changePassword', :auth => :user do
+		passwordChange = JSON.parse(request.body.read)
+		puts passwordChange
+		password_hash = Digest::MD5.hexdigest(passwordChange['currentPassword']);
+		if(password_hash != @user.password) 
+			{
+				success:false,
+				message:"Invalid Password"
+			}.to_json
+		elsif(passwordChange['newPassword1'] != passwordChange['newPassword2']) 
+			{
+				success:false,
+				message:"Passwords do not match"
+			}.to_json
+		else
+			@user.password = Digest::MD5.hexdigest(passwordChange['newPassword1']);
+			@user.save!
+
+			{
+				success:true,
+				message: "Password Change successful"
+			}.to_json
+		end
+	end
+
 	def self.start
 		init_db
 
@@ -114,6 +145,10 @@ class FantasyServer < Sinatra::Base
 
 		erb :polls
 	end
+
+	get '/user/changePassword', :auth => :user do
+		erb :changePassword
+	end 
 
 	# AJAX Calls
 

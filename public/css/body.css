@@ -1,0 +1,10 @@
+.password-match {
+	position: relative;
+	top: 9px;
+	color: red;
+}
+
+.password-message {
+	position: relative;
+	top:5px;
+}

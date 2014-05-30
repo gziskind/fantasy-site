@@ -1,6 +1,15 @@
 angular.module('aepi-fantasy').controller('HomeController', function($scope, $location, $resource, $cookieStore) {
 	var CURRENT_USER = "currentUser";
 
+	$scope.$watch('validUser', function () {
+		if(!$scope.validUser) {
+			$cookieStore.remove(CURRENT_USER);
+			$scope.currentUser = false;
+			$scope.loginSubmitted = false;
+			$scope.loginFailed = false;
+		}
+	});
+
 	$scope.currentUser = $cookieStore.get(CURRENT_USER);
 	if($scope.currentUser) {
 		$scope.loginSubmitted = true;
@@ -15,7 +24,6 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 		var Login = $resource('/api/login');
 		Login.save($scope.user, function(response) {
 			if(response.error) {
-				console.info(response.error);
 				$scope.loginFailed = true;
 				$scope.loginSubmitted = false;
 			} else {
@@ -34,6 +42,9 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 		$scope.currentUser = false;
 		$scope.loginSubmitted = false;
 		$scope.loginFailed = false;
+
+		var Logout = $resource('/api/logout');
+		Logout.save();
 	}
 
 	$scope.isActiveYear = function(year) {
