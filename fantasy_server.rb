@@ -76,7 +76,7 @@ class FantasyServer < Sinatra::Base
 
 	def self.init_db
 		MongoMapper.connection = Mongo::Connection.new('localhost')
-		MongoMapper.database = 'test_database'
+		MongoMapper.database = settings.database
 	end
 
 	# Home pages

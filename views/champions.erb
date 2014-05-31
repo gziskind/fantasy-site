@@ -2,7 +2,6 @@
 <html lang="en">
   <head>
     <%= erb :head %>
-    <script src="/js/championsController.js"></script>
   </head>
 
   <body ng-app="aepi-fantasy" ng-controller="HomeController">
@@ -13,6 +12,7 @@
       
       <div class="container-fluid">
 		<h1>Hall of Champions - <%= @sport.capitalize %></h1>
+		<br/>
 		<div class="col-sm-offset-1 col-sm-8">
 			<table class="table table-condensed table-hover">
 				<thead>
