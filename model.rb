@@ -27,3 +27,28 @@ def create_user(username, password)
 	user = User.new({username: username, password: password_digest});
 	user.save!
 end
+
+def create_season(year, sport)
+	if sport == 'baseball'
+		result_class = BaseballResult
+	else
+		result_class = FootballResult
+	end
+
+	user1 = User.find_by_username("Greg");
+	user2 = User.find_by_username("Greg2");
+	user3 = User.find_by_username("Greg3");
+	user4 = User.find_by_username("Greg4");
+	user5 = User.find_by_username("Greg5");
+
+	results = []
+	results.push(result_class.new({team_name:"Team 1", wins: 80, losses:25, ties:12, points: 1300, place:5, user:user1}))
+	results.push(result_class.new({team_name:"Team 2", wins: 81, losses:24, ties:12, points: 1301, place:3, user:user2}))
+	results.push(result_class.new({team_name:"Team 3", wins: 82, losses:23, ties:12, points: 1302, place:2, user:user3}))
+	results.push(result_class.new({team_name:"Team 4", wins: 83, losses:22, ties:12, points: 1303, place:1, user:user4}))
+	results.push(result_class.new({team_name:"Team 5", wins: 84, losses:21, ties:12, points: 1304, place:4, user:user5}))
+
+	season = Season.new({year:year, sport: sport, league_name: 'League Name', championship_score: '7-4-1', results: results});
+
+	season.save!
+end

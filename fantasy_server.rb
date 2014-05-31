@@ -120,6 +120,40 @@ class FantasyServer < Sinatra::Base
 		erb :names
 	end
 
+	get '/:sport/champions' do
+		@sport = params[:sport]
+
+		@champions = []
+
+		seasons = Season.find_all_by_sport(@sport);
+		@seasons = seasons.map {|season|
+			winner_index = season.results.find_index {|result|
+				result.place == 1
+			}
+
+			winner = season.results[winner_index]
+
+			runner_up_index = season.results.find_index {|result|
+				result.place == 2
+			}
+			runner_up = season.results[runner_up_index]
+
+			@champions.push({
+				year: season.year,
+				team_name: winner.team_name,
+				winner: winner.user.username,
+				record: winner.record,
+				result: season.championship_score,
+				runner_up: runner_up.user.username
+			})
+
+			@champions.sort_by! {|champion| champion[:year]}
+			@champions.reverse!
+		}
+
+		erb :champions
+	end
+
 	get '/polls/:type' do 
 		@header_index = 'polls'
 		@poll_type = params[:type]
