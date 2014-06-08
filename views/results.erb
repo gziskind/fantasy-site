@@ -15,7 +15,7 @@
         <div class="row">
           <div class="col-sm-3 col-md-2 sidebar-inverse">
             <ul class="nav">
-              <li><a class="header" href="#/overall">Seasons</a></li>
+              <li><a class="header">Seasons</a></li>
               <% for season in @seasons %>
                 <li class="{{isActiveYear(<%= season %>)}}"><a href="#/results/<%= season %>"><%= season %></a></li>
               <% end %>

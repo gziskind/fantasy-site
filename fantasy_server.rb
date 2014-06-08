@@ -195,7 +195,7 @@ class FantasyServer < Sinatra::Base
 		results = season.results.map {|result|
 			{
 				name: result.team_name,
-				owner: result.user.username,
+				owner: result.user.name,
 				wins: result.wins,
 				losses: result.losses,
 				ties: result.ties,
@@ -377,6 +377,16 @@ class FantasyServer < Sinatra::Base
 			else
 				return ''
 			end
+		end
+
+		def currentYear(sport)
+			seasons = Season.find_all_by_sport(sport);
+			seasons = seasons.map {|season|
+				season.year
+			}
+
+			seasons.sort!.reverse!
+			seasons[0]
 		end
 
 		def is_user?
