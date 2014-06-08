@@ -29,7 +29,7 @@ class FantasyServer < Sinatra::Base
 		
 		if(user)
 			session[:user_id] = user.id
-			user.public_user
+			user.public_user.to_json
 		else
 			{
 				error:"Invalid Login"
@@ -45,7 +45,6 @@ class FantasyServer < Sinatra::Base
 
 	post '/api/changePassword', :auth => :user do
 		passwordChange = JSON.parse(request.body.read)
-		puts passwordChange
 		password_hash = Digest::MD5.hexdigest(passwordChange['currentPassword']);
 		if(password_hash != @user.password) 
 			{
@@ -184,6 +183,10 @@ class FantasyServer < Sinatra::Base
 		erb :changePassword
 	end 
 
+	get '/admin/users', :auth => :admin do
+		erb :users
+	end
+
 	# AJAX Calls
 
 	get '/api/:sport/results/:year' do
@@ -316,6 +319,41 @@ class FantasyServer < Sinatra::Base
 		end
 	end
 
+	get '/api/admin/users', :auth => :admin do
+		users = User.all
+
+		users.map! {|user|
+			user.public_user
+		}
+
+		users.to_json
+	end
+
+	get '/api/admin/roles', :auth => :admin do
+		roles = Role.all
+
+		roles.to_json
+	end
+
+	post '/api/admin/user', :auth => :admin do
+		user_json = JSON.parse(request.body.read)
+		password_hash = Digest::MD5.hexdigest(user_json['password1'])
+
+		roles = []
+		user_json['roles'].each {|key,value|
+			roles.push(Role.find_by_name(key)) if value
+		}
+
+		user_data = {
+			username: user_json["username"],
+			name: user_json["name"],
+			roles: roles,
+			password: password_hash
+		}
+
+		User.new(user_data).save!
+	end
+
 	helpers do
 		def isBaseballActive
 			if @header_index == 'baseball'
@@ -343,6 +381,17 @@ class FantasyServer < Sinatra::Base
 
 		def is_user?
 			@user != nil
+		end
+
+		def is_admin?
+			admin = false
+			@user.roles.each {|role|
+				if role.name == "admin"
+					admin = true
+				end
+			} if @user != nil
+
+			admin
 		end
 	end
 end

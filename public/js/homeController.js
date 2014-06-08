@@ -18,6 +18,19 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 	}
 
 	// Public functions
+	$scope.isAdmin = function() {
+		var admin = false;
+		if($scope.currentUser) {
+			for(var c = 0; c < $scope.currentUser.roles.length; c++) {
+				if($scope.currentUser.roles[c].name == 'admin') {
+					admin = true;
+				}
+			}
+		}
+
+		return admin;
+	}
+
 	$scope.signIn = function() {
 		$scope.loginSubmitted = true;
 		$scope.loginFailed = false;
@@ -29,7 +42,8 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 			} else {
 				$scope.currentUser = {
 					id: response.id,
-					username: response.username
+					username: response.username,
+					roles: response.roles
 				};
 
 				$cookieStore.put(CURRENT_USER, $scope.currentUser);
@@ -76,6 +90,24 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 		var url = extractUrlAfterBang();
 		if('polls/' + pollId == url) {
 			return 'active'
+		} else {
+			return ''
+		}
+	}
+
+	$scope.isAdminCurrentUser = function() {
+		var url = extractUrlAfterBang();
+		if('users/current' == url) {
+			return "active"
+		} else {
+			return ''
+		}
+	}
+
+	$scope.isAdminCreateUser = function() {
+		var url = extractUrlAfterBang();
+		if('users/create' == url) {
+			return "active"
 		} else {
 			return ''
 		}

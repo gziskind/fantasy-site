@@ -1,0 +1,19 @@
+<div>
+	<h1>Current Users</h1>
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th>Username</th>
+				<th>Name</th>
+				<th>Roles</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="user in users">
+				<td>{{user.username}}</td>
+				<td>{{user.name}}</td>
+				<td><span ng-repeat="role in user.roles">{{role.name}} &nbsp;</span></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

@@ -9,13 +9,15 @@ angular.module('aepi-fantasy').controller('ChangePasswordController', function($
 		if($scope.syncedPassword) {
 			var Password = $resource('/api/changePassword');
 			Password.save($scope.password, function(response) {
-				console.info(response.message);
 				$scope.passwordMessage = response.message;
+				if(response.success) {
+					$scope.password = {}
+				}
 			});
 		}
 	}
 
-	$scope.confirmNewPasswordClass = function() {
+	$scope.confirmPasswordClass = function() {
 		if(!$scope.syncedPassword) {
 			return "has-warning"
 		} else {
