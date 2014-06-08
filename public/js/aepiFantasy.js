@@ -34,6 +34,16 @@ angular.module('aepi-fantasy',['ngRoute','ngResource','ngCookies'], function($ro
 		templateUrl: '/pages/poll.html'
 	})
 
+	$routeProvider.when('/users/current',{
+		controller: 'UsersController',
+		templateUrl: '/pages/currentUsers.html'
+	})
+
+	$routeProvider.when('/users/create',{
+		controller: 'UsersController',
+		templateUrl: '/pages/createUser.html'
+	})
+
 	// $routeProvider.otherwise({
 	// 	redirectTo: '/home'
 	// });

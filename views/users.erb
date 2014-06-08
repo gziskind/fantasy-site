@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%= erb :head %>
+
+	<script src="/js/usersController.js"></script>
+  </head>
+
+  <body ng-app="aepi-fantasy" ng-controller="HomeController">
+
+    <div class="container">
+      <!-- Static navbar -->
+      <%= erb :header %>
+      
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-3 col-md-2 sidebar-inverse">
+            <ul class="nav">
+              <li class="isAdminCurrentUsers()"><a href="#/users/current">Current Users</a></li>
+              <li class="isAdminCreateUser()"><a href="#/users/create">Create User</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-9 col-md-10">
+            <div ng-view>
+          </div>
+        </div>
+      </div>
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/lib/bootstrap.min.js"></script>
+  </body>
+</html>

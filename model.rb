@@ -19,12 +19,21 @@ def test_connect
 	MongoMapper.database = 'test_database'
 end
 
-def create_user(username, password)
+def production_connect
+	MongoMapper.connection = Mongo::Connection.new('localhost')
+	MongoMapper.database = 'aepifantasy'
+end
 
+def create_user(username, password, name, roles)
 	require 'digest/md5'
 
+	role_objects = []
+	roles.each {|role| 
+		role_objects.push(Role.find_by_name role);
+	}
+
 	password_digest = Digest::MD5.hexdigest(password);
-	user = User.new({username: username, password: password_digest});
+	user = User.new({username: username, password: password_digest, name: name, roles: role_objects});
 	user.save!
 end
 

@@ -1,0 +1,47 @@
+<div class="container-fluid">
+	<h1>Create User</h1>
+  	<form class="form-horizontal" role="form">
+	  <div class="form-group">
+	    <label for="username" class="col-sm-2 control-label">Username</label>
+	    <div class="col-sm-3">
+	      <input type="text" class="form-control" id="username" ng-model="user.username"/>
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <label for="password1" class="col-sm-2 control-label">Password</label>
+	    <div class="col-sm-3">
+	      <input type="password" class="form-control" id="password1" ng-model="user.password1"/>
+	    </div>
+	  </div>
+	  <div class="form-group has-feedback" ng-class="confirmPasswordClass()">
+	    <label for="password2" class="col-sm-2 control-label">Confirm Password </label>
+	    <div class="col-sm-3">
+	      <input type="password" class="form-control" id="password2" ng-model="user.password2">
+	      <span class="glyphicon glyphicon-warning-sign form-control-feedback" ng-hide="syncedPassword"></span>
+	    </div>
+	    <div class="col-sm-2" ng-hide="syncedPassword">
+	    	<span class="password-match">Passwords do not match</span>
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <label for="name" class="col-sm-2 control-label">Name</label>
+	    <div class="col-sm-3">
+	      <input type="text" class="form-control" id="name" ng-model="user.name"/>
+	    </div>
+	  </div>
+	  <div class="form-group">
+	  	<label class="col-sm-2 control-label">Roles</label>
+	  	<label class="checkbox-inline" ng-repeat="role in roles">
+		  <input type="checkbox" id="{{role.name}}" value="{{role.name}}" ng-model="user.roles[role.name]"> {{role.name}}
+		</label>
+	  </div>
+	  <div class="form-group">
+	    <div class="col-sm-offset-2 col-sm-1">
+	      <button type="submit" class="btn btn-default" ng-click="createUser()">Submit</button>
+	    </div>
+	    <div class="col-sm-4">
+			<span class="password-message">{{userMessage}}</span>
+		</div>
+	  </div>
+	</form>
+</div>
