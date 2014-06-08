@@ -3,6 +3,7 @@
 require 'net/http'
 require 'httparty'
 require 'nokogiri'
+require_relative '../model'
 
 def query_espn
 	hostname = "r.espn.go.com"
@@ -31,6 +32,12 @@ def query_espn
 	response = HTTParty.get(uri, :headers => {"Cookie" => cookie_header});
 
 	return response.body
+end
+
+def extract_league_name(html) 
+	name = html.css "//h1";
+
+	name[1].content
 end
 
 def extract_team_info(html)
@@ -69,7 +76,40 @@ def extract_team_info(html)
 	return team_info
 end
 
+def save_standings(league_name, info)
+	production_connect
+
+	results = [];
+	info.each_with_index {|team, index|
+		user = User.find_by_name(team[:owner]);
+
+		result_data = {
+			place: index + 1,
+			team_name: team[:team_name],
+			wins: team[:wins],
+			losses: team[:losses],
+			ties: team[:ties],
+			user: user
+		}
+		results.push(BaseballResult.new(result_data));
+	}
+
+	season_data = {
+		year: Time.now.year,
+		sport: 'baseball',
+		league_name: league_name,
+		results: results
+	}
+	season = Season.find_by_sport_and_year "baseball", Time.now.year
+	season.destroy if(!season.nil?)
+	
+	season = Season.new(season_data);
+
+	season.save!
+end
+
 response_body = query_espn
 html = Nokogiri::HTML(response_body)
-info = extract_team_info html
-puts info
+league_name = extract_league_name html;
+team_info = extract_team_info html
+save_standings league_name, team_info
