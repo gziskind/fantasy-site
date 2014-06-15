@@ -3,7 +3,7 @@
   <head>
     <%= erb :head %>
 
-	<script src="/js/usersController.js"></script>
+	<script src="/js/adminResultsController.js"></script>
   </head>
 
   <body ng-app="aepi-fantasy" ng-controller="HomeController">
@@ -16,8 +16,8 @@
         <div class="row">
           <div class="col-sm-3 col-md-2 sidebar-inverse">
             <ul class="nav">
-              <li ng-class="isAdminCurrentUsers()"><a href="#/users/current">Current Users</a></li>
-              <li ng-class="isAdminCreateUser()"><a href="#/users/create">Create User</a></li>
+              <li ng-class="isAdminBaseballResults()"><a href="#/admin/results/baseball">Baseball Results</a></li>
+              <li ng-class="isAdminFootballResults()"><a href="#/admin/results/football">Football Results</a></li>
             </ul>
           </div>
 

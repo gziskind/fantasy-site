@@ -25,8 +25,7 @@ angular.module('aepi-fantasy').controller('NamesController', function($scope, $l
 		$scope.names = value;
 	}
 
-	function capitaliseFirstLetter(str)
-	{
+	function capitaliseFirstLetter(str) {
 	    return str.charAt(0).toUpperCase() + str.slice(1);
 	}
 });

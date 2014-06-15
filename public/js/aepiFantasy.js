@@ -1,4 +1,4 @@
-angular.module('aepi-fantasy',['ngRoute','ngResource','ngCookies'], function($routeProvider) {
+angular.module('aepi-fantasy',['ngRoute','ngResource','ngCookies','ui.sortable'], function($routeProvider) {
 	$routeProvider.when('/results/overall', {
 		controller: 'ResultsController',
 		templateUrl: '/pages/results.html'
@@ -43,6 +43,11 @@ angular.module('aepi-fantasy',['ngRoute','ngResource','ngCookies'], function($ro
 		controller: 'UsersController',
 		templateUrl: '/pages/createUser.html'
 	})
+
+	$routeProvider.when('/admin/results/:sport',{
+		controller: 'AdminResultsController',
+		templateUrl: '/pages/editResults.html'
+	});
 
 	// $routeProvider.otherwise({
 	// 	redirectTo: '/home'

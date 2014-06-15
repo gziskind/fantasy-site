@@ -3,6 +3,7 @@ angular.module('aepi-fantasy').controller('ResultsController', function($scope, 
 	// Public variables
 	$scope.year = $routeParams.year;
 	$scope.results = []
+	$scope.currentYear = new Date().getFullYear();
 
 	// Private Variables
 	var firstPlaceNumber = 0;
