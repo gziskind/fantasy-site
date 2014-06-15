@@ -73,6 +73,11 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 		return activeUrlCompare('names/' + user);
 	}
 
+	$scope.isActiveCurrentTeams = function() {
+		console.info(activeUrlCompare('names'));
+		return activeUrlCompare('names');
+	}
+
 	$scope.isActivePoll = function(pollId) {
 		return activeUrlCompare('polls/' + pollId);
 	}

@@ -297,16 +297,24 @@ class FantasyServer < Sinatra::Base
 	end
 
 	get '/api/:sport/names' do
-		[{
-			owner: 'Greg',
-			teamName: "Greg's #{params[:sport].capitalize} Team"
-		},{
-			owner: 'Carrie',
-			teamName: "Carrie's Team"
-		},{
-			owner: 'Someone Else',
-			teamName:"Else's Team"
-		}].to_json
+		users = User.all
+
+		puts users.length
+		team_names = []
+
+		users.each{|user|
+			names = TeamName.find_all_by_sport_and_owner_id(params[:sport], user._id)
+			if names.length > 0
+				names.sort_by! {|name| name.created_at}
+
+				team_names.push({
+					owner: user.name,
+					teamName: names[0].name
+				})
+			end
+		}
+
+		team_names.to_json
 	end
 
 	get '/api/:sport/names/:user' do

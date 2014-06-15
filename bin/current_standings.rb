@@ -110,8 +110,30 @@ def save_standings(league_name, info)
 	season.save!
 end
 
+def save_team_names(info) 
+	info.each {|team|
+		owner = User.find_by_name(team[:owner]);
+
+		current_team_name = TeamName.find_by_name_and_sport(team[:team_name], 'baseball')
+		if current_team_name.nil? || current_team_name.owner.name != team[:owner]
+			team_name = TeamName.new({
+				owner: owner,
+				name: team[:team_name],
+				sport: 'baseball',
+			})
+
+			puts "Adding team name [#{team[:team_name]}]"
+
+			team_name.save!
+		else
+			puts "Team name [#{team[:team_name]}] already in database"
+		end
+	}
+end
+
 response_body = query_espn
 html = Nokogiri::HTML(response_body)
 league_name = extract_league_name html;
 team_info = extract_team_info html
 save_standings league_name, team_info
+save_team_names team_info

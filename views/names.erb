@@ -15,9 +15,9 @@
         <div class="row">
           <div class="col-sm-3 col-md-2 sidebar-inverse">
             <ul class="nav">
-              <li><a class="header" href="#/names">Current Names</a></li>
+              <li ng-class="isActiveCurrentTeams()"><a class="header" href="#/names">Current Names</a></li>
               <% for user in @users %>
-                <li class="{{isActiveTeamsUser('<%= user %>')}}"><a href="#/names/<%= user %>"><%= user %></a></li>
+                <li ng-class="isActiveTeamsUser('<%= user %>')"><a href="#/names/<%= user %>"><%= user %></a></li>
               <% end %>
             </ul>
           </div>
