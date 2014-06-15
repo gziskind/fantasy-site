@@ -120,6 +120,7 @@ class FantasyServer < Sinatra::Base
 	end
 
 	get '/:sport/champions' do
+		@header_index = params[:sport]
 		@sport = params[:sport]
 
 		@champions = []
@@ -140,15 +141,17 @@ class FantasyServer < Sinatra::Base
 			@champions.push({
 				year: season.year,
 				team_name: winner.team_name,
-				winner: winner.user.username,
+				winner: winner.user.name,
 				record: winner.record,
 				result: season.championship_score,
-				runner_up: runner_up.user.username
+				runner_up: runner_up.user.name
 			})
 
-			@champions.sort_by! {|champion| champion[:year]}
-			@champions.reverse!
 		}
+
+		@champions.sort_by! {|champion| champion[:year]}
+		@champions.reverse!
+		@champions.slice!(0)
 
 		erb :champions
 	end
@@ -180,27 +183,75 @@ class FantasyServer < Sinatra::Base
 	end
 
 	get '/user/changePassword', :auth => :user do
+		@header_index = 'admin'
 		erb :changePassword
 	end 
 
 	get '/admin/users', :auth => :admin do
+		@header_index = 'admin'
 		erb :users
 	end
 
+	get '/admin/editResults', :auth => :admin do
+		@header_index = 'admin'
+		erb :adminResults
+	end
+
 	# AJAX Calls
+
+	get '/api/:sport/results' do
+		seasons = Season.find_all_by_sport(params[:sport]);
+		results = seasons.map {|season|
+			{
+				year: season.year,
+				sport: season.sport,
+				league_name: season.league_name,
+				championship_score: season.championship_score,
+				results: season.results.map {|result|
+					return_data = {
+						name: result.team_name,
+						owner: result.user.name,
+						wins: result.wins,
+						losses: result.losses,
+						place: result.place
+					}
+
+					if params[:sport] == 'baseball'
+						return_data[:ties] = result.ties
+					else
+						return_data[:points] = result.points
+					end
+
+					return_data
+				}
+			}
+		}
+
+		results.sort_by! {|result| result[:year]}
+		results.reverse!
+
+		results.to_json
+	end
 
 	get '/api/:sport/results/:year' do
 		season = Season.find_by_sport_and_year(params[:sport], params[:year].to_i);
 
 		results = season.results.map {|result|
-			{
+			return_data = {
 				name: result.team_name,
 				owner: result.user.name,
 				wins: result.wins,
 				losses: result.losses,
-				ties: result.ties,
 				place: result.place
 			}
+
+			if params[:sport] == 'baseball'
+				return_data[:ties] = result.ties
+			else
+				return_data[:points] = result.points
+			end
+
+			return_data
 		}
 
 		results.sort_by! {|result| result[:place]}
@@ -354,6 +405,40 @@ class FantasyServer < Sinatra::Base
 		User.new(user_data).save!
 	end
 
+	post '/api/admin/results', :auth => :admin do
+		season_json = JSON.parse(request.body.read)
+		season = Season.find_by_sport_and_year(season_json["sport"], season_json["year"]);
+
+		season.championship_score = season_json["championship_score"];
+		results = []
+		season_json["results"].each {|result_json|
+			user = User.find_by_name(result_json["owner"])
+			result = {
+				team_name: result_json["name"],
+				wins: result_json["wins"],
+				losses: result_json["losses"],
+				place: result_json["place"],
+				user: user
+			}
+
+			if season_json["sport"] == 'football'
+				result[:points] = result_json["points"]
+				results.push(FootballResult.new(result));
+			else
+				result[:ties] = result_json["ties"]
+				results.push(BaseballResult.new(result));
+			end
+		}
+
+		season.results = results;
+		season.save!
+
+		{
+			success:true,
+			message:"Results Updated"
+		}.to_json
+	end
+
 	helpers do
 		def isBaseballActive
 			if @header_index == 'baseball'
@@ -373,6 +458,14 @@ class FantasyServer < Sinatra::Base
 
 		def isPollActive
 			if @header_index == 'polls'
+				return 'active'
+			else
+				return ''
+			end
+		end
+
+		def isAdminActive
+			if @header_index == 'admin'
 				return 'active'
 			else
 				return ''

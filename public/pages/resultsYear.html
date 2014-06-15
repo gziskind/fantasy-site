@@ -9,7 +9,7 @@
 				<th>Wins</th>
 				<th>Losses</th>
 				<th>Ties</th>
-				<th>Games Back</th>
+				<th ng-hide="{{year != currentYear}}">Games Back</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -20,7 +20,7 @@
 				<td>{{result.wins}}</td>
 				<td>{{result.losses}}</td>
 				<td>{{result.ties}}</td>
-				<td>{{getGamesBack(result)}}
+				<td  ng-hide="{{year != currentYear}}">{{getGamesBack(result)}}
 			</tr>
 		</tbody>
 	</table>

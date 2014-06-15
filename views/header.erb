@@ -16,7 +16,7 @@
           <ul class="dropdown-menu">
             <li><a href="/baseball/champions">Champions</a></li>
             <li><a href="/baseball/results#/results/<%= currentYear('baseball') %>">Season Results</a></li>
-            <li><a href="/baseball/names">Team Names</a></li>
+            <li><a href="/baseball/names#/names">Team Names</a></li>
             <li><a href="/baseball/records">Records</a></li>
             <li><a href="/baseball/facts">Fantasy Facts</a></li>
           </ul>
@@ -28,7 +28,7 @@
           <ul class="dropdown-menu">
             <li><a href="/football/champions">Champions</a></li>
             <li><a href="/football/results#/results/<%= currentYear('football') %>">Season Results</a></li>
-            <li><a href="/football/names">Team Names</a></li>
+            <li><a href="/football/names#/names">Team Names</a></li>
             <li><a href="/football/records">Records</a></li>
             <li><a href="/football/facts">Fantasy Facts</a></li>
           </ul>
@@ -44,10 +44,11 @@
         </li>
       </ul>
       <ul class="nav navbar-nav" ng-show="isAdmin()">
-        <li class="dropdown <%= isFootballActive %>">
+        <li class="dropdown <%= isAdminActive %>">
           <a class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="/admin/users">Users</a></li>
+            <li><a href="/admin/editResults">Results</a></li>
           </ul>
         </li>
       </ul>

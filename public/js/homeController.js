@@ -62,55 +62,35 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 	}
 
 	$scope.isActiveYear = function(year) {
-		var url = extractUrlAfterBang();
-		if('results/' + year == url) {
-			return 'active'
-		} else {
-			return ''
-		}
+		return activeUrlCompare('results/' + year);
 	}
+
 	$scope.isActiveRecordsUser = function(user) {
-		var url = extractUrlAfterBang();
-		if('records/' + user == url) {
-			return 'active';
-		} else {
-			return ''
-		}
+		return activeUrlCompare('records/' + user);
 	}
+
 	$scope.isActiveTeamsUser = function(user) {
-		var url = extractUrlAfterBang();
-		if('names/' + user == url) {
-			return 'active';
-		} else {
-			return ''
-		}
+		return activeUrlCompare('names/' + user);
 	}
 
 	$scope.isActivePoll = function(pollId) {
-		var url = extractUrlAfterBang();
-		if('polls/' + pollId == url) {
-			return 'active'
-		} else {
-			return ''
-		}
+		return activeUrlCompare('polls/' + pollId);
 	}
 
-	$scope.isAdminCurrentUser = function() {
-		var url = extractUrlAfterBang();
-		if('users/current' == url) {
-			return "active"
-		} else {
-			return ''
-		}
+	$scope.isAdminCurrentUsers = function() {
+		return activeUrlCompare('users/current');
 	}
 
 	$scope.isAdminCreateUser = function() {
-		var url = extractUrlAfterBang();
-		if('users/create' == url) {
-			return "active"
-		} else {
-			return ''
-		}
+		return activeUrlCompare('users/create');
+	}
+
+	$scope.isAdminBaseballResults = function() {
+		return activeUrlCompare('admin/results/baseball');
+	}
+
+	$scope.isAdminFootballResults = function() {
+		return activeUrlCompare('admin/results/football');
 	}
 
 	$scope.getSportType = function() {
@@ -124,6 +104,15 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 
 
 	// Private functions
+	function activeUrlCompare(url) {
+		var extracted_url = extractUrlAfterBang();
+		if(url == extracted_url) {
+			return "active"
+		} else {
+			return ''
+		}
+	}
+
 	function extractUrlAfterBang() {
 		return $location.url().substr(1);
 	}

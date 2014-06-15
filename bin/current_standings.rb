@@ -94,15 +94,17 @@ def save_standings(league_name, info)
 		results.push(BaseballResult.new(result_data));
 	}
 
+	year = 2014
+
 	season_data = {
-		year: Time.now.year,
+		year: year,
 		sport: 'baseball',
 		league_name: league_name,
 		results: results
 	}
-	season = Season.find_by_sport_and_year "baseball", Time.now.year
+	season = Season.find_by_sport_and_year "baseball", year
 	season.destroy if(!season.nil?)
-	
+
 	season = Season.new(season_data);
 
 	season.save!
