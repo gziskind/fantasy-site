@@ -4,14 +4,20 @@ require 'trollop'
 require_relative '../fantasy_server'
 
 options = Trollop::options do
-	opt :database, "Server database", :default => "test_database"
+	opt :database, "Database", :default => "test_database"
 	opt :port, "Server port", :default => 8080
+	opt :db_host, "Database Host", :default => "localhost", :short => "h"
+	opt :db_port, "Database Port", :default => 27017, :short => "P"
 end
 
 port = options[:port]
 database = options[:database]
+db_host = options[:db_host]
+db_port = options[:db_port]
 
 FantasyServer.set :port, port
 FantasyServer.set :database, database
+FantasyServer.set :db_host, db_host
+FantasyServer.set :db_port, db_port
 FantasyServer.start
 
