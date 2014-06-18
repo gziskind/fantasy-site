@@ -13,6 +13,7 @@ require_relative 'model/poll'
 require_relative 'model/question'
 require_relative 'model/response'
 require_relative 'model/answer'
+require_relative 'model/rating'
 
 def test_connect
 	MongoMapper.connection = Mongo::Connection.new('localhost')
