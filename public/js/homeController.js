@@ -74,7 +74,6 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 	}
 
 	$scope.isActiveCurrentTeams = function() {
-		console.info(activeUrlCompare('names'));
 		return activeUrlCompare('names');
 	}
 
@@ -119,6 +118,6 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 	}
 
 	function extractUrlAfterBang() {
-		return $location.url().substr(1);
+		return $location.url().substr(1).replace(/%20/g,' ');
 	}
 })
