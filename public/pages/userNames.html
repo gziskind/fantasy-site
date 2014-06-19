@@ -5,12 +5,19 @@
 			<tr>
 				<th>Year</th>
 				<th>Team Name</th>
+				<th>Rating</th>
+				<th ng-show="currentUser"> My Rating</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="name in names">
 				<td>{{name.year}}</td>
 				<td>{{name.teamName}}</td>
+				<td ng-show="name.rating">{{name.rating | number:2}}</td>
+				<td ng-hide="name.rating">--</td>
+				<td ng-show="currentUser">
+					<rating ng-model="name.myRating" on-leave="changeRating(name)"></rating>
+				</td>
 			</tr>
 		</tbody>
 	</table>
