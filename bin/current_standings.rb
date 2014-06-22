@@ -27,11 +27,29 @@ def query_espn
 		cookie_header = response['set-cookie']
 	}
 
+	cookie_string = parse_cookies(cookie_header)
+
 	hostname = "games.espn.go.com"
 	uri = "http://#{hostname}/flb/standings?leagueId=33843&seasonId=2014"
-	response = HTTParty.get(uri, :headers => {"Cookie" => cookie_header});
+	response = HTTParty.get(uri, :headers => {"Cookie" => cookie_string});
 
 	return response.body
+end
+
+def parse_cookies(cookie_header)
+	match_data = cookie_header.scan(/\S+=\S+;/)
+	cookie_string = ''
+
+	cookies = ['BLUE','espnAuth','RED','SWID']
+	match_data.each { |cookie|
+		cookies.each {|name|
+			if(cookie.start_with? name)
+				cookie_string += cookie
+			end
+		}
+	}
+
+	cookie_string
 end
 
 def extract_league_name(html) 
@@ -131,9 +149,35 @@ def save_team_names(info)
 	}
 end
 
+def verify_team_info(info) 
+	valid = true
+
+	if(info.length != 12)
+		valid = false
+	end
+
+	fields = [:team_name, :owner, :wins, :losses, :ties]
+	info.each {|entry|
+		fields.each{ |field|
+			if entry[field].nil?
+				valid = false
+			end
+		}
+	}
+
+	return valid
+end
+
 response_body = query_espn
 html = Nokogiri::HTML(response_body)
 league_name = extract_league_name html;
 team_info = extract_team_info html
-save_standings league_name, team_info
-save_team_names team_info
+
+if verify_team_info(team_info)
+	puts "Team info valid [#{Time.now}]"
+	save_standings league_name, team_info
+	save_team_names team_info
+else
+	puts "Team info Invalid [#{Time.now}]"
+	puts team_info
+end
