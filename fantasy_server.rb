@@ -149,13 +149,12 @@ class FantasyServer < Sinatra::Base
 				record: winner.record,
 				result: season.championship_score,
 				runner_up: runner_up.user.name
-			})
+			}) if !season.championship_score.nil?
 
 		}
 
 		@champions.sort_by! {|champion| champion[:year]}
 		@champions.reverse!
-		@champions.slice!(0)
 
 		erb :champions
 	end
@@ -309,6 +308,7 @@ class FantasyServer < Sinatra::Base
 			names = TeamName.find_all_by_sport_and_owner_id(params[:sport], user._id)
 			if names.length > 0
 				names.sort_by! {|name| name.created_at}
+				names.reverse!
 				recent_name = names[0]
 
 				total_rating = get_total_rating(recent_name)
