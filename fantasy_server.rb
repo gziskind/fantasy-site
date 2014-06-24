@@ -336,6 +336,7 @@ class FantasyServer < Sinatra::Base
 		names = TeamName.find_all_by_sport_and_owner_id(params[:sport], user._id);
 
 		names.sort_by! {|name| name.created_at}
+		names.reverse!
 
 		names.map! {|name|
 			total_rating = get_total_rating(name)
