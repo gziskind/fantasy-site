@@ -1,16 +1,16 @@
-angular.module('aepi-fantasy').controller('HomeController', function($scope, $location, $resource, $cookieStore) {
+angular.module('aepi-fantasy').controller('HomeController', function($scope, $location, $resource, ipCookie) {
 	var CURRENT_USER = "currentUser";
 
 	$scope.$watch('validUser', function () {
 		if(!$scope.validUser) {
-			$cookieStore.remove(CURRENT_USER);
+			ipCookie.remove(CURRENT_USER, {path:'/'});
 			$scope.currentUser = false;
 			$scope.loginSubmitted = false;
 			$scope.loginFailed = false;
 		}
 	});
 
-	$scope.currentUser = $cookieStore.get(CURRENT_USER);
+	$scope.currentUser = ipCookie(CURRENT_USER);
 	if($scope.currentUser) {
 		$scope.loginSubmitted = true;
 	} else {
@@ -46,13 +46,13 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 					roles: response.roles
 				};
 
-				$cookieStore.put(CURRENT_USER, $scope.currentUser);
+				ipCookie(CURRENT_USER, $scope.currentUser, {path: '/'})
 			}
 		})
 	}
 
 	$scope.logout = function() {
-		$cookieStore.remove(CURRENT_USER);
+		ipCookie.remove(CURRENT_USER, {path:'/'});
 		$scope.currentUser = false;
 		$scope.loginSubmitted = false;
 		$scope.loginFailed = false;
