@@ -12,7 +12,7 @@
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li class="dropdown <%= isBaseballActive %>">
-          <a class="dropdown-toggle" data-toggle="dropdown">Baseball <b class="caret"></b></a>
+          <a class="dropdown-toggle">Baseball <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="/baseball/champions">Champions</a></li>
             <li><a href="/baseball/results#/results/<%= currentYear('baseball') %>">Season Results</a></li>
@@ -24,7 +24,7 @@
       </ul>
       <ul class="nav navbar-nav">
         <li class="dropdown <%= isFootballActive %>">
-          <a class="dropdown-toggle" data-toggle="dropdown">Football <b class="caret"></b></a>
+          <a class="dropdown-toggle">Football <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="/football/champions">Champions</a></li>
             <li><a href="/football/results#/results/<%= currentYear('football') %>">Season Results</a></li>
@@ -36,7 +36,7 @@
       </ul>
       <ul class="nav navbar-nav" ng-show="false">
         <li class="dropdown <%= isPollActive %>">
-          <a class="dropdown-toggle" data-toggle="dropdown">Polls <b class="caret"></b></a>
+          <a class="dropdown-toggle">Polls <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="/polls/current">Current Polls</a></li>
             <li><a href="/polls/result">Poll Results</a></li>
@@ -45,7 +45,7 @@
       </ul>
       <ul class="nav navbar-nav" ng-show="isAdmin()">
         <li class="dropdown <%= isAdminActive %>">
-          <a class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
+          <a class="dropdown-toggle">Admin <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="/admin/users#/users/current">Users</a></li>
             <li><a href="/admin/editResults">Results</a></li>
