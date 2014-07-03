@@ -101,6 +101,14 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 		return activeUrlCompare('admin/results/football');
 	}
 
+	$scope.isAdminBaseballRecords = function() {
+		return activeUrlCompare('admin/records/baseball');
+	}
+
+	$scope.isAdminFootballRecords = function() {
+		return activeUrlCompare('admin/records/football');
+	}
+
 	$scope.getSportType = function() {
 		var path = window.location.pathname;
 		if(path.indexOf('football') != -1) {

@@ -200,6 +200,11 @@ class FantasyServer < Sinatra::Base
 		erb :adminResults
 	end
 
+	get '/admin/confirmRecords', :auth => :admin do
+		@header_index = 'admin'
+		erb :adminRecords
+	end
+
 	# AJAX Calls
 
 	get '/api/:sport/results' do
@@ -535,6 +540,44 @@ class FantasyServer < Sinatra::Base
 		{
 			success:true,
 			message:"Results Updated"
+		}.to_json
+	end
+
+	get '/api/admin/:sport/records', :auth => :admin do
+		records = FantasyRecord.find_all_by_sport_and_confirmed(params[:sport], false);
+
+		results = records.map {|result|
+			owners = result.owners.map {|owner|
+				{
+					name: owner.name
+				}
+			}
+
+			{
+				id: result._id,
+				record: result.record,
+				value: result.value,
+				year: result.year,
+				owners: owners,
+				submittedBy: result.submitted_by.name
+			}
+		}
+
+		results.to_json
+	end
+
+	post '/api/admin/:sport/record/confirm', :auth => :admin do
+		record_json = JSON.parse(request.body.read)
+
+		record = FantasyRecord.find_by_id(record_json['id']);
+		record.confirmed = true;
+
+		sleep(4)
+
+		record.save!
+
+		{
+			success: true
 		}.to_json
 	end
 

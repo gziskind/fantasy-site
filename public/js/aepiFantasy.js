@@ -49,6 +49,11 @@ angular.module('aepi-fantasy',['ngRoute','ngResource','ipCookie','ui.sortable','
 		templateUrl: '/pages/editResults.html'
 	});
 
+	$routeProvider.when('/admin/records/:sport',{
+		controller: 'AdminRecordsController',
+		templateUrl: '/pages/confirmRecords.html'
+	});
+
 	// $routeProvider.otherwise({
 	// 	redirectTo: '/home'
 	// });
