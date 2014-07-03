@@ -7,7 +7,7 @@ angular.module('aepi-fantasy').controller('RecordsController', function($scope, 
 
 	// Public variables
 	$scope.sport = capitaliseFirstLetter(sport);
-	$scope.records = [];
+	$scope.records = getRecords();
 	$scope.users = populateUsers();
 	$scope.user = $routeParams.user;
 	$scope.record = {
@@ -70,7 +70,6 @@ angular.module('aepi-fantasy').controller('RecordsController', function($scope, 
 
 
 	// Watches
-	$scope.$watch('user', updateRecords)
 
 
 	// Private Functions
@@ -95,11 +94,11 @@ angular.module('aepi-fantasy').controller('RecordsController', function($scope, 
 		}
 	}
 
-	function updateRecords(newValue, oldValue) {
+	function getRecords() {
 		var Records = $resource('/api/' + sport + '/records');
-		var value = Records.query(function(response) {
-			$scope.records = value;
-		});
+		var results = Records.query();
+
+		return results;
 	}
 
 	function populateUsers() {
