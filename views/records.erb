@@ -15,10 +15,12 @@
         <div class="row">
           <div class="col-sm-3 col-md-2 sidebar-inverse">
             <ul class="nav">
-              <li><a class="header" href="#/records">All Records</a></li>
+              <li ng-class="isActiveRecords()"><a href="#/records/current">View Records</a></li>
+              <li ng-show="currentUser" ng-class="isActiveCreateRecord()"><a href="#/records/create">Submit Record</a></li>
+              <!--
               <% for user in @users %>
                 <li class="{{isActiveRecordsUser('<%= user %>')}}"><a href="#/records/<%= user %>"><%= user %></a></li>
-              <% end %>
+              <% end %> -->
             </ul>
           </div>
 
