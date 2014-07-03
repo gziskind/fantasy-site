@@ -263,19 +263,49 @@ class FantasyServer < Sinatra::Base
 	end
 
 	get '/api/:sport/records' do
-		records = FantasyRecord.find_all_by_sport(params[:sport]);
+		records = FantasyRecord.find_all_by_sport_and_confirmed(params[:sport], true);
 
 		results = records.map {|result|
+			owners = result.owners.map {|owner|
+				{
+					name: owner.name
+				}
+			}
+
 			{
 				record: result.record,
-				name: result.team_name,
-				owner: result.owner.username,
 				value: result.value,
-				year: result.season
+				year: result.year,
+				owners: owners 
 			}
 		}
 
 		results.to_json
+	end
+
+	post '/api/:sport/record', :auth => :user do
+		record_json = JSON.parse(request.body.read);
+
+		owners = []
+		record_json["owners"].each {|owner|
+			owners.push(User.find_by_name(owner["name"]));
+		}
+
+		record = FantasyRecord.new({
+			record: record_json["record"],
+			value: record_json["value"],
+			year: record_json["year"],
+			sport: params[:sport],
+			confirmed: false,
+			submitted_by: @user,
+			owners: owners
+		})
+
+		record.save!
+
+		{
+			success:true,
+		}.to_json
 	end
 
 	get '/api/:sport/records/:user' do
@@ -423,6 +453,20 @@ class FantasyServer < Sinatra::Base
 				]
 			}.to_json
 		end
+	end
+
+	get '/api/:sport/allusers' do
+		role = Role.find_by_name(params[:sport])
+		users = User.all
+
+		results = []
+		users.each {|user|
+			results.push({
+				name: user.name
+			}) if user.roles.include? role
+		}
+
+		results.to_json
 	end
 
 	get '/api/admin/users', :auth => :admin do

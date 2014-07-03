@@ -65,8 +65,12 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 		return activeUrlCompare('results/' + year);
 	}
 
-	$scope.isActiveRecordsUser = function(user) {
-		return activeUrlCompare('records/' + user);
+	$scope.isActiveRecords = function() {
+		return activeUrlCompare('records/current');
+	}
+
+	$scope.isActiveCreateRecord = function() {
+		return activeUrlCompare('records/create');
 	}
 
 	$scope.isActiveTeamsUser = function(user) {

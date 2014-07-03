@@ -9,14 +9,14 @@ angular.module('aepi-fantasy',['ngRoute','ngResource','ipCookie','ui.sortable','
 		templateUrl: '/pages/resultsYear.html'
 	});
 
-	$routeProvider.when('/records', {
+	$routeProvider.when('/records/current', {
 		controller: 'RecordsController',
 		templateUrl: '/pages/records.html'
 	})
 
-	$routeProvider.when('/records/:user', {
+	$routeProvider.when('/records/create', {
 		controller: 'RecordsController',
-		templateUrl: '/pages/records.html'
+		templateUrl: '/pages/createRecord.html'
 	})
 
 	$routeProvider.when('/names', {

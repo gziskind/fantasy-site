@@ -3,10 +3,13 @@ angular.module('aepi-fantasy').controller('ChangePasswordController', function($
 	// Public variables
 	$scope.syncedPassword = true;
 	$scope.passwordMessage = '';
+	$scope.password = {
+		password:''
+	}
 
 	// Public functions
 	$scope.changePassword = function() {
-		if($scope.syncedPassword) {
+		if($scope.syncedPassword && validate()) {
 			var Password = $resource('/api/changePassword');
 			Password.save($scope.password, function(response) {
 				$scope.passwordMessage = response.message;
@@ -31,6 +34,14 @@ angular.module('aepi-fantasy').controller('ChangePasswordController', function($
 
 
 	// Private Functions
+	function validate() {
+		if($scope.password.currentPassword && $scope.password.newPassword1 && $scope.password.newPassword2) {
+			return true;
+		} else {
+			$scope.passwordMessage = 'Missing Fields';
+		}
+	}
+
 	function checkPasswordSync() {
 		if($scope.password) {
 			if($scope.password.newPassword1 != $scope.password.newPassword2) {
