@@ -569,10 +569,13 @@ class FantasyServer < Sinatra::Base
 	post '/api/admin/:sport/record/confirm', :auth => :admin do
 		record_json = JSON.parse(request.body.read)
 
+		current_record = FantasyRecord.find_by_sport_and_record_and_confirmed(params[:sport], record_json["record"], true)
+		if !current_record.nil?
+			current_record.destroy
+		end
+
 		record = FantasyRecord.find_by_id(record_json['id']);
 		record.confirmed = true;
-
-		sleep(4)
 
 		record.save!
 
