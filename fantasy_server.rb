@@ -287,7 +287,7 @@ class FantasyServer < Sinatra::Base
 			}
 		}
 
-		results.sort_by! {|result| result[:type]}
+		results.sort_by! {|result| [result[:type], result[:record]]}
 
 		results.to_json
 	end
@@ -316,27 +316,6 @@ class FantasyServer < Sinatra::Base
 		{
 			success:true,
 		}.to_json
-	end
-
-	get '/api/:sport/records/:user' do
-		owner = User.find_by_username(params[:user]);
-		records = FantasyRecord.find_all_by_sport(params[:sport]);
-
-		records.select! {|item| 
-			item.owner.username == owner.username
-		}
-
-		results = records.map {|result|
-			{
-				record: result.record,
-				name: result.team_name,
-				owner: result.owner.username,
-				value: result.value,
-				year: result.season
-			}
-		}
-
-		results.to_json
 	end
 
 	get '/api/:sport/years' do
