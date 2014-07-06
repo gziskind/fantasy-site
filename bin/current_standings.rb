@@ -5,6 +5,8 @@ require 'httparty'
 require 'nokogiri'
 require_relative '../model'
 
+YEAR = 2014
+
 def query_espn
 	hostname = "r.espn.go.com"
 	uri = "https://#{hostname}/espn/memberservices/pc/login"
@@ -30,7 +32,7 @@ def query_espn
 	cookie_string = parse_cookies(cookie_header)
 
 	hostname = "games.espn.go.com"
-	uri = "http://#{hostname}/flb/standings?leagueId=33843&seasonId=2014"
+	uri = "http://#{hostname}/flb/standings?leagueId=33843&seasonId=#{YEAR}"
 	response = HTTParty.get(uri, :headers => {"Cookie" => cookie_string});
 
 	return response.body
@@ -112,15 +114,13 @@ def save_standings(league_name, info)
 		results.push(BaseballResult.new(result_data));
 	}
 
-	year = 2014
-
 	season_data = {
-		year: year,
+		year: YEAR,
 		sport: 'baseball',
 		league_name: league_name,
 		results: results
 	}
-	season = Season.find_by_sport_and_year "baseball", year
+	season = Season.find_by_sport_and_year "baseball", YEAR
 	season.destroy if(!season.nil?)
 
 	season = Season.new(season_data);
@@ -139,6 +139,10 @@ def save_team_names(info)
 				name: team[:team_name],
 				sport: 'baseball',
 			})
+
+			if YEAR != Time.now.year
+				team_name.year = YEAR;
+			end
 
 			puts "Adding team name [#{team[:team_name]}]"
 
