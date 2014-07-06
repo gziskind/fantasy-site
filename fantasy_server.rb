@@ -278,9 +278,10 @@ class FantasyServer < Sinatra::Base
 			}
 
 			{
+				type: result.type,
 				record: result.record,
 				value: result.value,
-				year: result.year,
+				years: result.years,
 				owners: owners 
 			}
 		}
@@ -297,9 +298,10 @@ class FantasyServer < Sinatra::Base
 		}
 
 		record = FantasyRecord.new({
+			type: record_json['type'],
 			record: record_json["record"],
 			value: record_json["value"],
-			year: record_json["year"],
+			years: record_json["years"],
 			sport: params[:sport],
 			confirmed: false,
 			submitted_by: @user,
@@ -554,10 +556,11 @@ class FantasyServer < Sinatra::Base
 			}
 
 			{
+				type: result.type,
 				id: result._id,
 				record: result.record,
 				value: result.value,
-				year: result.year,
+				years: result.years,
 				owners: owners,
 				submittedBy: result.submitted_by.name
 			}
@@ -578,6 +581,18 @@ class FantasyServer < Sinatra::Base
 		record.confirmed = true;
 
 		record.save!
+
+		{
+			success: true
+		}.to_json
+	end
+
+	post '/api/admin/:sport/record/reject', :auth => :admin do
+		record_json = JSON.parse(request.body.read)
+
+		record = FantasyRecord.find_by_id(record_json['id']);
+
+		record.destroy
 
 		{
 			success: true

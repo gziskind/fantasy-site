@@ -9,14 +9,14 @@ angular.module('aepi-fantasy',['ngRoute','ngResource','ipCookie','ui.sortable','
 		templateUrl: '/pages/resultsYear.html'
 	});
 
-	$routeProvider.when('/records/current', {
-		controller: 'RecordsController',
-		templateUrl: '/pages/records.html'
+	$routeProvider.when('/records/create', {
+		controller: 'SubmitRecordsController',
+		templateUrl: '/pages/createRecord.html'
 	})
 
-	$routeProvider.when('/records/create', {
+	$routeProvider.when('/records/:type', {
 		controller: 'RecordsController',
-		templateUrl: '/pages/createRecord.html'
+		templateUrl: '/pages/records.html'
 	})
 
 	$routeProvider.when('/names', {
@@ -57,4 +57,11 @@ angular.module('aepi-fantasy',['ngRoute','ngResource','ipCookie','ui.sortable','
 	// $routeProvider.otherwise({
 	// 	redirectTo: '/home'
 	// });
+});
+
+
+angular.module('aepi-fantasy').filter('capitalize', function() {
+    return function(input, scope) {
+        return input.substring(0,1).toUpperCase()+input.substring(1);
+    }
 });

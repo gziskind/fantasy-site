@@ -3,25 +3,33 @@
 	<table class="table table-condensed table-hover">
 		<thead>
 			<tr>
+				<th>Type</td>
 				<th>Record</th>
-				<th>Owner(s)</th>
 				<th>Value</th>
+				<th>Owner(s)</th>
 				<th>Year</th>
 				<th>Submitted By</th>
 				<th>Confirm</th>
+				<th>Reject</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="record in records">
+				<td>{{record.type | capitalize}}</td>
 				<td>{{record.record}}</td>
-				<td><span ng-repeat="owner in record.owners">{{owner.name}}<br/></span></td>
 				<td>{{record.value}}</td>
-				<td>{{record.year}}</td>
+				<td><span ng-repeat="owner in record.owners">{{owner.name}}<br/></span></td>
+				<td><span ng-repeat="year in record.years track by $index">{{year}}<br/></span></td>
 				<td>{{record.submittedBy}}</td>
 				<td>
-					<button ng-hide="record.submitted" type="submit" class="btn btn-primary btn-xs" ng-click="confirmRecord(record)">Confirm</button>
+					<button ng-hide="record.submitted || record.submitRejected" type="submit" class="btn btn-primary btn-xs" ng-click="confirmRecord(record)">Confirm</button>
 					<img style="position:relative; left:20px;" ng-show="record.submitted && !record.confirmed" src="/img/small-loader.gif"/>
 					<span ng-show="record.confirmed">Confirmed</span>
+				</td>
+				<td>
+					<button ng-hide="record.submitted || record.submitRejected" type="submit" class="btn btn-danger btn-xs" ng-click="rejectRecord(record)">Reject</button>
+					<img style="position:relative; left:20px;" ng-show="record.submitRejected && !record.rejected" src="/img/small-loader.gif"/>
+					<span ng-show="record.rejected">Rejected.</span>
 				</td>
 			</tr>
 		</tbody>

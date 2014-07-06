@@ -3,6 +3,7 @@
   <head>
     <%= erb :head %>
     <script src="/js/recordsController.js"></script>
+    <script src="/js/submitRecordsController.js"></script>
   </head>
 
   <body ng-app="aepi-fantasy" ng-controller="HomeController" ng-cloak>
@@ -15,7 +16,10 @@
         <div class="row">
           <div class="col-sm-3 col-md-2 sidebar-inverse">
             <ul class="nav">
-              <li ng-class="isActiveRecords()"><a href="#/records/current">View Records</a></li>
+              <li ng-class="isActiveAllRecords()"><a href="#/records/current">All Records</a></li>
+              <li ng-class="isActiveCareerRecords()"><a href="#/records/career">Career Records</a></li>
+              <li ng-class="isActiveSeasonRecords()"><a href="#/records/season">Season Records</a></li>
+              <li ng-class="isActiveWeeklyRecords()"><a href="#/records/weekly">Weekly Records</a></li>
               <li ng-show="currentUser" ng-class="isActiveCreateRecord()"><a href="#/records/create">Submit Record</a></li>
               <!--
               <% for user in @users %>
