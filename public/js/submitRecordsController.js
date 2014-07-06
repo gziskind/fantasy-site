@@ -9,12 +9,14 @@ angular.module('aepi-fantasy').controller('SubmitRecordsController', function($s
 	$scope.sport = capitaliseFirstLetter(sport);
 	$scope.types = ['career','season','weekly'];
 	$scope.records = getRecords();
+	$scope.years = [];
 	$scope.record = {
 		owners: [{}],
 		years: []
 	};
 	$scope.users = populateUsers();
 
+	initializeYears();
 
 	// Public functions
 	$scope.submitRecord = function() {
@@ -135,6 +137,16 @@ angular.module('aepi-fantasy').controller('SubmitRecordsController', function($s
 		var results = Records.query();
 
 		return results;
+	}
+
+	function initializeYears() {
+		var Years = $resource('/api/' + sport + '/years');
+		var results = Years.query(function(response) {
+			$scope.years = [];
+			for(var c = 0; c < results.length; c++) {
+				$scope.years.push(results[c].year);
+			}
+		});
 	}
 
 	function populateUsers() {

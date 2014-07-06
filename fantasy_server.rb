@@ -336,6 +336,19 @@ class FantasyServer < Sinatra::Base
 		results.to_json
 	end
 
+	get '/api/:sport/years' do
+		seasons = Season.find_all_by_sport(params[:sport]);
+
+		results = []
+		seasons.each {|season|
+			results.push({
+				year: season.year
+			});
+		}
+
+		results.sort_by! {|result| result[:year]}.to_json
+	end
+
 	get '/api/:sport/names' do
 		users = User.all
 
@@ -572,7 +585,7 @@ class FantasyServer < Sinatra::Base
 	post '/api/admin/:sport/record/confirm', :auth => :admin do
 		record_json = JSON.parse(request.body.read)
 
-		current_record = FantasyRecord.find_by_sport_and_record_and_confirmed(params[:sport], record_json["record"], true)
+		current_record = FantasyRecord.find_by_sport_and_record_and_confirmed_and_type(params[:sport], record_json["record"], true, record_json['type'])
 		if !current_record.nil?
 			current_record.destroy
 		end

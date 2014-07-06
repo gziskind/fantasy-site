@@ -27,7 +27,7 @@
     	<div ng-hide="record.type == 'career' || !record.type">
 	    	<label for="year" class="col-sm-1 control-label">Year</label>
 	    	<div class="col-sm-2">
-		      <input type="text" class="form-control" id="year" ng-model="record.years[$index]"/>
+	    	  <select ng-model="record.years[$index]" class="form-control" ng-options="year for year in years"/>
 		    </div>
 		</div>
     	<button class="btn btn-danger" ng-show="showRemoveOwner($index)" ng-click="removeOwner($index)">Remove Owner</button>
