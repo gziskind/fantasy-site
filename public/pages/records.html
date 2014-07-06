@@ -1,20 +1,25 @@
 <div>
-	<h1>{{sport}} Records</h1>
+	<h1>{{sport}}<span ng-if="type != 'Current'"> {{type}}</span> Records</h1>
 	<table class="table table-condensed table-hover">
 		<thead>
 			<tr>
+				<th ng-show="type == 'Current'">Type</th>
 				<th>Record</th>
-				<th>Owner(s)</th>
 				<th>Value</th>
-				<th>Year</th>
+				<th>Owner(s)</th>
+				<th ng-hide="type == 'Career'">Year</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="record in records">
+			<tr ng-repeat="record in records | filter:type:compareType">
+				<td ng-show="type == 'Current'">{{record.type | capitalize}}</td>
 				<td>{{record.record}}</td>
-				<td><span ng-repeat="owner in record.owners">{{owner.name}}<br/></span></td>
 				<td>{{record.value}}</td>
-				<td>{{record.year}}</td>
+				<td><span ng-repeat="owner in record.owners">{{owner.name}}<br/></span></td>
+				<td ng-hide="type == 'Career'">
+					<div ng-repeat="year in record.years track by $index">{{year}}</div>
+					<span ng-if="record.years.length == 0">N/A</span>
+				</td>
 			</tr>
 		</tbody>
 	</table>

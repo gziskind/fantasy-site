@@ -1,19 +1,17 @@
 <div class="container-fluid">
 	<h1>Submit Record</h1>
   	<form class="form-horizontal" role="form">
+  	  <div class="form-group">
+  	  	<label for="type" class="col-sm-2 control-label">Type</label>
+  	  	<div class="col-sm-3">
+	    	<select ng-model="record.type" class="form-control" ng-options="(type | capitalize) for type in types"/>
+	    </div>
+	  </div>
 	  <div class="form-group">
 	    <label for="record" class="col-sm-2 control-label">Record</label>
 	    <div class="col-sm-3">
-	      <input autocomplete="off" type="text" class="form-control" id="record" ng-model="record.record" typeahead="record.record for record in records" typeahead-on-select="recordSelected($item, $model, $label)"/>
+	      <input autocomplete="off" type="text" class="form-control" id="record" ng-model="record.record" typeahead="record.record for record in records | filter:$viewValue | filter:filterRecords" typeahead-on-select="recordSelected($item, $model, $label)"/>
 	    </div>
-	  </div>
-	  <div class="form-group" ng-repeat="owner in record.owners track by $index">
-	    <label for="owner" class="col-sm-2 control-label" ng-show="showOwnerLabel($index)">Owner</label>
-    	<div class="col-sm-3" ng-class="getOwnerClass($index)">
-    		<select ng-model="record.owners[$index]" ng-options="user.name for user in users" class="form-control"/>
-    	</div>
-    	<button class="btn btn-primary" ng-show="showAddOwner($index)" ng-click="addOwner()">Add New Owner</button>
-    	<button class="btn btn-danger" ng-show="showRemoveOwner($index)" ng-click="removeOwner($index)">Remove Owner</button>
 	  </div>
 	  <div class="form-group has-feedback" ng-class="confirmPasswordClass()">
 	    <label for="value" class="col-sm-2 control-label">Value</label>
@@ -21,17 +19,27 @@
 	      <input type="text" class="form-control" id="value" ng-model="record.value">
 	    </div>
 	  </div>
-	  <div class="form-group">
-	    <label for="year" class="col-sm-2 control-label">Year</label>
-	    <div class="col-sm-3">
-	      <input type="text" class="form-control" id="year" ng-model="record.year"/>
-	    </div>
+	  <div class="form-group" ng-repeat="owner in record.owners track by $index">
+	    <label for="owner" class="col-sm-2 control-label" ng-show="showOwnerLabel($index)">Owner</label>
+    	<div class="col-sm-3" ng-class="getOwnerClass($index)">
+    		<select ng-model="record.owners[$index]" ng-options="user.name for user in users" class="form-control"/>
+    	</div>
+    	<div ng-hide="record.type == 'career' || !record.type">
+	    	<label for="year" class="col-sm-1 control-label">Year</label>
+	    	<div class="col-sm-2">
+		      <input type="text" class="form-control" id="year" ng-model="record.years[$index]"/>
+		    </div>
+		</div>
+    	<button class="btn btn-danger" ng-show="showRemoveOwner($index)" ng-click="removeOwner($index)">Remove Owner</button>
 	  </div>
 	  <div class="form-group">
 	    <div class="col-sm-offset-2 col-sm-1">
 	      <button type="submit" class="btn btn-primary" ng-click="submitRecord()">Submit</button>
 	    </div>
-	    <div class="col-sm-4">
+	    <div class="col-sm-1">
+	    	<button class="btn btn-success" ng-click="addOwner()">Add New Owner</button>
+	    </div>
+	    <div class="col-sm-offset-1 col-sm-4">
 			<span class="password-message">{{recordMessage}}</span>
 		</div>
 	  </div>

@@ -65,8 +65,20 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 		return activeUrlCompare('results/' + year);
 	}
 
-	$scope.isActiveRecords = function() {
+	$scope.isActiveAllRecords = function() {
 		return activeUrlCompare('records/current');
+	}
+
+	$scope.isActiveCareerRecords = function() {
+		return activeUrlCompare('records/career');
+	}
+
+	$scope.isActiveSeasonRecords = function() {
+		return activeUrlCompare('records/season');
+	}
+
+	$scope.isActiveWeeklyRecords = function() {
+		return activeUrlCompare('records/weekly');
 	}
 
 	$scope.isActiveCreateRecord = function() {

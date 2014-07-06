@@ -3,9 +3,10 @@ require 'mongo_mapper'
 class FantasyRecord
 	include MongoMapper::Document
 
+	key :type, String
 	key :record, String
 	key :value, String
-	key :year, String
+	key :years, Array
 	key :sport, String
 	key :owner_ids, Array
 	key :confirmed, Boolean
