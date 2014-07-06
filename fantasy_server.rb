@@ -101,7 +101,6 @@ class FantasyServer < Sinatra::Base
 	get '/:sport/records' do
 		@sport = params[:sport];
 		@header_index = @sport;
-		@users = ['Greg','Greg2','Greg3'];
 
 		erb :records
 	end
@@ -119,6 +118,8 @@ class FantasyServer < Sinatra::Base
 				@users.push(user.name)
 			end
 		}
+
+		@users.sort!
 
 		erb :names
 	end
@@ -286,6 +287,8 @@ class FantasyServer < Sinatra::Base
 			}
 		}
 
+		results.sort_by! {|result| result[:type]}
+
 		results.to_json
 	end
 
@@ -357,7 +360,14 @@ class FantasyServer < Sinatra::Base
 		users.each{|user|
 			names = TeamName.find_all_by_sport_and_owner_id(params[:sport], user._id)
 			if names.length > 0
-				names.sort_by! {|name| name.created_at}
+				names.sort_by! { |name| 
+					if name.year.nil?
+						name.created_at
+					else
+						Time.new(name.year)
+					end
+				}
+
 				names.reverse!
 				recent_name = names[0]
 
@@ -378,6 +388,8 @@ class FantasyServer < Sinatra::Base
 			end
 		}
 
+		team_names.sort_by! {|name| name[:owner]}
+
 		team_names.to_json
 	end
 
@@ -385,7 +397,13 @@ class FantasyServer < Sinatra::Base
 		user = User.find_by_name(params[:user]);
 		names = TeamName.find_all_by_sport_and_owner_id(params[:sport], user._id);
 
-		names.sort_by! {|name| name.created_at}
+		names.sort_by! { |name| 
+			if name.year.nil?
+				name.created_at
+			else
+				Time.new(name.year)
+			end
+		}
 		names.reverse!
 
 		names.map! {|name|
@@ -396,6 +414,12 @@ class FantasyServer < Sinatra::Base
 				teamName: name.name,
 				rating: total_rating
 			}
+			if name.year.nil?
+				team_name_info[:year] = name.created_at.year
+			else
+				team_name_info[:year] = name.year
+			end
+
 
 			if is_user?
 				userRating = Rating.find_by_team_name_id_and_user_id(name._id, @user._id)
