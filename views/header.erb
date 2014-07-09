@@ -11,38 +11,29 @@
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li class="dropdown <%= isBaseballActive %>">
+        <li class="dropdown <%= is_baseball_active %>">
           <a class="dropdown-toggle">Baseball <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="/baseball/champions">Champions</a></li>
-            <li><a href="/baseball/results#/results/<%= currentYear('baseball') %>">Season Results</a></li>
+            <li><a href="/baseball/results#/results/<%= current_year('baseball') %>">Season Results</a></li>
             <li><a href="/baseball/names#/names">Team Names</a></li>
             <li><a href="/baseball/records#/records/current">Records</a></li>
           </ul>
         </li>
       </ul>
       <ul class="nav navbar-nav">
-        <li class="dropdown <%= isFootballActive %>">
+        <li class="dropdown <%= is_football_active %>">
           <a class="dropdown-toggle">Football <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="/football/champions">Champions</a></li>
-            <li><a href="/football/results#/results/<%= currentYear('football') %>">Season Results</a></li>
+            <li><a href="/football/results#/results/<%= current_year('football') %>">Season Results</a></li>
             <li><a href="/football/names#/names">Team Names</a></li>
             <li><a href="/football/records#/records/current">Records</a></li>
           </ul>
         </li>
       </ul>
-      <ul class="nav navbar-nav" ng-show="false">
-        <li class="dropdown <%= isPollActive %>">
-          <a class="dropdown-toggle">Polls <b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            <li><a href="/polls/current">Current Polls</a></li>
-            <li><a href="/polls/result">Poll Results</a></li>
-          </ul>
-        </li>
-      </ul>
       <ul class="nav navbar-nav" ng-show="isAdmin()">
-        <li class="dropdown <%= isAdminActive %>">
+        <li class="dropdown <%= is_admin_active %>">
           <a class="dropdown-toggle">Admin <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="/admin/users#/users/current">Users</a></li>
