@@ -19,15 +19,15 @@
 	      <input type="text" class="form-control" id="value" ng-model="record.value">
 	    </div>
 	  </div>
-	  <div class="form-group" ng-repeat="owner in record.owners track by $index">
+	  <div class="form-group" ng-repeat="record_holder in record.record_holders">
 	    <label for="owner" class="col-sm-2 control-label" ng-show="showOwnerLabel($index)">Owner</label>
     	<div class="col-sm-3" ng-class="getOwnerClass($index)">
-    		<select ng-model="record.owners[$index]" ng-options="user.name for user in users" class="form-control"/>
+    		<select ng-model="record_holder.name" ng-options="user.name for user in users" class="form-control"/>
     	</div>
     	<div ng-hide="record.type == 'career' || !record.type">
 	    	<label for="year" class="col-sm-1 control-label">Year</label>
 	    	<div class="col-sm-2">
-	    	  <select ng-model="record.years[$index]" class="form-control" ng-options="year for year in years"/>
+	    	  <select ng-model="record_holder.year" class="form-control" ng-options="year for year in years"/>
 		    </div>
 		</div>
     	<button class="btn btn-danger" ng-show="showRemoveOwner($index)" ng-click="removeOwner($index)">Remove Owner</button>

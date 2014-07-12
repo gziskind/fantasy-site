@@ -15,10 +15,10 @@
 				<td ng-show="type == 'Current'">{{record.type | capitalize}}</td>
 				<td>{{record.record}}</td>
 				<td>{{record.value}}</td>
-				<td><span ng-repeat="owner in record.owners">{{owner.name}}<br/></span></td>
+				<td><span ng-repeat="record_holder in record.record_holders | orderBy:'year'">{{record_holder.name}}<br/></span></td>
 				<td ng-hide="type == 'Career'">
-					<div ng-repeat="year in record.years track by $index">{{year}}</div>
-					<span ng-if="record.years.length == 0">N/A</span>
+					<div ng-repeat="record_holder in record.record_holders | orderBy:'year'">{{record_holder.year}}</div>
+					<span ng-if="record.type == 'career'">N/A</span>
 				</td>
 			</tr>
 		</tbody>

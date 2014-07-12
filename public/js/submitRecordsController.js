@@ -11,8 +11,7 @@ angular.module('aepi-fantasy').controller('SubmitRecordsController', function($s
 	$scope.records = getRecords();
 	$scope.years = [];
 	$scope.record = {
-		owners: [{}],
-		years: []
+		record_holders:[{}]
 	};
 	$scope.users = populateUsers();
 
@@ -27,8 +26,7 @@ angular.module('aepi-fantasy').controller('SubmitRecordsController', function($s
 				$scope.recordMessage = 'Record Submitted'
 				if(response.success) {
 					$scope.record = {
-						owners: [{}],
-						years: []
+						record_holders: [{}]
 					}
 				}
 			});
@@ -37,9 +35,8 @@ angular.module('aepi-fantasy').controller('SubmitRecordsController', function($s
 
 	$scope.recordSelected = function(item, model, label) {
 		$scope.record = item
-
-		for(var c = 0; c < $scope.record.owners.length; c++) {
-			$scope.record.owners[c] = userMap[$scope.record.owners[c].name]
+		for(var c = 0; c < $scope.record.record_holders.length; c++) {
+			$scope.record.record_holders[c].name = userMap[$scope.record.record_holders[c].name]
 		}
 	}
 
@@ -52,11 +49,11 @@ angular.module('aepi-fantasy').controller('SubmitRecordsController', function($s
 	}
 
 	$scope.addOwner = function() {
-		$scope.record.owners.push({});
+		$scope.record.record_holders.push({});
 	}
 
 	$scope.removeOwner = function(index) {
-		$scope.record.owners.splice(index,1);
+		$scope.record.record_holders.splice(index,1);
 	}
 
 	$scope.showOwnerLabel = function(index) {
@@ -105,16 +102,16 @@ angular.module('aepi-fantasy').controller('SubmitRecordsController', function($s
 
 		var repeatedOwners = false;
 		var owners = [];
-		for(var c = 0; c < record.owners.length; c++) {
-			if(owners.indexOf(record.owners[c].name) != -1) {
+		for(var c = 0; c < record.record_holders.length; c++) {
+			if(owners.indexOf(record.record_holders[c].name.name) != -1) {
 				repeatedOwners = true;
 			}
-			owners.push(record.owners[c].name);
+			owners.push(record.record_holders[c].name.name);
 
-			if(!record.owners[c].name) {
+			if(!record.record_holders[c].name.name) {
 				missingFields = true;
 			}
-			if(record.type != 'career' && !record.years[c]) {
+			if(record.type != 'career' && !record.record_holders[c].year) {
 				missingFields = true;
 			}
 		}
