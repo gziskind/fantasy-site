@@ -144,7 +144,7 @@ angular.module('aepi-fantasy').controller('SubmitRecordsController', function($s
 		var results = Years.query(function(response) {
 			$scope.years = [];
 			for(var c = 0; c < results.length; c++) {
-				$scope.years.push(results[c].year);
+				$scope.years.push(results[c].year.toString());
 			}
 		});
 	}
