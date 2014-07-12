@@ -18,8 +18,8 @@
 				<td>{{record.type | capitalize}}</td>
 				<td>{{record.record}}</td>
 				<td>{{record.value}}</td>
-				<td><span ng-repeat="owner in record.owners">{{owner.name}}<br/></span></td>
-				<td><span ng-repeat="year in record.years track by $index">{{year}}<br/></span></td>
+				<td><span ng-repeat="record_holder in record.record_holders | orderBy:'year'">{{record_holder.name}}<br/></span></td>
+				<td><span ng-repeat="record_holder in record.record_holders | orderBy:'year'">{{record_holder.year}}<br/></span></td>
 				<td>{{record.submittedBy}}</td>
 				<td>
 					<button ng-hide="record.submitted || record.submitRejected" type="submit" class="btn btn-primary btn-xs" ng-click="confirmRecord(record)">Confirm</button>

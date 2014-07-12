@@ -80,9 +80,10 @@ class FantasyServer
 		records = FantasyRecord.find_all_by_sport_and_confirmed(params[:sport], false);
 
 		results = records.map {|result|
-			owners = result.owners.map {|owner|
+			record_holders = result.record_holders.map {|record_holder|
 				{
-					name: owner.name
+					name:record_holder.user.name,
+					year: record_holder.year
 				}
 			}
 
@@ -91,8 +92,7 @@ class FantasyServer
 				id: result._id,
 				record: result.record,
 				value: result.value,
-				years: result.years,
-				owners: owners,
+				record_holders: record_holders,
 				submittedBy: result.submitted_by.name
 			}
 		}

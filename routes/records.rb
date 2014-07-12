@@ -14,9 +14,10 @@ class FantasyServer
 		records = FantasyRecord.find_all_by_sport_and_confirmed(params[:sport], true);
 
 		results = records.map {|result|
-			owners = result.owners.map {|owner|
+			record_holders = result.record_holders.map {|record_holder|
 				{
-					name: owner.name
+					name:record_holder.user.name,
+					year: record_holder.year
 				}
 			}
 
@@ -24,8 +25,7 @@ class FantasyServer
 				type: result.type,
 				record: result.record,
 				value: result.value,
-				years: result.years,
-				owners: owners 
+				record_holders: record_holders
 			}
 		}
 
@@ -37,20 +37,21 @@ class FantasyServer
 	post '/api/:sport/record', :auth => :user do
 		record_json = JSON.parse(request.body.read);
 
-		owners = []
-		record_json["owners"].each {|owner|
-			owners.push(User.find_by_name(owner["name"]));
+		record_holders = []
+		record_json["record_holders"].each {|record_holder|
+			user = User.find_by_name(record_holder["name"]["name"]);
+
+			record_holders.push(RecordHolder.new({user:user, year:record_holder['year']}));
 		}
 
 		record = FantasyRecord.new({
 			type: record_json['type'],
 			record: record_json["record"],
 			value: record_json["value"],
-			years: record_json["years"],
 			sport: params[:sport],
+			record_holders: record_holders,
 			confirmed: false,
 			submitted_by: @user,
-			owners: owners
 		})
 
 		record.save!
