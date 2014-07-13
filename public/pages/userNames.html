@@ -10,7 +10,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="name in names">
+			<tr ng-repeat="name in names | orderBy:'year':true">
 				<td>{{name.year}}</td>
 				<td>{{name.teamName}}</td>
 				<td ng-show="name.rating">{{name.rating | number:2}}</td>
@@ -21,4 +21,30 @@
 			</tr>
 		</tbody>
 	</table>
+	<br/>
+	<div ng-show="currentUser.name == user">
+		<h3>Submit Past Team Names - {{user}}</h3>
+		<form class="form-horizontal" role="form">
+			<div class="form-group has-feedback" ng-class="confirmPasswordClass()">
+		    	<label for="year" class="col-sm-2 control-label">Year</label>
+		    	<div class="col-sm-2">
+		    	  <select ng-model="name.year" class="form-control" ng-options="year for year in years"/>
+			    </div>
+		  	</div>
+		  	<div class="form-group">
+			    <label for="record" class="col-sm-2 control-label">Team Name</label>
+			    <div class="col-sm-3">
+			    	<input type="text" class="form-control" id="value" ng-model="name.teamName">
+			    </div>
+			</div>
+			<div class="form-group">
+			    <div class="col-sm-offset-2 col-sm-1">
+			      <button type="submit" class="btn btn-primary" ng-click="submitTeamName()">Submit</button>
+			    </div>
+			    <div class="col-sm-3">
+					<span class="password-message">{{teamMessage}}</span>
+				</div>
+			</div>
+		</form>
+	</div>
 </div>

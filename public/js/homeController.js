@@ -43,7 +43,8 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 				$scope.currentUser = {
 					id: response.id,
 					username: response.username,
-					roles: response.roles
+					roles: response.roles,
+					name: response.name
 				};
 
 				ipCookie(CURRENT_USER, $scope.currentUser, {path: '/'})
