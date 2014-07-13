@@ -8,6 +8,8 @@ angular.module('aepi-fantasy').controller('NamesController', function($scope, $l
 	$scope.names = [];
 	$scope.user = $routeParams.user;
 
+	initializeYears();
+
 	// Watches
 	$scope.$watch('user', updateNames)
 	$scope.$watch('currentUser', reloadNames)
@@ -24,8 +26,32 @@ angular.module('aepi-fantasy').controller('NamesController', function($scope, $l
 		}
 	}
 
+	$scope.submitTeamName = function() {
+		$scope.teamMessage = '';
+		if(validate($scope.name)) {
+			var TeamName = $resource('/api/' + sport + "/names/" + $scope.currentUser.name);
+			TeamName.save($scope.name, function(response) {
+				if(response.success) {
+					$scope.teamMessage = 'Team Name Submitted';
+					$scope.names.push($scope.name);
+					$scope.name = {};
+				} else {
+					$scope.teamMessage = response.message;
+				}
+			});
+		} 
+	}
+
 
 	// Private Functions
+	function validate(name) {
+		if(name.teamName && name.year) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	function updateNames(newValue, oldValue) {
 		var url = '';
 		if(newValue) {
@@ -40,6 +66,16 @@ angular.module('aepi-fantasy').controller('NamesController', function($scope, $l
 				value[c].previousRating = value[c].myRating
 			}
 			$scope.names = value;
+		});
+	}
+
+	function initializeYears() {
+		var Years = $resource('/api/' + sport + '/years');
+		var results = Years.query(function(response) {
+			$scope.years = [];
+			for(var c = 0; c < results.length; c++) {
+				$scope.years.push(results[c].year);
+			}
 		});
 	}
 

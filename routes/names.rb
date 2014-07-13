@@ -80,7 +80,6 @@ class FantasyServer
 			total_rating = get_total_rating(name)
 
 			team_name_info = {
-				year: name.created_at.year,
 				teamName: name.name,
 				rating: total_rating
 			}
@@ -124,6 +123,31 @@ class FantasyServer
 		}.to_json
 	end
 
+	post '/api/:sport/names/:user', :auth => :user do
+		name_json = JSON.parse(request.body.read)
+
+		current_team_name = TeamName.find_by_sport_and_name_and_owner_id(params[:sport], name_json["teamName"], @user._id);
+
+		if current_team_name.nil?
+			team_name = TeamName.new({
+				owner: @user,
+				name: name_json["teamName"],
+				sport: params[:sport],
+				year: name_json["year"]
+			})
+
+			team_name.save!
+
+			{
+				success: true
+			}.to_json
+		else
+			{
+				success: false,
+				message: "Team name already exists."
+			}.to_json
+		end
+	end
 
 	# Helper Methods
 	def get_total_rating(team) 
