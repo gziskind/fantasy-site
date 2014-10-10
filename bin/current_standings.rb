@@ -7,9 +7,19 @@ require_relative '../model'
 
 YEAR = 2014
 
-def query_espn
+def query_espn_baseball
+	hostname = "games.espn.go.com"
+	query_espn "http://#{hostname}/flb/standings?leagueId=33843&seasonId=#{YEAR}"
+end
+
+def query_espn_football
+	hostname = "games.espn.go.com"
+	query_espn "http://#{hostname}/ffl/standings?leagueId=196185&seasonId=#{YEAR}"
+end
+
+def query_espn(standings_uri)
 	hostname = "r.espn.go.com"
-	uri = "https://#{hostname}/espn/memberservices/pc/login"
+	login_uri = "https://#{hostname}/espn/memberservices/pc/login"
 
 	options = {
 		"username" => "gziskind",
@@ -19,7 +29,7 @@ def query_espn
 
 	cookie_header = nil
 
-	request = Net::HTTP::Post.new(uri)
+	request = Net::HTTP::Post.new(login_uri)
 	request.form_data = options
 	Net::HTTP::start(hostname, 443, :use_ssl => true) { |http|
 		http.use_ssl = true
@@ -31,9 +41,7 @@ def query_espn
 
 	cookie_string = parse_cookies(cookie_header)
 
-	hostname = "games.espn.go.com"
-	uri = "http://#{hostname}/flb/standings?leagueId=33843&seasonId=#{YEAR}"
-	response = HTTParty.get(uri, :headers => {"Cookie" => cookie_string});
+	response = HTTParty.get(standings_uri, :headers => {"Cookie" => cookie_string});
 
 	return response.body
 end
@@ -60,7 +68,7 @@ def extract_league_name(html)
 	name[1].content
 end
 
-def extract_team_info(html)
+def extract_team_info(html, is_football = false)
 	teams = html.css "//table[@class='tableBody'][1]/tr/td/a"
 
 	team_info = []
@@ -92,6 +100,15 @@ def extract_team_info(html)
 			team_info[index-1][:ties] = tie.content
 		end
 	}
+
+	if is_football
+		points = html.css("//table[@class='tableBody']")[1].css("/tr/td[2]")
+		points.each_with_index {|point,index|
+			if index > 0
+				team_info[index-1][:points] = point.content
+			end
+		}
+	end
 
 	return team_info
 end
@@ -133,7 +150,7 @@ def save_team_names(info)
 		owner = User.find_by_name(team[:owner]);
 
 		current_team_name = TeamName.find_by_name_and_sport(team[:team_name], 'baseball')
-		if current_team_name.nil? || current_team_name.owner.name != team[:owner]
+		if(!owner.nil? && (current_team_name.nil? || current_team_name.owner.name != team[:owner]))
 			team_name = TeamName.new({
 				owner: owner,
 				name: team[:team_name],
@@ -147,6 +164,8 @@ def save_team_names(info)
 			puts "Adding team name [#{team[:team_name]}]"
 
 			team_name.save!
+		elsif owner.nil?
+			puts "Could not find owner [#{team[:owner]}]"
 		else
 			puts "Team name [#{team[:team_name]}] already in database"
 		end
@@ -172,16 +191,22 @@ def verify_team_info(info)
 	return valid
 end
 
-response_body = query_espn
-html = Nokogiri::HTML(response_body)
+response_body = query_espn_football;
+html = Nokogiri::HTML(response_body);
 league_name = extract_league_name html;
-team_info = extract_team_info html
+team_info = extract_team_info html, true
 
-if verify_team_info(team_info)
-	puts "Team info valid [#{Time.now}]"
-	save_standings league_name, team_info
-	save_team_names team_info
-else
-	puts "Team info Invalid [#{Time.now}]"
-	puts team_info
-end
+puts team_info
+# response_body = query_espn_baseball
+# html = Nokogiri::HTML(response_body)
+# league_name = extract_league_name html;
+# team_info = extract_team_info html
+
+# if verify_team_info(team_info)
+# 	puts "Team info valid [#{Time.now}]"
+# 	save_standings league_name, team_info
+# 	save_team_names team_info
+# else
+# 	puts "Team info Invalid [#{Time.now}]"
+# 	puts team_info
+# end
