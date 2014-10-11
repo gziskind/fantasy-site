@@ -86,10 +86,11 @@ def extract_team_info(html, is_football = false)
 
 	team_info = []
 	teams.each {|team|
-		match_data  = team['title'].match(/.*\((.*)\)/)
+		match_data  = team['title'].match(/.*\((.*, )?(.*)\)/)
+
 		team_info.push({
 			team_name: team.content,
-			owner: match_data[1]
+			owner: match_data[2]
 		})
 	}
 
