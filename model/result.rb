@@ -6,6 +6,7 @@ class Result
 	key :team_name, String
 	key :wins, Integer
 	key :losses, Integer
+	key :ties, Integer
 	key :place, Integer
 
 	belongs_to :user
