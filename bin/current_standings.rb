@@ -154,7 +154,7 @@ def save_standings(league_name, info, sport)
 			ties: team[:ties],
 			user: user
 		}
-		result_data[:points] = team[:points] if !team[:point].nil?
+		result_data[:points] = team[:points] if !team[:points].nil?
 		results.push(result_class.new(result_data));
 	}
 
