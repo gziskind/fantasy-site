@@ -31,14 +31,11 @@ class FantasyServer
 						owner: result.user.name,
 						wins: result.wins,
 						losses: result.losses,
+						ties: result.ties,
 						place: result.place
 					}
 
-					if params[:sport] == 'baseball'
-						return_data[:ties] = result.ties
-					else
-						return_data[:points] = result.points
-					end
+					return_data[:points] = result.points if params[:sport] == 'football'
 
 					return_data
 				}
@@ -60,14 +57,11 @@ class FantasyServer
 				owner: result.user.name,
 				wins: result.wins,
 				losses: result.losses,
+				ties: result.ties,
 				place: result.place
 			}
 
-			if params[:sport] == 'baseball'
-				return_data[:ties] = result.ties
-			else
-				return_data[:points] = result.points
-			end
+			return_data[:points] = result.points if params[:sport] == 'football'
 
 			return_data
 		}

@@ -9,6 +9,7 @@
 				<th>Wins</th>
 				<th>Losses</th>
 				<th>Ties</th>
+				<th ng-show="{{$parent.getSportType() == 'football'}}">Points</th>
 				<th ng-hide="{{year != currentYear}}">Games Back</th>
 			</tr>
 		</thead>
@@ -20,7 +21,8 @@
 				<td>{{result.wins}}</td>
 				<td>{{result.losses}}</td>
 				<td>{{result.ties}}</td>
-				<td  ng-hide="{{year != currentYear}}">{{getGamesBack(result)}}
+				<td ng-show="{{$parent.getSportType() == 'football'}}">{{result.points}}</td>
+				<td ng-hide="{{year != currentYear}}">{{getGamesBack(result)}}
 			</tr>
 		</tbody>
 	</table>
