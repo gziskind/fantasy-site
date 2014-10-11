@@ -4,6 +4,6 @@ class FootballResult < Result
 	key :points, Float
 
 	def record 
-		return "#{self.wins} - #{self.losses} (#{self.points} pts)"
+		return "#{self.wins} - #{self.losses} - #{self.ties} (#{self.points} pts)"
 	end
 end
