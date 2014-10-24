@@ -70,7 +70,7 @@ end
 def extract_league_name(html) 
 	name = html.css "//h1";
 
-	name[1].content
+	name[1].content.sub /(\s(\d{4}) Regular Season Final)? Standings/,""
 end
 
 def extract_team_baseball_info(html)
