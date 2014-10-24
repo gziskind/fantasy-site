@@ -94,8 +94,8 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 		return activeUrlCompare('names');
 	}
 
-	$scope.isActivePoll = function(pollId) {
-		return activeUrlCompare('polls/' + pollId);
+	$scope.isActiveProfileUser = function(user) {
+		return activeUrlCompare('profile/' + user);
 	}
 
 	$scope.isAdminCurrentUsers = function() {

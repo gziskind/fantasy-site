@@ -1,7 +1,7 @@
 require 'mongo_mapper'
 
 class Result
-	include MongoMapper::EmbeddedDocument
+	include MongoMapper::Document
 
 	key :team_name, String
 	key :wins, Integer

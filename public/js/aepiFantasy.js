@@ -42,7 +42,12 @@ angular.module('aepi-fantasy',['ngRoute','ngResource','ipCookie','ui.sortable','
 	$routeProvider.when('/users/create',{
 		controller: 'UsersController',
 		templateUrl: '/pages/createUser.html'
-	})
+	});
+
+	$routeProvider.when('/profile/:user', {
+		controller: 'ProfilesController',
+		templateUrl:'/pages/profile.html'
+	});
 
 	$routeProvider.when('/admin/results/:sport',{
 		controller: 'AdminResultsController',
