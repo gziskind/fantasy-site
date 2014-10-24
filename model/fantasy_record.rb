@@ -7,7 +7,6 @@ class FantasyRecord
 	key :record, String
 	key :value, String
 	key :sport, String
-	key :owner_ids, Array
 	key :confirmed, Boolean
 
 	many :record_holders

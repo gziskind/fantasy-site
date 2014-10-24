@@ -18,66 +18,86 @@ class FantasyServer
 
 
 	# API Calls
-	get '/api/profiles/:user/results' do
+	get '/api/profiles/:user', :auth => :user do
 		user = User.find_by_name(params[:user])
 
-		baseball_results = BaseballResult.find_all_by_user_id(user._id)
-		football_results = FootballResult.find_all_by_user_id(user._id)
-
-		results = {};
-		results[:baseball] = get_baseball_stats(baseball_results) if !baseball_results.nil?
-		results[:football] = get_football_stats(football_results) if !football_results.nil?
-
-		results.to_json
-	end
-
-	def get_baseball_stats(results) 
-		wins = 0
-		losses = 0
-		ties = 0
-		total_finish = 0
-		finishes = {}
-
-		results.each {|result|
-			wins += result.wins
-			losses += result.losses
-			ties += result.ties
-			total_finish += result.place
-
-			finishes[result.season.year.to_s] = {
-				place: result.place,
-				record: "#{result.wins} - #{result.losses} - #{result.ties}"
-			} 
+		roles = user.roles.map {|role|
+			role.name
 		}
 
-		win_percentage = ((wins + ties/2.0) / (wins + losses + ties)).round(3)
-		average_finish = (total_finish / results.size.to_f).round
+		results = Result.find_all_by_user_id(user._id)
+		results_json = results.map {|result|
+			sport = nil
+			if result.class == BaseballResult
+				sport = 'baseball' 
+			else
+				sport = 'football'
+			end
 
+			json = {
+				sport: sport,
+				year: result.season.year,
+				place: result.place,
+				record: "#{result.wins}-#{result.losses}-#{result.ties}"
+			}
+
+			json[:points] = result.points if sport == 'football'
+			json
+		}
+
+		team_names = TeamName.find_all_by_owner_id(user._id);
+		team_names_json = team_names.map {|team_name|
+			rating = get_total_rating(team_name);
+
+			{
+				team_name: team_name.name,
+				rating: rating
+			}
+		}
+
+		all_records = FantasyRecord.all
+		records = all_records.select {|record|
+			record.record_holders.any? { |record_holder|  
+				record_holder.user == user
+			}
+		}
+
+		records_json = records.map {|record|
+			index = record.record_holders.find_index { |record_holder|
+				record_holder.user == user
+			}
+
+			{
+				type: record.type,
+				record: record.record,
+				value: record.value,
+				year: record.record_holders[index].year
+			}
+		}
 
 		{
-			"Win Percentage" => "#{win_percentage}",
-			"Average Finish" => "#{get_place(average_finish)} Place",
-			"results" => finishes
+			roles: roles,
+			tagLine: 'Something',
+			results: results_json,
+			team_names: team_names_json,
+			records: records_json
+		}.to_json
+	end
+
+	def get_total_rating(team) 
+		total_rating = 0
+		ratings = Rating.find_all_by_team_name_id(team._id)
+		ratings.each {|rating|
+			total_rating += rating.rating
 		}
-	end
-
-	def get_football_stats(results)
-		{}
-	end
-
-	def round(number) 
-		(number - 0.5).round
-	end
-
-	def get_place(place)
-		if place == 1
-			"1st"
-		elsif place == 2
-			"2nd"
-		elsif place == 3
-			"3rd"
+		if ratings.length > 0
+			total_rating = total_rating / ratings.length.to_f
 		else
-			"#{place}th"
+			total_rating = nil
 		end
+
+		total_rating
 	end
+
+	
 end
