@@ -1,0 +1,101 @@
+<div>
+	<div class="row">
+		<div class="col-md-3">
+			<img src="whatever" style="height:200px; width:200px; border:1">
+		</div>
+		<div class="col-md-9">
+			<h1>Greg Ziskind</h1>
+		</div>
+		<div class="col-md-9" style="margin:20px 0;">
+			This is a tag line or bio of some kind for the profile
+		</div>
+		<div class="col-md-9 btn-group" style="margin:20px 0">
+	        <label class="btn btn-primary" ng-model="radioModel" btn-radio="'Left'" uncheckable>All</label>
+	        <label class="btn btn-primary" ng-model="radioModel" btn-radio="'Middle'" uncheckable>Football</label>
+	        <label class="btn btn-primary" ng-model="radioModel" btn-radio="'Right'" uncheckable>Baseball</label>
+	    </div>
+	</div>
+	<h2>Trophies</h2>
+	<div class="row">
+		<div class="col-md-2">
+			TROPHY
+		</div>
+		<div class="col-md-2">
+			TROPHY2
+		</div>
+		<div class="col-md-2">
+			TROPHY3
+		</div>
+	</div>
+	<h2>Finishes</h2>
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th>Sport</th>
+				<th>Year</th>
+				<th>Place</th>
+				<th>Record</th>
+				<th>Points</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="result in results">
+				<td>{{$index + 1}}</td>
+				<td>{{result.name}}</td>
+				<td>{{result.owner}}</td>
+				<td>{{result.wins}}</td>
+				<td>{{result.losses}}</td>
+				<td>{{result.ties}}</td>
+				<td  ng-hide="{{year != currentYear}}">{{getGamesBack(result)}}
+			</tr>
+		</tbody>
+	</table>
+	<div class="row">
+		<div class="col-md-6">
+			<h3>Best Team Names</h3>
+			<div class="row">
+				<div class="col-md-5">Name 1</div>
+				<div class="col-md-1">4.5</div>
+			</div>
+			<div class="row">
+				<div class="col-md-5">Name 2</div>
+				<div class="col-md-1">4.0</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<h3>Worst Team Names</h3>
+			<div class="row">
+				<div class="col-md-5">Name 3</div>
+				<div class="col-md-1">0.4</div>
+			</div>
+			<div class="row">
+				<div class="col-md-5">Name 4</div>
+				<div class="col-md-1">0.7</div>
+			</div>
+		</div>
+	</div>
+	<h2>Records</h2>
+	<table class="table table-condensed table-hover table-striped">
+		<thead>
+			<tr>
+				<th>Type</th>
+				<th>Record</th>
+				<th>Value</th>
+				<th>Owner(s)</th>
+				<th>Year</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="record in records | filter:type:compareType">
+				<td ng-show="type == 'Current'">{{record.type | capitalize}}</td>
+				<td>{{record.record}}</td>
+				<td>{{record.value}}</td>
+				<td><span ng-repeat="record_holder in record.record_holders | orderBy:'year'">{{record_holder.name}}<br/></span></td>
+				<td ng-hide="type == 'Career'">
+					<div ng-repeat="record_holder in record.record_holders | orderBy:'year'">{{record_holder.year}}</div>
+					<span ng-if="record.type == 'career'">N/A</span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

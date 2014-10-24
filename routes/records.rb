@@ -34,6 +34,34 @@ class FantasyServer
 		results.to_json
 	end
 
+	get '/api/records/:user' do
+		owner = User.find_by_name(params[:user])
+		records = FantasyRecord.find_all_by_confirmed(true)
+
+		records.select! {|record|
+			is_user = false
+			record.record_holders.each {|record_holder|
+				puts "#{record_holder.user} - #{owner}"
+				if record_holder.user == owner
+					is_user = true
+				end
+			}
+
+			is_user
+		}
+
+		results = records.map {|result|
+			{
+				sport: result.sport,
+				type: result.type,
+				record: result.record,
+				value: result.value,
+			}
+		}
+
+		results.to_json
+	end
+
 	post '/api/:sport/record', :auth => :user do
 		record_json = JSON.parse(request.body.read);
 
