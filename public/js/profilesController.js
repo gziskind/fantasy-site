@@ -2,14 +2,130 @@ angular.module('aepi-fantasy').controller('ProfilesController', function($scope,
 
 	// Private Variables
 
-
 	// Public variables
 	$scope.user = $routeParams.user;
+	$scope.profile = getProfile();
+	$scope.sportOptions = [];
+	$scope.trophies = [];
+	$scope.finishes = [];
+	$scope.selectedSport = ''; 
+	$scope.bestTeamNames = [];
+	$scope.worstTeamNames = [];
 
 	// Public functions
+	$scope.capitaliseFirstLetter = function(str) {
+	    return str.charAt(0).toUpperCase() + str.slice(1);
+	}
+
+	$scope.transformPlace = function(place) {
+		if(place == 1) {
+			return '1st';
+		} else if(place == 2) {
+			return '2nd';
+		} else if(place == 3) {
+			return '3rd';
+		} else {
+			return place + 'th';
+		}
+	}
 
 	// Watches
+	$scope.$watch('selectedSport', updateProfile);
 
 
 	// Private Functions
+	function getProfile() {
+		var Profile = $resource('/api/profiles/:user');
+		var profile = Profile.get({user: $scope.user}, function() {
+			$scope.profile = profile;
+
+			setSportOptions();
+		});
+	}
+
+	function updateProfile(newValue, oldValue) {
+		if(newValue) {
+			setTrophies();
+			setFinishes();
+			setTeamNames();
+		}
+	}
+
+	function setTrophies() {
+		var trophies = [];
+		var results = $scope.profile.results;
+
+		for(var c = 0; c < results.length; c++) {
+			if(results[c].place <= 3  && isSportSelected(results[c].sport)) {
+				trophies.push({
+					sport: results[c].sport,
+					year: results[c].year,
+					place: results[c].place
+				});
+			}
+		}
+
+		$scope.trophies = trophies;
+	}
+
+	function setFinishes() {
+		var finishes = [];
+		var results = $scope.profile.results;
+
+		for(var c = 0; c < results.length; c++) {
+			if(isSportSelected(results[c].sport)) {
+				finishes.push(results[c]);
+				
+				if(results[c].sport == 'baseball') {
+					results[c].points = '-';
+				}
+			}
+		}
+		$scope.finishes = finishes
+	}
+
+	function setSportOptions() {
+		var options = [];
+
+		if($scope.profile.roles.indexOf('football') != -1) {
+			options.push('football');
+		}
+		if($scope.profile.roles.indexOf('baseball') != -1) {
+			options.push('baseball');
+		}
+
+		if(options.length > 1) {
+			options.unshift('all');
+		}
+
+		$scope.sportOptions = options;
+		$scope.selectedSport = options[0];
+	}
+
+	function setTeamNames() {
+		var bestTeamNames = [];
+		var worstTeamNames = [];
+		var teamNames = $scope.profile.team_names;
+
+		for(var c = 0; c < teamNames.length; c++) {
+			if(teamNames[c].rating > 2.5) {
+				bestTeamNames.push(teamNames[c]);
+			} else {
+				worstTeamNames.push(teamNames[c]);
+			}
+		}
+
+		$scope.bestTeamNames = bestTeamNames;
+		$scope.worstTeamNames = worstTeamNames;
+	}
+
+	function isSportSelected(sport) {
+		if($scope.selectedSport == 'all') {
+			return true
+		} else {
+			return $scope.selectedSport == sport;
+		}
+	}
+
+	
 });
