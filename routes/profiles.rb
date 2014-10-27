@@ -26,6 +26,9 @@ class FantasyServer
 		}
 
 		results = Result.find_all_by_user_id(user._id)
+		results.sort_by! {|result| result.season.year}
+		results.reverse!
+
 		results_json = results.map {|result|
 			sport = nil
 			if result.class == BaseballResult
@@ -77,7 +80,7 @@ class FantasyServer
 
 		{
 			roles: roles,
-			tagLine: 'Something',
+			tagline: 'Something',
 			results: results_json,
 			team_names: team_names_json,
 			records: records_json

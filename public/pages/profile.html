@@ -4,49 +4,41 @@
 			<img src="whatever" style="height:200px; width:200px; border:1">
 		</div>
 		<div class="col-md-9">
-			<h1>Greg Ziskind</h1>
+			<h1>{{user}}</h1>
 		</div>
 		<div class="col-md-9" style="margin:20px 0;">
-			This is a tag line or bio of some kind for the profile
+			{{profile.tagline}}
 		</div>
 		<div class="col-md-9 btn-group" style="margin:20px 0">
-	        <label class="btn btn-primary" ng-model="radioModel" btn-radio="'Left'" uncheckable>All</label>
-	        <label class="btn btn-primary" ng-model="radioModel" btn-radio="'Middle'" uncheckable>Football</label>
-	        <label class="btn btn-primary" ng-model="radioModel" btn-radio="'Right'" uncheckable>Baseball</label>
+			<!-- Parent scope needed because ng-repeat creates a new scope -->
+	        <label class="btn btn-primary" ng-model="$parent.selectedSport" ng-repeat="sportOption in sportOptions" btn-radio="sportOption">{{capitaliseFirstLetter(sportOption)}}</label>
 	    </div>
 	</div>
 	<h2>Trophies</h2>
 	<div class="row">
-		<div class="col-md-2">
-			TROPHY
-		</div>
-		<div class="col-md-2">
-			TROPHY2
-		</div>
-		<div class="col-md-2">
-			TROPHY3
+		<div class="col-md-2" ng-repeat="trophy in trophies">
+			<div class="row">{{transformPlace(trophy.place)}} Place</div>
+			<div class="row">{{capitaliseFirstLetter(trophy.sport)}} {{trophy.year}}</div>
 		</div>
 	</div>
 	<h2>Finishes</h2>
 	<table class="table table-condensed table-hover">
 		<thead>
 			<tr>
-				<th>Sport</th>
 				<th>Year</th>
+				<th>Sport</th>
 				<th>Place</th>
 				<th>Record</th>
-				<th>Points</th>
+				<th ng-hide="selectedSport == 'baseball'">Points</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="result in results">
-				<td>{{$index + 1}}</td>
-				<td>{{result.name}}</td>
-				<td>{{result.owner}}</td>
-				<td>{{result.wins}}</td>
-				<td>{{result.losses}}</td>
-				<td>{{result.ties}}</td>
-				<td  ng-hide="{{year != currentYear}}">{{getGamesBack(result)}}
+			<tr ng-repeat="finish in finishes">
+				<td>{{finish.year}}</td>
+				<td>{{capitaliseFirstLetter(finish.sport)}}</td>
+				<td>{{transformPlace(finish.place)}}</td>
+				<td>{{finish.record}}</td>
+				<td ng-hide="selectedSport == 'baseball'">{{finish.points}}</td>
 			</tr>
 		</tbody>
 	</table>
@@ -81,7 +73,6 @@
 				<th>Type</th>
 				<th>Record</th>
 				<th>Value</th>
-				<th>Owner(s)</th>
 				<th>Year</th>
 			</tr>
 		</thead>
@@ -90,7 +81,6 @@
 				<td ng-show="type == 'Current'">{{record.type | capitalize}}</td>
 				<td>{{record.record}}</td>
 				<td>{{record.value}}</td>
-				<td><span ng-repeat="record_holder in record.record_holders | orderBy:'year'">{{record_holder.name}}<br/></span></td>
 				<td ng-hide="type == 'Career'">
 					<div ng-repeat="record_holder in record.record_holders | orderBy:'year'">{{record_holder.year}}</div>
 					<span ng-if="record.type == 'career'">N/A</span>
