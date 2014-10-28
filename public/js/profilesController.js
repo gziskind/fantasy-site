@@ -11,6 +11,7 @@ angular.module('aepi-fantasy').controller('ProfilesController', function($scope,
 	$scope.selectedSport = ''; 
 	$scope.bestTeamNames = [];
 	$scope.worstTeamNames = [];
+	$scope.records = [];
 
 	// Public functions
 	$scope.capitaliseFirstLetter = function(str) {
@@ -48,6 +49,7 @@ angular.module('aepi-fantasy').controller('ProfilesController', function($scope,
 			setTrophies();
 			setFinishes();
 			setTeamNames();
+			setRecords();
 		}
 	}
 
@@ -108,15 +110,29 @@ angular.module('aepi-fantasy').controller('ProfilesController', function($scope,
 		var teamNames = $scope.profile.team_names;
 
 		for(var c = 0; c < teamNames.length; c++) {
-			if(teamNames[c].rating > 2.5) {
-				bestTeamNames.push(teamNames[c]);
-			} else {
-				worstTeamNames.push(teamNames[c]);
+			if(isSportSelected(teamNames[c].sport)) {
+				if(teamNames[c].rating > 2.5) {
+					bestTeamNames.push(teamNames[c]);
+				} else {
+					worstTeamNames.push(teamNames[c]);
+				}
 			}
 		}
 
 		$scope.bestTeamNames = bestTeamNames;
 		$scope.worstTeamNames = worstTeamNames;
+	}
+
+	function setRecords() {
+		var records = [];
+		var allRecords = $scope.profile.records;
+
+		for(var c = 0; c < allRecords.length; c++) {
+			if(isSportSelected(allRecords[c].sport)) {
+				records.push(allRecords[c]);
+			}
+		}
+		$scope.records = records
 	}
 
 	function isSportSelected(sport) {

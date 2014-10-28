@@ -45,24 +45,16 @@
 	<div class="row">
 		<div class="col-md-6">
 			<h3>Best Team Names</h3>
-			<div class="row">
-				<div class="col-md-5">Name 1</div>
-				<div class="col-md-1">4.5</div>
-			</div>
-			<div class="row">
-				<div class="col-md-5">Name 2</div>
-				<div class="col-md-1">4.0</div>
+			<div class="row" ng-repeat="teamName in bestTeamNames">
+				<div class="col-md-6">{{teamName.team_name}}</div>
+				<div class="col-md-1">{{teamName.rating}}</div>
 			</div>
 		</div>
 		<div class="col-md-6">
 			<h3>Worst Team Names</h3>
-			<div class="row">
-				<div class="col-md-5">Name 3</div>
-				<div class="col-md-1">0.4</div>
-			</div>
-			<div class="row">
-				<div class="col-md-5">Name 4</div>
-				<div class="col-md-1">0.7</div>
+			<div class="row" ng-repeat="teamName in worstTeamNames">
+				<div class="col-md-6">{{teamName.team_name}}</div>
+				<div class="col-md-1">{{teamName.rating}}</div>
 			</div>
 		</div>
 	</div>
@@ -77,14 +69,11 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="record in records | filter:type:compareType">
-				<td ng-show="type == 'Current'">{{record.type | capitalize}}</td>
+			<tr ng-repeat="record in records">
+				<td>{{capitaliseFirstLetter(record.sport)}}</td>
 				<td>{{record.record}}</td>
 				<td>{{record.value}}</td>
-				<td ng-hide="type == 'Career'">
-					<div ng-repeat="record_holder in record.record_holders | orderBy:'year'">{{record_holder.year}}</div>
-					<span ng-if="record.type == 'career'">N/A</span>
-				</td>
+				<td>{{record.year}}</td>
 			</tr>
 		</tbody>
 	</table>

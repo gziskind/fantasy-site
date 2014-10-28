@@ -80,6 +80,7 @@ class FantasyServer
 			total_rating = get_total_rating(name)
 
 			team_name_info = {
+				owner: user.name,
 				teamName: name.name,
 				rating: total_rating
 			}
