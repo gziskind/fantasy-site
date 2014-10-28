@@ -1,7 +1,7 @@
 class FantasyServer 
 
 	# Views
-	get '/profiles' do 
+	get '/profiles', :auth => :user do 
 		@header_index = 'profiles';
 
 		users = User.all
@@ -54,6 +54,7 @@ class FantasyServer
 
 			{
 				team_name: team_name.name,
+				sport: team_name.sport,
 				rating: rating
 			}
 		}
@@ -73,6 +74,7 @@ class FantasyServer
 			{
 				type: record.type,
 				record: record.record,
+				sport: record.sport,
 				value: record.value,
 				year: record.record_holders[index].year
 			}
