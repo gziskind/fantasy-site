@@ -112,8 +112,10 @@ angular.module('aepi-fantasy').controller('ProfilesController', function($scope,
 		for(var c = 0; c < teamNames.length; c++) {
 			if(isSportSelected(teamNames[c].sport)) {
 				if(teamNames[c].rating > 2.5) {
+					console.log("best " + teamNames[c]);
 					bestTeamNames.push(teamNames[c]);
-				} else {
+				} else if(teamNames[c].rating > 0 && teamNames[c].rating <= 2.5) {
+					console.log("worst " + teamNames[c].rating);
 					worstTeamNames.push(teamNames[c]);
 				}
 			}

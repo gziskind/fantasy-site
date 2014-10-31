@@ -17,9 +17,13 @@
 	<h2>Trophies</h2>
 	<div class="row">
 		<div class="col-md-2" ng-repeat="trophy in trophies">
-			<div class="row">{{transformPlace(trophy.place)}} Place</div>
-			<div class="row">{{capitaliseFirstLetter(trophy.sport)}} {{trophy.year}}</div>
+			<img ng-src="img/{{transformPlace(trophy.place)}}-place-transparent.png" style="width:100%"/>
+			<div style="text-align:center;">{{transformPlace(trophy.place)}} Place</div>
+			<div style="text-align:center;">{{capitaliseFirstLetter(trophy.sport)}} {{trophy.year}}</div>
 		</div>
+	</div>
+	<div ng-if="trophies.length == 0">
+		NONE
 	</div>
 	<h2>Finishes</h2>
 	<table class="table table-condensed table-hover">
@@ -47,19 +51,25 @@
 			<h3>Best Team Names</h3>
 			<div class="row" ng-repeat="teamName in bestTeamNames">
 				<div class="col-md-6">{{teamName.team_name}}</div>
-				<div class="col-md-1">{{teamName.rating}}</div>
+				<div class="col-md-1">{{teamName.rating | number:2}}</div>
+			</div>
+			<div ng-if="bestTeamNames.length == 0">
+				NONE
 			</div>
 		</div>
 		<div class="col-md-6">
 			<h3>Worst Team Names</h3>
 			<div class="row" ng-repeat="teamName in worstTeamNames">
 				<div class="col-md-6">{{teamName.team_name}}</div>
-				<div class="col-md-1">{{teamName.rating}}</div>
+				<div class="col-md-1">{{teamName.rating | number:2}}</div>
 			</div>
+		</div>
+		<div ng-if="worstTeamNames.length == 0">
+			NONE
 		</div>
 	</div>
 	<h2>Records</h2>
-	<table class="table table-condensed table-hover table-striped">
+	<table ng-if="records.length > 0" class="table table-condensed table-hover table-striped">
 		<thead>
 			<tr>
 				<th>Type</th>
@@ -77,4 +87,7 @@
 			</tr>
 		</tbody>
 	</table>
+	<div ng-if="records.length == 0">
+		NONE
+	</div>
 </div>
