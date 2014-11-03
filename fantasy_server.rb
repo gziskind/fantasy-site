@@ -27,15 +27,11 @@ class FantasyServer < Sinatra::Base
 		MongoMapper.database = settings.database
 	end
 
-	# Home page
-	get '/' do 
-		erb :index
-	end
-
 	helpers Helpers
 end
 
 # Include routes
+require_relative 'routes/home'
 require_relative 'routes/login'
 require_relative 'routes/results'
 require_relative 'routes/admin'

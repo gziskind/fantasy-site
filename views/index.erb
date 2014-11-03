@@ -11,7 +11,50 @@
       <%= erb :header %>
       
       <div class="container-fluid">
-      	LANDING PAGE
+        <h1>AEPi Fantasy League</h1>
+        <div class="row">
+          <div class="col-md-6">
+            <h3>Most Championships</h3>
+            <% @championships.each {|championship| %>
+              <div class="row">
+                <div class="col-md-6"><%= championship[0] %></div>
+                <div class="col-md-1"><%= championship[1] %></div>
+              </div>
+            <% } %>
+          </div>
+          <div class="col-md-6">
+            <h3>Most Last Place Finishes</h3>
+            <% @last_places.each {|last_place| %>
+              <div class="row">
+                <div class="col-md-6"><%= last_place[0] %></div>
+                <div class="col-md-1"><%= last_place[1] %></div>
+              </div>
+            <% } %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+              <h3>Best Team Names</h3>
+              <% index = 0; while index < 5 && index < @team_names.length %>
+              <div class="row">
+                <div class="col-md-5"><%= @team_names.reverse[index][:name] %></div>
+                <div class="col-md-3"><%= @team_names.reverse[index][:owner] %></div>
+                <div class="col-md-1"><%= @team_names.reverse[index][:rating] %></div>
+              </div>
+              <% index+=1; end %>
+            </div>
+            <div class="col-md-6">
+              <h3>Worst Team Names</h3>
+              <% index = 0; while index < 5 && index < @team_names.length %>
+              <div class="row">
+                <div class="col-md-5"><%= @team_names[index][:name] %></div>
+                <div class="col-md-3"><%= @team_names[index][:owner] %></div>
+                <div class="col-md-1"><%= @team_names[index][:rating] %></div>
+              </div>
+              <% index+=1; end %>
+            </div>
+          </div>
+        </div>  
       </div>
 
 
