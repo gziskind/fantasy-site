@@ -52,10 +52,6 @@ class FantasyServer
 
 		@team_names.sort_by! {|team_name| team_name[:rating]}
 
-		puts @championships
-		puts @last_places
-		puts @team_names
-
 		erb :index
 	end
 

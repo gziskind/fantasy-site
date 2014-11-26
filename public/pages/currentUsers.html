@@ -5,6 +5,7 @@
 			<tr>
 				<th>Username</th>
 				<th>Name</th>
+				<th>Unique Name</th>
 				<th>Roles</th>
 			</tr>
 		</thead>
@@ -12,6 +13,7 @@
 			<tr ng-repeat="user in users">
 				<td>{{user.username}}</td>
 				<td>{{user.name}}</td>
+				<td>{{user.uniqueName}}</td>
 				<td><span ng-repeat="role in user.roles">{{role.name}} &nbsp;</span></td>
 			</tr>
 		</tbody>

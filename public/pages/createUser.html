@@ -30,6 +30,12 @@
 	    </div>
 	  </div>
 	  <div class="form-group">
+	    <label for="uniqueName" class="col-sm-2 control-label">Unique Name</label>
+	    <div class="col-sm-3">
+	      <input type="text" class="form-control" id="name" ng-model="user.uniqueName"/>
+	    </div>
+	  </div>
+	  <div class="form-group">
 	  	<label class="col-sm-2 control-label">Roles</label>
 	  	<label class="checkbox-inline" ng-repeat="role in roles">
 		  <input type="checkbox" id="{{role.name}}" value="{{role.name}}" ng-model="user.roles[role.name]"> {{role.name}}
