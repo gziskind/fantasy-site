@@ -5,6 +5,7 @@ class User
 
 	key :username, String, :required => true
 	key :password, String
+	key :unique_name, String
 	key :name, String
 	key :role_ids, Array
 
@@ -16,6 +17,7 @@ class User
 			username: username,
 			id: id,
 			name: name,
+			uniqueName: unique_name,
 			roles: roles
 		}
 	end

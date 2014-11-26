@@ -14,17 +14,30 @@ require_relative 'model/response'
 require_relative 'model/answer'
 require_relative 'model/rating'
 
-def test_connect
+def connect(database)
 	MongoMapper.connection = Mongo::Connection.new('localhost')
-	MongoMapper.database = 'test_database'
+	MongoMapper.database = database
+end
+
+def test_connect
+	connect 'test_database'
 end
 
 def production_connect
-	MongoMapper.connection = Mongo::Connection.new('localhost')
-	MongoMapper.database = 'aepifantasy'
+	connect 'aepifantasy'
 end
 
-def create_user(username, password, name, roles)
+def create_roles
+	roles = ['admin','baseball_commish','football_commish','football','baseball'];
+
+	roles.each {|role_name|
+		role = Role.new({name:role_name})
+		role.save!
+		puts "Created role #{role_name}"
+	}
+end
+
+def create_user(username, password, name, unique_name, roles)
 	require 'digest/md5'
 
 	role_objects = []
@@ -33,7 +46,7 @@ def create_user(username, password, name, roles)
 	}
 
 	password_digest = Digest::MD5.hexdigest(password);
-	user = User.new({username: username, password: password_digest, name: name, roles: role_objects});
+	user = User.new({username: username, password: password_digest, name: name, unique_name: unique_name, roles: role_objects});
 	user.save!
 end
 

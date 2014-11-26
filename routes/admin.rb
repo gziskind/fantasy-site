@@ -35,6 +35,7 @@ class FantasyServer
 		user_data = {
 			username: user_json["username"],
 			name: user_json["name"],
+			unique_name: user_json["uniqueName"],
 			roles: roles,
 			password: password_hash
 		}

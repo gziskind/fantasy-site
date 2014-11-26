@@ -8,9 +8,11 @@ require_relative '../model'
 
 options = Trollop::options do
 	opt :year, "Year", :default => Time.now.year
+	opt :database, "Database", :default => "aepifantasy"
 end
 
 YEAR = options[:year]
+DATABASE = options[:database]
 
 def query_espn_baseball
 	hostname = "games.espn.go.com"
@@ -26,7 +28,7 @@ def query_espn(standings_uri)
 	hostname = "r.espn.go.com"
 	login_uri = "https://#{hostname}/espn/memberservices/pc/login"
 
-	options = {
+	query_options = {
 		"username" => "gziskind",
 		"password" => "kaplacko",
 		"SUBMIT" => 1
@@ -35,7 +37,7 @@ def query_espn(standings_uri)
 	cookie_header = nil
 
 	request = Net::HTTP::Post.new(login_uri)
-	request.form_data = options
+	request.form_data = query_options
 	Net::HTTP::start(hostname, 443, :use_ssl => true) { |http|
 		http.use_ssl = true
 		http.verify_mode = OpenSSL::SSL::VERIFY_NONE # read into this
@@ -144,7 +146,7 @@ def save_standings(league_name, info, sport)
 
 	results = [];
 	info.each_with_index {|team, index|
-		user = User.find_by_name(team[:owner]);
+		user = User.find_by_unique_name(team[:owner]);
 
 		result_data = {
 			place: index + 1,
@@ -182,7 +184,7 @@ end
 
 def save_team_names(info, sport) 
 	info.each {|team|
-		owner = User.find_by_name(team[:owner]);
+		owner = User.find_by_unique_name(team[:owner]);
 
 		current_team_name = TeamName.find_by_name_and_sport(team[:team_name], sport)
 		if(!owner.nil? && (current_team_name.nil? || current_team_name.owner.name != team[:owner]))
@@ -268,7 +270,7 @@ def parse_football
 	end
 end
 
-production_connect
+connect DATABASE
 
 parse_football if (YEAR != Time.now.year || (Time.now.month >= 9 && Time.now.month <= 12))
 parse_baseball if (YEAR != Time.now.year || (Time.now.month >= 4 && Time.now.month <= 9))
