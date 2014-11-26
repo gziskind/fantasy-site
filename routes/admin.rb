@@ -48,28 +48,16 @@ class FantasyServer
 		season = Season.find_by_sport_and_year(season_json["sport"], season_json["year"]);
 
 		season.championship_score = season_json["championship_score"];
+		season.save!
+
 		results = []
 		season_json["results"].each {|result_json|
 			user = User.find_by_name(result_json["owner"])
-			result = {
-				team_name: result_json["name"],
-				wins: result_json["wins"],
-				losses: result_json["losses"],
-				place: result_json["place"],
-				user: user
-			}
+			result = Result.find_by_season_id_and_user_id(season._id, user._id);
 
-			if season_json["sport"] == 'football'
-				result[:points] = result_json["points"]
-				results.push(FootballResult.new(result));
-			else
-				result[:ties] = result_json["ties"]
-				results.push(BaseballResult.new(result));
-			end
+			result.place = results_json["place"]
+			result.save!
 		}
-
-		season.results = results;
-		season.save!
 
 		{
 			success:true,
