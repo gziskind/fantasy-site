@@ -8,6 +8,7 @@ class User
 	key :unique_name, String
 	key :name, String
 	key :role_ids, Array
+	key :image_url, String
 
 	many :roles, :in => :role_ids
 	many :team_names
