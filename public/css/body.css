@@ -8,3 +8,8 @@
 	position: relative;
 	top:5px;
 }
+
+.header div {
+	font-weight: bold;
+	text-decoration: underline;
+}

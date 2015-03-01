@@ -1,7 +1,11 @@
 <div>
 	<div class="row">
 		<div class="col-md-3">
-			<img src="whatever" style="height:200px; width:200px; border:1">
+			<img ng-src="{{profile.imageUrl}}" style="height:200px; width:200px; border:1">
+			<div class="row" ng-show="currentUser.name == user">
+				<a class="col-md-6" ng-click="editImage()">Edit</a>
+				<a class="col-md-6" ng-click="removeImage()">Remove </a>
+			</div>
 		</div>
 		<div class="col-md-9">
 			<h1>{{user}}</h1>

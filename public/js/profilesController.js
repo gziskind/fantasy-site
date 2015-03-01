@@ -1,4 +1,4 @@
-angular.module('aepi-fantasy').controller('ProfilesController', function($scope, $location, $routeParams, $resource) {
+angular.module('aepi-fantasy').controller('ProfilesController', function($scope, $location, $routeParams, $resource, $modal) {
 
 	// Private Variables
 
@@ -28,6 +28,30 @@ angular.module('aepi-fantasy').controller('ProfilesController', function($scope,
 		} else {
 			return place + 'th';
 		}
+	}
+
+	$scope.editImage = function() {
+		var editImageModal = $modal.open({
+			templateUrl: 'pages/uploadImage.html',
+		    controller: 'UploadImageController',
+		    size: 'sm'
+		});
+
+		editImageModal.result.then(function(url) {
+			$scope.profile.imageUrl = url;
+
+			var ImageUrl = $resource("/api/profiles/:user/image", {user:$scope.user});
+			ImageUrl.save({imageUrl:url});
+		})
+	}
+
+	$scope.removeImage = function() {
+		var ImageUrl = $resource("/api/profiles/:user/image", {user:$scope.user});
+		ImageUrl.delete(function(response) {
+			if(response.success) {
+				$scope.profile.imageUrl = response.imageUrl;
+			}
+		});
 	}
 
 	// Watches
@@ -112,10 +136,8 @@ angular.module('aepi-fantasy').controller('ProfilesController', function($scope,
 		for(var c = 0; c < teamNames.length; c++) {
 			if(isSportSelected(teamNames[c].sport)) {
 				if(teamNames[c].rating > 2.5) {
-					console.log("best " + teamNames[c]);
 					bestTeamNames.push(teamNames[c]);
 				} else if(teamNames[c].rating > 0 && teamNames[c].rating <= 2.5) {
-					console.log("worst " + teamNames[c].rating);
 					worstTeamNames.push(teamNames[c]);
 				}
 			}
