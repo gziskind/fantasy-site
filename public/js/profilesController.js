@@ -34,7 +34,7 @@ angular.module('aepi-fantasy').controller('ProfilesController', function($scope,
 		var editImageModal = $modal.open({
 			templateUrl: 'pages/uploadImage.html',
 		    controller: 'UploadImageController',
-		    size: 'sm'
+		    windowClass: 'upload-modal'
 		});
 
 		editImageModal.result.then(function(url) {

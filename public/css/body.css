@@ -13,3 +13,7 @@
 	font-weight: bold;
 	text-decoration: underline;
 }
+
+.upload-modal .modal-dialog{
+	width: 700px;
+}

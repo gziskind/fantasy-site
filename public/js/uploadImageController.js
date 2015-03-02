@@ -2,21 +2,32 @@ angular.module('aepi-fantasy').controller('UploadImageController', function($sco
 
 	// Private Variables
 
-
 	// Public variables
-
+    $scope.myCroppedImage = '';
+    $scope.loadingMessage = '';
+    $scope.sending = false;
 
 	// Public functions
-	$scope.fileUpload = function(testing) {
-		fileUpload.uploadFileToUrl($scope.uploadedFile, "https://api.imgur.com/3/image/", function(response) {
+	$scope.fileUpload = function() {
+        var currentSrc = angular.element("#croppedImage")[0].currentSrc;
+        var base64 = currentSrc.replace("data:image/png;base64,","");
+
+        $scope.sending = true;
+        $scope.loadingMessage = "Uploading..."
+
+		fileUpload.uploadFileToUrl(base64, "https://api.imgur.com/3/image/", function(response) {
 			if(response.success) {
 				var imageLink = response.data.link;
 
 				$modalInstance.close(imageLink);
 			} else {
-				console.info("failture");
-			}
-		});
+                $scope.loadingMessage = "Upload Failed";
+                $scope.sending = false;
+            }
+        }, function() {
+            $scope.loadingMessage = "Upload Failed";
+            $scope.sending = false;
+        });
 	}
 
 	$scope.cancel = function() {
@@ -36,9 +47,15 @@ angular.module('aepi-fantasy').directive('fileModel', function ($parse) {
             var modelSetter = model.assign;
             
             element.bind('change', function(){
-                scope.$apply(function(){
-                    modelSetter(scope.$parent, element[0].files[0]);
-                });
+                var file = element[0].files[0]
+                var reader = new FileReader();
+                reader.onload = function(evt) {
+                    scope.$apply(function(){
+                        console.info(evt.target.result);
+                        modelSetter(scope.$parent, evt.target.result);
+                    });
+                };
+                reader.readAsDataURL(file)
             });
         }
     };
@@ -58,4 +75,22 @@ angular.module('aepi-fantasy').service('fileUpload', function ($http) {
         .success(success)
         .error(failure);
     }
+});
+
+angular.module('aepi-fantasy').directive('clickOnce', function($timeout) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var replacementText = attrs.clickOnce;
+
+            element.bind('click', function() {
+                $timeout(function() {
+                    if (replacementText) {
+                        element.html(replacementText);
+                    }
+                    element.attr('disabled', true);
+                }, 0);
+            });
+        }
+    };
 });
