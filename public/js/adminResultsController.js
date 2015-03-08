@@ -25,7 +25,9 @@ angular.module('aepi-fantasy').controller('AdminResultsController', function($sc
 		var value = Seasons.query(function() {
 			$scope.seasons = value
 			$scope.season = value[0]
-			$scope.results = value[0].results;
+			if(value[0]) {
+				$scope.results = value[0].results;
+			}
 		});
 	}
 
