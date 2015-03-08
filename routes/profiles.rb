@@ -1,5 +1,7 @@
 class FantasyServer 
 
+	DEFAULT_IMAGE_URL = "/img/empty-image.jpg"
+
 	# Views
 	get '/profiles', :auth => :user do 
 		@header_index = 'profiles';
@@ -28,6 +30,9 @@ class FantasyServer
 		results = Result.find_all_by_user_id(user._id)
 		results.sort_by! {|result| result.season.year}
 		results.reverse!
+
+		image_url = user.image_url
+		image_url = DEFAULT_IMAGE_URL if image_url.nil?
 
 		results_json = results.map {|result|
 			sport = nil
@@ -82,11 +87,40 @@ class FantasyServer
 
 		{
 			roles: roles,
+			imageUrl: image_url,
 			tagline: 'Something',
 			results: results_json,
 			team_names: team_names_json,
 			records: records_json
 		}.to_json
+	end
+
+	post '/api/profiles/:user/image', :auth => :user do
+		if @user.name == params[:user]
+			image_json = JSON.parse(request.body.read)
+			@user.image_url = image_json["imageUrl"]
+			@user.save!
+
+			{
+				success:true
+			}.to_json
+		else
+			redirect '/unauthorized'
+		end
+	end
+
+	delete '/api/profiles/:user/image', :auth => :user do
+		if @user.name == params[:user]
+			@user.image_url = nil
+			@user.save!
+
+			{
+				success:true,
+				imageUrl: DEFAULT_IMAGE_URL
+			}.to_json
+		else
+			redirect '/unauthorized'
+		end
 	end
 
 	def get_total_rating(team) 

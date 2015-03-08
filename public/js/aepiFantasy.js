@@ -1,4 +1,4 @@
-angular.module('aepi-fantasy',['ngRoute','ngResource','ipCookie','ui.sortable','ui.bootstrap'], function($routeProvider) {
+angular.module('aepi-fantasy',['ngRoute','ngResource','ipCookie','ui.sortable','ui.bootstrap','ImageCropper','ngImgCrop'], function($routeProvider) {
 	$routeProvider.when('/results/overall', {
 		controller: 'ResultsController',
 		templateUrl: '/pages/results.html'
@@ -70,3 +70,4 @@ angular.module('aepi-fantasy').filter('capitalize', function() {
         return input.substring(0,1).toUpperCase()+input.substring(1);
     }
 });
+
