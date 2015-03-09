@@ -3,7 +3,8 @@
   <head>
     <%= erb :head %>
 
-	<script src="/js/adminResultsController.js"></script>
+  <script src="/js/adminResultsController.js"></script>
+	<script src="/js/adminCreateResultsController.js"></script>
   </head>
 
   <body ng-app="aepi-fantasy" ng-controller="HomeController" ng-cloak>
@@ -18,6 +19,7 @@
             <ul class="nav">
               <li ng-class="isAdminBaseballResults()"><a href="#/admin/results/baseball">Baseball Results</a></li>
               <li ng-class="isAdminFootballResults()"><a href="#/admin/results/football">Football Results</a></li>
+              <li ng-class="isAdminCreateResult()"><a href="#/admin/results">Add Result</a></li>
             </ul>
           </div>
 

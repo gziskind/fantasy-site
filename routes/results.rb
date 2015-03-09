@@ -70,4 +70,41 @@ class FantasyServer
 
 		results.to_json
 	end
+
+	post '/api/:sport/results/:year' do
+		season_json = JSON.parse(request.body.read)
+		result_class = params[:sport] == 'football' ? FootballResult : BaseballResult 
+
+		results = []
+		season_json["results"].each {|result_json|
+			user = User.find_by_name(result_json["owner"])
+			result_data = {
+				team_name: result_json["teamName"],
+				wins: result_json["wins"],
+				losses: result_json['losses'],
+				ties: result_json['ties'],
+				place: result_json['place'],
+				user: user
+			}
+
+			result_data[:points] = result_json['points'] if params[:sport] == 'football'
+
+			results.push(result_class.new(result_data))
+		}
+
+		season_data = {
+			year: params[:year],
+			sport: params[:sport],
+			league_name: season_json['leagueName'],
+			championship_score: season_json['championshipScore'],
+			results: results
+		}
+
+		season = Season.new(season_data)
+		season.save!
+
+		{
+			success:true
+		}.to_json
+	end
 end

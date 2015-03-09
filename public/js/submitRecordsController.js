@@ -147,7 +147,7 @@ angular.module('aepi-fantasy').controller('SubmitRecordsController', function($s
 	}
 
 	function populateUsers() {
-		var Users = $resource('/api/' + sport + '/allusers');
+		var Users = $resource('/api/allusers/' + sport);
 		var results = Users.query(function(response) {
 			for(var c = 0; c < results.length; c++) {
 				userMap[results[c].name] = results[c];

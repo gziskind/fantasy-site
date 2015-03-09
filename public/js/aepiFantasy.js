@@ -49,6 +49,11 @@ angular.module('aepi-fantasy',['ngRoute','ngResource','ipCookie','ui.sortable','
 		templateUrl:'/pages/profile.html'
 	});
 
+	$routeProvider.when('/admin/results',{
+		controller: 'AdminCreateResultsController',
+		templateUrl: '/pages/createResults.html'
+	});
+
 	$routeProvider.when('/admin/results/:sport',{
 		controller: 'AdminResultsController',
 		templateUrl: '/pages/editResults.html'
