@@ -50,7 +50,7 @@
 
       <form class="navbar-form pull-right" style="padding-top:2px;" ng-hide="loginSubmitted">
         <span class="login-failed" ng-show="loginFailed">Login Failed</span>
-        <input class="span2 form-control" type="text" style="height:30px; width:130px" placeholder="Username" ng-model="user.name">
+        <input class="span2 form-control" type="text" style="height:30px; width:130px; padding:5px 12px;" placeholder="Username" ng-model="user.name">
         <input class="span2 form-control" type="password" style="height:30px; width:130px" placeholder="Password" ng-model=" user.password">
         <button type="submit" class="btn btn-sm" style="color:white" ng-click="signIn()">Sign in</button>
       </form>
