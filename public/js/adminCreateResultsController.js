@@ -15,6 +15,10 @@ angular.module('aepi-fantasy').controller('AdminCreateResultsController', functi
 		Season.save($scope.season, function(response) {
 			console.info(response);
 		});
+
+		$scope.season = {
+			results:[]
+		};
 	}
 
 	$scope.addNewTeam = function() {

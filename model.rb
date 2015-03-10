@@ -27,6 +27,19 @@ def production_connect
 	connect 'aepifantasy'
 end
 
+def insert_points(year, points)
+	season = Season.find_by_sport_and_year('football', year)
+
+	season.results.sort_by! {|result|
+		result.place
+	}
+
+	season.results.each_with_index {|result,index|
+		result.points = points[index]
+		result.save!
+	}
+end
+
 def create_roles
 	roles = ['admin','baseball_commish','football_commish','football','baseball'];
 
