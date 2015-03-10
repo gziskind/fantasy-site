@@ -68,7 +68,10 @@ class FantasyServer
 
 		results.sort_by! {|result| result[:place]}
 
-		results.to_json
+		{
+			leagueName: season.league_name,
+			results: results
+		}.to_json
 	end
 
 	post '/api/:sport/results/:year' do
