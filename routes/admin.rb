@@ -55,7 +55,7 @@ class FantasyServer
 			user = User.find_by_name(result_json["owner"])
 			result = Result.find_by_season_id_and_user_id(season._id, user._id);
 
-			result.place = results_json["place"]
+			result.place = result_json["place"]
 			result.save!
 		}
 
