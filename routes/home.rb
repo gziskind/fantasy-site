@@ -55,6 +55,10 @@ class FantasyServer
 		erb :index
 	end
 
+	get '/unauthorized' do
+		erb :unauthorized
+	end
+
 	def get_total_rating(team) 
 		total_rating = 0
 		ratings = Rating.find_all_by_team_name_id(team._id)
