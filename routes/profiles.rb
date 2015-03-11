@@ -28,7 +28,7 @@ class FantasyServer
 		}
 
 		results = Result.find_all_by_user_id(user._id)
-		results.sort_by! {|result| result.season.year}
+		results.sort_by! {|result| [result.season.year, result.season.sport]}
 		results.reverse!
 
 		image_url = user.image_url

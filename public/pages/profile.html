@@ -20,8 +20,8 @@
 	</div>
 	<h2>Trophies</h2>
 	<div class="row">
-		<div class="col-md-2" ng-repeat="trophy in trophies">
-			<img ng-src="img/{{transformPlace(trophy.place)}}-place-transparent.png" style="width:100%"/>
+		<div class="col-md-2"  ng-repeat="trophy in trophies">
+			<img ng-src="img/{{transformPlace(trophy.place)}}-place-transparent.png" style="width:100%; height:155px;"/>
 			<div style="text-align:center;">{{transformPlace(trophy.place)}} Place</div>
 			<div style="text-align:center;">{{capitaliseFirstLetter(trophy.sport)}} {{trophy.year}}</div>
 		</div>
@@ -67,15 +67,16 @@
 				<div class="col-md-6">{{teamName.team_name}}</div>
 				<div class="col-md-1">{{teamName.rating | number:2}}</div>
 			</div>
-		</div>
-		<div ng-if="worstTeamNames.length == 0">
-			NONE
+			<div ng-if="worstTeamNames.length == 0">
+				NONE
+			</div>
 		</div>
 	</div>
 	<h2>Records</h2>
 	<table ng-if="records.length > 0" class="table table-condensed table-hover table-striped">
 		<thead>
 			<tr>
+				<th>Sport</th>
 				<th>Type</th>
 				<th>Record</th>
 				<th>Value</th>
@@ -85,9 +86,13 @@
 		<tbody>
 			<tr ng-repeat="record in records">
 				<td>{{capitaliseFirstLetter(record.sport)}}</td>
+				<td>{{capitaliseFirstLetter(record.type)}}</td>
 				<td>{{record.record}}</td>
 				<td>{{record.value}}</td>
-				<td>{{record.year}}</td>
+				<td>
+					{{record.year}}
+					<span ng-if="record.type == 'career'">N/A</span>
+				</td>
 			</tr>
 		</tbody>
 	</table>
