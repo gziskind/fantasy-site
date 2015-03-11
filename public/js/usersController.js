@@ -14,6 +14,14 @@ angular.module('aepi-fantasy').controller('UsersController', function($scope, $l
 
 
 	// Public Functions
+	$scope.resetPassword = function(user) {
+		user.submitted = true;
+		var Password = $resource('/api/admin/users/'+ user.username + '/passwordreset');
+		Password.save(function(response) {
+			user.confirmed = true;
+		})
+	}
+
 	$scope.confirmNewPasswordClass = function() {
 		if(!$scope.syncedPassword) {
 			return "has-warning"

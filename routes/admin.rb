@@ -128,4 +128,16 @@ class FantasyServer
 
 		users.to_json
 	end
+
+	post '/api/admin/users/:username/passwordreset', :auth => :admin do
+		user = User.find_by_username(params[:username])
+
+		password_hash = Digest::MD5.hexdigest('testing');
+		user.password = password_hash
+		user.save!
+
+		{
+			success:true
+		}.to_json
+	end
 end
