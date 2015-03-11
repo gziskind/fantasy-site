@@ -10,7 +10,7 @@ class FantasyServer
 
 		@users = []
 		users.each {|user|
-			@users.push(user.name)
+			@users.push(user.name) if user.roles.size > 0
 		}
 
 		@users.sort!
