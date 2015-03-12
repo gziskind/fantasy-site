@@ -17,6 +17,8 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 		$scope.loginSubmitted = false;
 	}
 
+	$scope.alerts = populateAlerts();
+
 	// Public functions
 	$scope.isAdmin = function() {
 		var admin = false;
@@ -135,8 +137,46 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 		}
 	}
 
+	$scope.getAlerts = function(alerts) {
+		var currentLevel = $scope.alerts;
+		for(var c = 0; c < alerts.length; c++) {
+			if(currentLevel != null) {
+				currentLevel = currentLevel[alerts[c]];
+			}
+		}
+
+		var count = sumAlertLevel(currentLevel);
+
+		if(count === 0) {
+			count = null;
+		}
+
+		return count;
+	}
 
 	// Private functions
+	function sumAlertLevel(currentLevel) {
+		console.info(currentLevel);
+		if(typeof currentLevel === 'object') {
+			var midSum = 0;
+			for(level in currentLevel) {
+				midSum += sumAlertLevel(currentLevel[level]);
+			}
+			return midSum;
+		} else {
+			return currentLevel;
+		}
+	}
+
+	function populateAlerts() {
+		var Alerts = $resource('/api/alerts');
+		var alerts = Alerts.get(function(response) {
+
+		});
+
+		return alerts;
+	}
+
 	function activeUrlCompare(url) {
 		var extracted_url = extractUrlAfterBang();
 		if(url == extracted_url) {

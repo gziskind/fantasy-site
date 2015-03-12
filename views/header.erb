@@ -39,11 +39,11 @@
       </ul>
       <ul class="nav navbar-nav" ng-show="isAdmin()">
         <li class="dropdown <%= is_admin_active %>">
-          <a class="dropdown-toggle">Admin <b class="caret"></b></a>
+          <a class="dropdown-toggle">Admin <b class="caret"></b><span class="badge pull-right">{{getAlerts(['admin'])}}</span></a>
           <ul class="dropdown-menu">
             <li><a href="/admin/users#/users/current">Users</a></li>
-            <li><a href="/admin/editResults">Results</a></li>
-            <li><a href="/admin/confirmRecords">Records</a></li>
+            <li><a href="/admin/editResults">Results<span class="badge pull-right">{{getAlerts(['admin','results'])}}</span></a></li>
+            <li><a href="/admin/confirmRecords">Records<span class="badge pull-right">{{getAlerts(['admin','records'])}}</span></a></li>
           </ul>
         </li>
       </ul>

@@ -16,8 +16,8 @@
         <div class="row">
           <div class="col-sm-3 col-md-2 sidebar-inverse">
             <ul class="nav">
-              <li ng-class="isAdminBaseballRecords()"><a href="#/admin/records/baseball">Baseball Records</a></li>
-              <li ng-class="isAdminFootballRecords()"><a href="#/admin/records/football">Football Records</a></li>
+              <li ng-class="isAdminBaseballRecords()"><a href="#/admin/records/baseball">Baseball Records<span class="badge pull-right">{{getAlerts(['admin','records','baseball'])}}</span></a></li>
+              <li ng-class="isAdminFootballRecords()"><a href="#/admin/records/football">Football Records<span class="badge pull-right">{{getAlerts(['admin','records','football'])}}</span></a></li>
             </ul>
           </div>
 
