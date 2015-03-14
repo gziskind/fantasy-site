@@ -33,3 +33,7 @@
 .dropdown.active .badge, .dropdown.open .badge {
 	background-color: #aaaaaa;
 }
+
+.dropdown-menu > li > a {
+	white-space:normal;
+}
