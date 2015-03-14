@@ -156,7 +156,6 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 
 	// Private functions
 	function sumAlertLevel(currentLevel) {
-		console.info(currentLevel);
 		if(typeof currentLevel === 'object') {
 			var midSum = 0;
 			for(level in currentLevel) {

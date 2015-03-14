@@ -88,7 +88,7 @@ class FantasyServer
 		{
 			roles: roles,
 			imageUrl: image_url,
-			tagline: 'Something',
+			bio: user.bio,
 			results: results_json,
 			team_names: team_names_json,
 			records: records_json
