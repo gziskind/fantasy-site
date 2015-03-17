@@ -14,9 +14,10 @@ require_relative 'model/response'
 require_relative 'model/answer'
 require_relative 'model/rating'
 
-def connect(database)
-	MongoMapper.connection = Mongo::Connection.new('localhost')
+def connect(database, host = 'localhost', port = 27017, user = nil, password = nil)
+	MongoMapper.connection = Mongo::Connection.new(host, port)
 	MongoMapper.database = database
+	MongoMapper.database.authenticate(user, password) if user && password
 end
 
 def test_connect
