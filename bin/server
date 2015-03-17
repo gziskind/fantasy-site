@@ -8,17 +8,24 @@ options = Trollop::options do
 	opt :port, "Server port", :default => 8080
 	opt :db_host, "Database Host", :default => "localhost", :short => "h"
 	opt :db_port, "Database Port", :default => 27017, :short => "P"
+	opt :db_user, "Database User"
+	opt :db_password, "Database Password"
 end
 
-port = options[:port]
-database = options[:database]
-db_host = options[:db_host]
-db_port = options[:db_port]
+port = ENV["PORT"] || options[:port]
+database = ENV["DATABASE"] ||options[:database]
+db_host = ENV["DB_HOST"] || options[:db_host]
+db_port = ENV["DB_PORT"] || options[:db_port]
+db_user = ENV["DB_USER"] || options[:db_user]
+db_password = ENV["DB_PASSWORD"] || options[:db_password]
+
 
 FantasyServer.set :bind, '0.0.0.0'
 FantasyServer.set :port, port
 FantasyServer.set :database, database
 FantasyServer.set :db_host, db_host
 FantasyServer.set :db_port, db_port
+FantasyServer.set :db_user, db_user
+FantasyServer.set :db_password, db_password
 FantasyServer.start
 
