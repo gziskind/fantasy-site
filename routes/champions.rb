@@ -1,6 +1,7 @@
 class FantasyServer 
 	# Views
 	get '/:sport/champions' do
+		event "/#{params[:sport]}/champions"
 		@header_index = params[:sport]
 		@sport = params[:sport]
 

@@ -3,6 +3,8 @@ class FantasyServer
 	# Views
 	# Home page
 	get '/' do 
+		event '/'
+
 		championship_results  = Result.find_all_by_place(1)
 		last_place_results = Result.find_all_by_place(12)
 		team_names = TeamName.all
@@ -56,6 +58,8 @@ class FantasyServer
 	end
 
 	get '/unauthorized' do
+		event '/unauthorized'
+
 		erb :unauthorized
 	end
 

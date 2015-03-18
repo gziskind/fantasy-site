@@ -55,4 +55,11 @@ module Helpers
 
 		admin
 	end
+
+	def event(event_name, user = 'Anonymous')
+		user = @user.username if @user != nil
+
+		ev = Event.new({username: user, event: event_name, time: Time.now});
+		ev.save!
+	end
 end

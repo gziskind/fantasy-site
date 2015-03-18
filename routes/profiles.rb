@@ -4,6 +4,7 @@ class FantasyServer
 
 	# Views
 	get '/profiles', :auth => :user do 
+		event "/profiles"
 		@header_index = 'profiles';
 
 		users = User.all

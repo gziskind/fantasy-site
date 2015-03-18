@@ -6,6 +6,7 @@ class FantasyServer
 
 		username = login["name"]
 		password = Digest::MD5.hexdigest(login["password"]) if login["password"]
+		event '/api/login', username
 
 		user = User.find_by_username_and_password(username, password);
 		
@@ -26,6 +27,7 @@ class FantasyServer
 	end
 
 	post '/api/changePassword', :auth => :user do
+		event '/api/changePassword'
 		passwordChange = JSON.parse(request.body.read)
 		password_hash = Digest::MD5.hexdigest(passwordChange['currentPassword']);
 		if(password_hash != @user.password) 
