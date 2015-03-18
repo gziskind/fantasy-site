@@ -2,7 +2,7 @@ class FantasyServer
 
 	# Views
 	get '/:sport/records' do
-		event "/#{params[:sport]}/records"
+		event "#{params[:sport].capitalize}Records"
 		@sport = params[:sport];
 		@header_index = @sport;
 

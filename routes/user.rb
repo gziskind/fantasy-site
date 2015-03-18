@@ -7,7 +7,7 @@ class FantasyServer
 
 	# Views
 	get '/user/changePassword', :auth => :user do
-		event "/user/changePassword"
+		event "UserChangePassword"
 		@header_index = 'admin'
 		erb :changePassword
 	end 
