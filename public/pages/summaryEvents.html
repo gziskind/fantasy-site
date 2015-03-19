@@ -1,0 +1,19 @@
+<div>
+	<h1>Summary</h1>
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th>User</th>
+				<th>Total Hits</th>
+				<th ng-repeat="event in eventTypes">{{event}}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="summary in summaries">
+				<td>{{summary.name}}</td>
+				<td>{{summary.hits}}</td>
+				<td ng-repeat="event in eventTypes">{{summary[event]}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

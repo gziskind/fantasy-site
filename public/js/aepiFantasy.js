@@ -64,6 +64,16 @@ angular.module('aepi-fantasy',['ngRoute','ngResource','ipCookie','ui.sortable','
 		templateUrl: '/pages/confirmRecords.html'
 	});
 
+	$routeProvider.when('/admin/events/summary',{
+		controller: 'AdminEventsController',
+		templateUrl: '/pages/summaryEvents.html'
+	});
+
+	$routeProvider.when('/admin/events/live',{
+		controller: 'AdminEventsController',
+		templateUrl: '/pages/liveEvents.html'
+	});
+
 	// $routeProvider.otherwise({
 	// 	redirectTo: '/home'
 	// });

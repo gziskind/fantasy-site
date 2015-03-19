@@ -1,0 +1,19 @@
+<div>
+	<h1>Live</h1>
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th>Time</th>
+				<th>User</th>
+				<th>Event</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="event in events">
+				<td>{{event.time | date:"MM/dd/yy hh:mm:ss"}}</td>
+				<td>{{event.username}}</td>
+				<td>{{event.event}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
