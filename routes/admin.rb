@@ -1,19 +1,16 @@
 class FantasyServer 
 	# Views
 	get '/admin/users', :auth => :admin do
-		event 'AdminUsers'
 		@header_index = 'admin'
 		erb :users
 	end
 
 	get '/admin/editResults', :auth => :admin do
-		event 'AdminEditResults'
 		@header_index = 'admin'
 		erb :adminResults
 	end
 
 	get '/admin/confirmRecords', :auth => :admin do
-		event 'AdminConfirmRecords'
 		@header_index = 'admin'
 		erb :adminRecords
 	end
