@@ -65,7 +65,7 @@ class FantasyServer
 			}
 		}
 
-		all_records = FantasyRecord.all
+		all_records = FantasyRecord.find_all_by_confirmed(true)
 		records = all_records.select {|record|
 			record.record_holders.any? { |record_holder|  
 				record_holder.user == user
