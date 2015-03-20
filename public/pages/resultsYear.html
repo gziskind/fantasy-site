@@ -1,5 +1,10 @@
 <div>
 	<h1>{{year}} - {{leagueName}}</h1>
+	<div class="col-md-9 btn-group" style="margin:20px 0">
+		<!-- Parent scope needed because ng-repeat creates a new scope -->
+        <label class="btn btn-primary" ng-model="selectedStandingsType" btn-radio="'final'">Final</label>
+        <label class="btn btn-primary" ng-model="selectedStandingsType" btn-radio="'regularSeason'">Regular Season</label>
+    </div>
 	<table class="table table-condensed table-hover">
 		<thead>
 			<tr>
