@@ -71,7 +71,8 @@ class FantasyServer
 
 		{
 			leagueName: season.league_name,
-			results: results
+			results: results,
+			isFinal: !season.championship_score.nil?
 		}.to_json
 	end
 

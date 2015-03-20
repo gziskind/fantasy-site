@@ -36,6 +36,7 @@ angular.module('aepi-fantasy').controller('ResultsController', function($scope, 
 
 			$scope.leagueName = value.leagueName;
 			$scope.results = value.results;
+			$scope.isFinal = value.isFinal; 
 		});
 	}
 
