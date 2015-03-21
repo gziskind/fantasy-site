@@ -1,4 +1,4 @@
-source ~/applications/fantasy-site/.env
+. ~/applications/fantasy-site/.env
 
 . $RUBY_ENV
-$FANTASY_HOME/bin/current_standings.rb -h $DB_HOST -P $DB_PORT -u $DB_USER -p $DB_PASSWORD
+$FANTASY_HOME/bin/current_standings.rb -h $DB_HOST -P $DB_PORT -u $DB_USER -p $DB_PASSWORD -U $ESPN_USER -w $ESPN_PASSWORD -b $BASEBALL_ID -f $FOOTBALL_ID
