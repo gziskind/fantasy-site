@@ -1,5 +1,5 @@
-<div>
-	<div class="row">
+<div class="row">
+	<div class="col-md-12 row">
 		<div class="col-md-3">
 			<img ng-src="{{profile.imageUrl}}" style="height:200px; width:200px; border:1">
 			<div class="row" ng-show="currentUser.name == user">
@@ -18,39 +18,41 @@
 	        <label class="btn btn-primary" ng-model="$parent.selectedSport" ng-repeat="sportOption in sportOptions" btn-radio="sportOption">{{capitaliseFirstLetter(sportOption)}}</label>
 	    </div>
 	</div>
-	<h2>Trophies</h2>
-	<div class="row">
-		<div class="col-md-2"  ng-repeat="trophy in trophies">
-			<img ng-src="img/{{transformPlace(trophy.place)}}-place-transparent.png" style="width:100%; height:155px;"/>
+	<h2 class="col-md-12">Trophies</h2>
+	<div class="row col-md-12">
+		<div class="col-md-2 col-xs-6"  ng-repeat="trophy in trophies">
+			<img ng-src="img/{{transformPlace(trophy.place)}}-place-transparent.png" style="width:100%; max-width:130px; height:155px;"/>
 			<div style="text-align:center;">{{transformPlace(trophy.place)}} Place</div>
 			<div style="text-align:center;">{{capitaliseFirstLetter(trophy.sport)}} {{trophy.year}}</div>
 		</div>
 	</div>
-	<div ng-if="trophies.length == 0">
+	<div class="col-md-12" ng-if="trophies.length == 0">
 		NONE
 	</div>
-	<h2>Finishes</h2>
-	<table class="table table-condensed table-hover">
-		<thead>
-			<tr>
-				<th>Year</th>
-				<th>Sport</th>
-				<th>Place</th>
-				<th>Record</th>
-				<th ng-hide="selectedSport == 'baseball'">Points</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="finish in finishes">
-				<td>{{finish.year}}</td>
-				<td>{{capitaliseFirstLetter(finish.sport)}}</td>
-				<td>{{transformPlace(finish.place)}}</td>
-				<td>{{finish.record}}</td>
-				<td ng-hide="selectedSport == 'baseball'">{{finish.points}}</td>
-			</tr>
-		</tbody>
-	</table>
-	<div class="row">
+	<h2 class="col-md-12">Finishes</h2>
+	<div class="col-md-12 table-responsive">
+		<table class="table table-condensed table-hover table-striped">
+			<thead>
+				<tr>
+					<th>Year</th>
+					<th>Sport</th>
+					<th>Place</th>
+					<th>Record</th>
+					<th ng-hide="selectedSport == 'baseball'">Points</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="finish in finishes">
+					<td>{{finish.year}}</td>
+					<td>{{capitaliseFirstLetter(finish.sport)}}</td>
+					<td>{{transformPlace(finish.place)}}</td>
+					<td>{{finish.record}}</td>
+					<td ng-hide="selectedSport == 'baseball'">{{finish.points}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="row col-md-12">
 		<div class="col-md-6">
 			<h3>Best Team Names</h3>
 			<div class="row" ng-repeat="teamName in bestTeamNames">
@@ -72,31 +74,33 @@
 			</div>
 		</div>
 	</div>
-	<h2>Records</h2>
-	<table ng-if="records.length > 0" class="table table-condensed table-hover table-striped">
-		<thead>
-			<tr>
-				<th>Sport</th>
-				<th>Type</th>
-				<th>Record</th>
-				<th>Value</th>
-				<th>Year</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="record in records">
-				<td>{{capitaliseFirstLetter(record.sport)}}</td>
-				<td>{{capitaliseFirstLetter(record.type)}}</td>
-				<td>{{record.record}}</td>
-				<td>{{record.value}}</td>
-				<td>
-					{{record.year}}
-					<span ng-if="record.type == 'career'">N/A</span>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<div ng-if="records.length == 0">
+	<h2 class="col-md-12">Records</h2>
+	<div class="col-md-12 table-responsive">
+		<table ng-if="records.length > 0" class="table table-condensed table-hover table-striped">
+			<thead>
+				<tr>
+					<th>Sport</th>
+					<th>Type</th>
+					<th>Record</th>
+					<th>Value</th>
+					<th>Year</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="record in records">
+					<td>{{capitaliseFirstLetter(record.sport)}}</td>
+					<td>{{capitaliseFirstLetter(record.type)}}</td>
+					<td>{{record.record}}</td>
+					<td>{{record.value}}</td>
+					<td>
+						{{record.year}}
+						<span ng-if="record.type == 'career'">N/A</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="col-md-12" ng-if="records.length == 0">
 		NONE
 	</div>
 </div>

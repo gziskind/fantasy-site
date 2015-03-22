@@ -1,24 +1,28 @@
-<div>
-	<h1>Current {{sport}} Team Names</h1>
-	<table class="table table-condensed table-hover">
-		<thead>
-			<tr>
-				<th>Owner</th>
-				<th>Team Name</th>
-				<th>Rating</th>
-				<th ng-show="currentUser"> My Rating</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="name in names">
-				<td>{{name.owner}}</td>
-				<td>{{name.teamName}}</td>
-				<td ng-show="name.rating">{{name.rating | number:2}}</td>
-				<td ng-hide="name.rating">--</td>
-				<td ng-show="currentUser">
-					<rating ng-model="name.myRating" on-leave="changeRating(name)"></rating>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+<div class="row">
+	<div class="col-md-12">
+		<h1>Current {{sport}} Team Names</h1>
+	</div>
+	<div class="col-md-12 table-responsive">
+		<table class="table table-condensed table-hover">
+			<thead>
+				<tr>
+					<th>Owner</th>
+					<th>Team Name</th>
+					<th>Rating</th>
+					<th ng-show="currentUser"> My Rating</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="name in names">
+					<td>{{name.owner}}</td>
+					<td>{{name.teamName}}</td>
+					<td ng-show="name.rating">{{name.rating | number:2}}</td>
+					<td ng-hide="name.rating">--</td>
+					<td ng-show="currentUser">
+						<rating ng-model="name.myRating" on-leave="changeRating(name)"></rating>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>

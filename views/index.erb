@@ -17,8 +17,8 @@
             <h3>Most Championships</h3>
             <% @championships.each {|championship| %>
               <div class="row">
-                <div class="col-md-6"><%= championship[0] %></div>
-                <div class="col-md-1"><%= championship[1] %></div>
+                <div class="col-md-6 col-xs-6"><%= championship[0] %></div>
+                <div class="col-md-1 col-xs-1"><%= championship[1] %></div>
               </div>
             <% } %>
           </div>
@@ -26,8 +26,8 @@
             <h3>Most Last Place Finishes</h3>
             <% @last_places.each {|last_place| %>
               <div class="row">
-                <div class="col-md-6"><%= last_place[0] %></div>
-                <div class="col-md-1"><%= last_place[1] %></div>
+                <div class="col-md-6 col-xs-6"><%= last_place[0] %></div>
+                <div class="col-md-1 col-xs-1"><%= last_place[1] %></div>
               </div>
             <% } %>
           </div>
@@ -36,30 +36,30 @@
           <div class="col-md-6">
               <h3>Best Team Names</h3>
               <div class="row header">
-                <div class="col-md-5">Team Name</div>
-                <div class="col-md-4">Owner</div>
-                <div class="col-md-1">Rating</div>
+                <div class="col-md-5 col-xs-5">Team Name</div>
+                <div class="col-md-4 col-xs-4">Owner</div>
+                <div class="col-md-1 col-xs-1">Rating</div>
               </div>
               <% index = 0; while index < 5 && index < @team_names.length %>
               <div class="row">
-                <div class="col-md-5"><%= @team_names.reverse[index][:name] %></div>
-                <div class="col-md-4"><%= @team_names.reverse[index][:owner] %></div>
-                <div class="col-md-1"><%= @team_names.reverse[index][:rating] %></div>
+                <div class="col-md-5 col-xs-5"><%= @team_names.reverse[index][:name] %></div>
+                <div class="col-md-4 col-xs-4"><%= @team_names.reverse[index][:owner] %></div>
+                <div class="col-md-1 col-xs-1"><%= @team_names.reverse[index][:rating] %></div>
               </div>
               <% index+=1; end %>
             </div>
             <div class="col-md-6">
               <h3>Worst Team Names</h3>
               <div class="row header">
-                <div class="col-md-5">Team Name</div>
-                <div class="col-md-4">Owner</div>
-                <div class="col-md-1">Rating</div>
+                <div class="col-md-5 col-xs-5">Team Name</div>
+                <div class="col-md-4 col-xs-4">Owner</div>
+                <div class="col-md-1 col-xs-1">Rating</div>
               </div>
               <% index = 0; while index < 5 && index < @team_names.length %>
               <div class="row">
-                <div class="col-md-5"><%= @team_names[index][:name] %></div>
-                <div class="col-md-4"><%= @team_names[index][:owner] %></div>
-                <div class="col-md-1"><%= @team_names[index][:rating] %></div>
+                <div class="col-md-5 col-xs-5"><%= @team_names[index][:name] %></div>
+                <div class="col-md-4 col-xs-4"><%= @team_names[index][:owner] %></div>
+                <div class="col-md-1 col-xs-1"><%= @team_names[index][:rating] %></div>
               </div>
               <% index+=1; end %>
             </div>

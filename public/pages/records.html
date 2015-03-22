@@ -1,26 +1,30 @@
-<div>
-	<h1>{{sport}}<span ng-if="type != 'Current'"> {{type}}</span> Records</h1>
-	<table class="table table-condensed table-hover table-striped">
-		<thead>
-			<tr>
-				<th ng-show="type == 'Current'">Type</th>
-				<th>Record</th>
-				<th>Value</th>
-				<th>Owner(s)</th>
-				<th ng-hide="type == 'Career'">Year</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="record in records | filter:type:compareType">
-				<td ng-show="type == 'Current'">{{record.type | capitalize}}</td>
-				<td>{{record.record}}</td>
-				<td>{{record.value}}</td>
-				<td><span ng-repeat="record_holder in record.record_holders | orderBy:'year'">{{record_holder.name}}<br/></span></td>
-				<td ng-hide="type == 'Career'">
-					<div ng-repeat="record_holder in record.record_holders | orderBy:'year'">{{record_holder.year}}</div>
-					<span ng-if="record.type == 'career'">N/A</span>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+<div class="row">
+	<div class="col-md-12">
+		<h1>{{sport}}<span ng-if="type != 'Current'"> {{type}}</span> Records</h1>
+	</div>
+	<div class="col-md-12 table-responsive">
+		<table class="table table-condensed table-hover table-striped">
+			<thead>
+				<tr>
+					<th ng-show="type == 'Current'">Type</th>
+					<th>Record</th>
+					<th>Value</th>
+					<th>Owner(s)</th>
+					<th ng-hide="type == 'Career'">Year</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="record in records | filter:type:compareType">
+					<td ng-show="type == 'Current'">{{record.type | capitalize}}</td>
+					<td>{{record.record}}</td>
+					<td>{{record.value}}</td>
+					<td><span ng-repeat="record_holder in record.record_holders | orderBy:'year'">{{record_holder.name}}<br/></span></td>
+					<td ng-hide="type == 'Career'">
+						<div ng-repeat="record_holder in record.record_holders | orderBy:'year'">{{record_holder.year}}</div>
+						<span ng-if="record.type == 'career'">N/A</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
