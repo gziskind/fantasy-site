@@ -1,22 +1,24 @@
 <div class="row">
 	<div class="col-md-12 row">
-		<div class="col-md-3">
-			<img ng-src="{{profile.imageUrl}}" style="height:200px; width:200px; border:1">
-			<div class="row" ng-show="currentUser.name == user">
-				<a class="col-md-6" ng-click="editImage()">Edit</a>
-				<a class="col-md-6" ng-click="removeImage()">Remove </a>
+		<div class="col-lg-3 col-md-4 col-sm-12 row-fluid">
+			<div class="col-md-12">
+				<img ng-src="{{profile.imageUrl}}" style="height:200px; width:200px; border:1">
+				<div class="row" ng-show="currentUser.name == user">
+					<a class="col-md-6" ng-click="editImage()">Edit</a>
+					<a class="col-md-6" ng-click="removeImage()">Remove </a>
+				</div>
+			</div>
+			<div class="col-md-12 btn-group" style="margin:20px 0">
+				<!-- Parent scope needed because ng-repeat creates a new scope -->
+		        <label class="btn btn-primary btn-sm" ng-model="$parent.selectedSport" ng-repeat="sportOption in sportOptions" btn-radio="sportOption">{{capitaliseFirstLetter(sportOption)}}</label>
+		    </div>
+		</div>
+		<div class="col-lg-9 col-md-8 col-sm-12 row">
+			<h1 class="col-md-12">{{user}}</h1>
+			<div class="col-md-12" style="font-size: 12px;">
+				{{profile.bio}}
 			</div>
 		</div>
-		<div class="col-md-9">
-			<h1>{{user}}</h1>
-		</div>
-		<div class="col-md-9" style="margin:20px 0;">
-			{{profile.bio}}
-		</div>
-		<div class="col-md-9 btn-group" style="margin:20px 0">
-			<!-- Parent scope needed because ng-repeat creates a new scope -->
-	        <label class="btn btn-primary" ng-model="$parent.selectedSport" ng-repeat="sportOption in sportOptions" btn-radio="sportOption">{{capitaliseFirstLetter(sportOption)}}</label>
-	    </div>
 	</div>
 	<h2 class="col-md-12">Trophies</h2>
 	<div class="row col-md-12">
