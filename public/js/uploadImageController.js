@@ -19,7 +19,7 @@ angular.module('aepi-fantasy').controller('UploadImageController', function($sco
 			if(response.success) {
 				var imageLink = response.data.link;
 
-				$modalInstance.close(imageLink);
+				$modalInstance.close(imageLink.replace(/https?:/,""));
 			} else {
                 $scope.loadingMessage = "Upload Failed";
                 $scope.sending = false;
