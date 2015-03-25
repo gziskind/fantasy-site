@@ -50,6 +50,7 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 				};
 
 				ipCookie(CURRENT_USER, $scope.currentUser, {path: '/'})
+				window.location.reload()
 			}
 		})
 	}

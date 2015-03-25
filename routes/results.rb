@@ -21,7 +21,7 @@ class FantasyServer
 	get '/api/:sport/results' do
 		seasons = Season.find_all_by_sport(params[:sport]);
 		results = seasons.map {|season|
-			{
+			season_result = {
 				year: season.year,
 				sport: season.sport,
 				league_name: season.league_name,
@@ -42,6 +42,10 @@ class FantasyServer
 					return_data
 				}
 			}
+
+			season_result[:league_name] = season.league_name if !@user.nil?
+
+			season_result
 		}
 
 		results.sort_by! {|result| result[:year]}
@@ -71,11 +75,14 @@ class FantasyServer
 
 		results.sort_by! {|result| result[:place]}
 
-		{
-			leagueName: season.league_name,
+		json_return = {
 			results: results,
 			isFinal: !season.championship_score.nil?
-		}.to_json
+		}
+
+		json_return[:leagueName] = season.league_name if !@user.nil?
+
+		json_return.to_json
 	end
 
 	post '/api/:sport/results/:year' do
