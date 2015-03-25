@@ -18,7 +18,9 @@
 				<thead>
 					<tr>
 						<th>Year</th>
-						<th>Team Name</th>
+						<% if @user != nil %>
+							<th>Team Name</th>
+						<% end %>
 						<th>Owner</th>
 						<th>Record</th>
 						<th>Result</th>
@@ -29,7 +31,9 @@
 					<% @champions.each {|champion| %>
 						<tr>
 							<td><%= champion[:year] %></td>
-							<td><%= champion[:team_name] %></td>
+							<% if @user != nil %>
+								<td><%= champion[:team_name] %></td>
+							<% end %>
 							<td><%= champion[:winner] %></td>
 							<td><%= champion[:record] %></td>
 							<td><%= champion[:result] %></td>

@@ -20,15 +20,17 @@ class FantasyServer
 			}
 			runner_up = season.results[runner_up_index]
 
-			@champions.push({
+			champion = {
 				year: season.year,
-				team_name: winner.team_name,
 				winner: winner.user.name,
 				record: winner.record,
 				result: season.championship_score,
 				runner_up: runner_up.user.name
-			}) if !season.championship_score.nil?
+			}
 
+			champion[:team_name] = winner.team_name if @user != nil
+
+			@champions.push(champion) if !season.championship_score.nil?
 		}
 
 		@champions.sort_by! {|champion| champion[:year]}

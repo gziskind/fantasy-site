@@ -1,7 +1,7 @@
 class FantasyServer 
 
 	# Views
-	get '/:sport/names' do 
+	get '/:sport/names', :auth => :user do 
 		event "#{params[:sport].capitalize}Names"
 		@sport = params[:sport];
 		@header_index = @sport;
@@ -23,7 +23,7 @@ class FantasyServer
 
 
 	# API Calls
-	get '/api/:sport/names' do
+	get '/api/:sport/names', :auth => :user do
 		users = User.all
 
 		team_names = []
@@ -64,7 +64,7 @@ class FantasyServer
 		team_names.to_json
 	end
 
-	get '/api/:sport/names/:user' do
+	get '/api/:sport/names/:user', :auth => :user do
 		user = User.find_by_name(params[:user]);
 		names = TeamName.find_all_by_sport_and_owner_id(params[:sport], user._id);
 

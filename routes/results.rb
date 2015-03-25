@@ -28,13 +28,14 @@ class FantasyServer
 				championship_score: season.championship_score,
 				results: season.results.map {|result|
 					return_data = {
-						name: result.team_name,
 						owner: result.user.name,
 						wins: result.wins,
 						losses: result.losses,
 						ties: result.ties,
 						place: result.place
 					}
+
+					return_data[:name] = result.team_name if !@user.nil?
 
 					return_data[:points] = result.points if params[:sport] == 'football'
 
@@ -54,13 +55,14 @@ class FantasyServer
 
 		results = season.results.map {|result|
 			return_data = {
-				name: result.team_name,
 				owner: result.user.name,
 				wins: result.wins,
 				losses: result.losses,
 				ties: result.ties,
 				place: result.place
 			}
+
+			return_data[:name] = result.team_name if !@user.nil?
 
 			return_data[:points] = result.points if params[:sport] == 'football'
 
