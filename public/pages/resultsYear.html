@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-md-12">
-		<h1>{{year}} - {{leagueName}}</h1>
+		<h1>{{year}} <span ng-show="currentUser">- {{leagueName}}</span></h1>
 	</div>
 	<div class="col-md-9 btn-group" style="margin:20px 0" ng-show="isFinal">
 		<!-- Parent scope needed because ng-repeat creates a new scope -->
