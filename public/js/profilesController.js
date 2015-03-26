@@ -38,10 +38,12 @@ angular.module('aepi-fantasy').controller('ProfilesController', function($scope,
 		});
 
 		editImageModal.result.then(function(url) {
-			$scope.profile.imageUrl = url;
+			if(url) {
+				$scope.profile.imageUrl = url;
 
-			var ImageUrl = $resource("/api/profiles/:user/image", {user:$scope.user});
-			ImageUrl.save({imageUrl:url});
+				var ImageUrl = $resource("/api/profiles/:user/image", {user:$scope.user});
+				ImageUrl.save({imageUrl:url});
+			}
 		})
 	}
 
