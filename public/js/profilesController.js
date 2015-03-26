@@ -143,8 +143,20 @@ angular.module('aepi-fantasy').controller('ProfilesController', function($scope,
 			}
 		}
 
-		$scope.bestTeamNames = bestTeamNames;
-		$scope.worstTeamNames = worstTeamNames;
+		$scope.bestTeamNames = filterTeamNames(bestTeamNames, false, 5);
+		$scope.worstTeamNames = filterTeamNames(worstTeamNames, true, 5);
+	}
+
+	function filterTeamNames(teams, reverse, size) {
+		teams.sort(function(team1, team2) {
+			if(team1.rating < team2.rating) {
+				return reverse ? -1 : 1;
+			} else {
+				return reverse ? 1 : -1;
+			}
+		});
+
+		return teams.slice(0, size);
 	}
 
 	function setRecords() {
