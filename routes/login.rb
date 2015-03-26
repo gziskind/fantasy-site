@@ -4,7 +4,7 @@ class FantasyServer
 	post '/api/login' do
 		login = JSON.parse(request.body.read)
 
-		username = login["name"]
+		username = login["name"].downcase
 		password = Digest::MD5.hexdigest(login["password"]) if login["password"]
 		event 'Login', username
 
