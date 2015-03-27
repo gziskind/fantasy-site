@@ -47,7 +47,7 @@ class FantasyServer
 				@team_names.push({
 					name: team_name.name,
 					owner: team_name.owner.name,
-					rating: get_total_rating(team_name)
+					rating: get_total_rating(team_name).round(2)
 				})
 			end
 		}
