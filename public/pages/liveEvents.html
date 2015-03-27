@@ -1,5 +1,9 @@
 <div>
-	<h1>Live</h1>
+	<h1>
+		Live 
+		<span class="glyphicon glyphicon-refresh pull-right" aria-hidden="true" style="font-size: 25px; margin:10px" ng-click="refreshLive()" ng-hide="refreshLoading"></span>
+		<img class="pull-right" style="margin-top:16px; margin-right:16px;" ng-show="refreshLoading" src="/img/small-loader.gif"/>
+	</h1>
 	<table class="table table-condensed table-hover">
 		<thead>
 			<tr>
@@ -9,7 +13,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="event in events">
+			<tr ng-repeat="event in events" ng-class="isNewEvent(event)">
 				<td>{{event.time | date:"MM/dd/yy hh:mm:ss"}}</td>
 				<td>{{event.username}}</td>
 				<td>{{event.event}}</td>

@@ -11,6 +11,20 @@ angular.module('aepi-fantasy').controller('AdminEventsController', function($sco
 	// Private Functions
 
 	// Public Functions
+	$scope.refreshLive = function() {
+		$scope.refreshLoading = true;
+		updateLiveEvents(function() {
+			$scope.refreshLoading = false
+		});
+	}
+
+	$scope.isNewEvent = function(user) {
+		if(user.newEvent) {
+			return 'new-event';
+		} else {
+			return '';
+		}
+	}
 
 	// Private Functions
 
@@ -22,10 +36,28 @@ angular.module('aepi-fantasy').controller('AdminEventsController', function($sco
 		});
 	}
 
-	function updateLiveEvents() {
+	function updateLiveEvents(callback) {
 		var Live = $resource('/api/events/live/1');
 		var results = Live.get(function() {
+			if($scope.events) {
+				setNewEventsAfterTime(results.events, $scope.events[0].time);
+			}
+
 			$scope.events = results.events;
+
+			if(callback) {
+				callback();
+			}
 		});
+	}
+
+	function setNewEventsAfterTime(newEvents, time) {
+		for(var c = 0; c < newEvents.length; c++) {
+			if(newEvents[c].time > time) {
+				newEvents[c].newEvent = true;
+			} else {
+				break;
+			}
+		}
 	}
 });

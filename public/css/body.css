@@ -37,3 +37,7 @@
 .dropdown-menu > li > a {
 	white-space:normal;
 }
+
+.new-event {
+	background-color: #6E3338;
+}
