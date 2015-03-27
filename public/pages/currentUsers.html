@@ -8,6 +8,7 @@
 				<th>Unique Name</th>
 				<th>Roles</th>
 				<th>Password</th>
+				<th>Delete</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -20,6 +21,11 @@
 					<button ng-hide="user.submitted" type="submit" class="btn btn-primary btn-xs" ng-click="resetPassword(user)">Reset</button>
 					<img style="position:relative; left:20px;" ng-show="user.submitted && !user.confirmed" src="/img/small-loader.gif"/>
 					<span ng-show="user.confirmed">Password Reset.</span>
+				</td>
+				<td>
+					<button ng-hide="user.roles.length > 0 || user.deleteSubmitted" type="submit" class="btn btn-danger btn-xs" ng-click="deleteUser(user)">Delete</button>
+					<img style="position:relative; left:20px;" ng-show="user.deleteSubmitted && !user.deleteConfirmed" src="/img/small-loader.gif"/>
+					<span ng-show="user.deleteConfirmed">Deleted.</span>
 				</td>
 			</tr>
 		</tbody>

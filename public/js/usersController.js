@@ -14,6 +14,18 @@ angular.module('aepi-fantasy').controller('UsersController', function($scope, $l
 
 
 	// Public Functions
+	$scope.deleteUser = function(user) {
+		user.deleteSubmitted = true;
+		var User = $resource('/api/admin/users/' + user.username);
+		User.remove(function(response) {
+			if(response.success) {
+				user.deleteConfirmed = true;
+			} else {
+				user.deleteSubmitted = false;
+			}
+		})
+	}
+
 	$scope.resetPassword = function(user) {
 		user.submitted = true;
 		var Password = $resource('/api/admin/users/'+ user.username + '/passwordreset');

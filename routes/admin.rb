@@ -140,4 +140,18 @@ class FantasyServer
 			success:true
 		}.to_json
 	end
+
+	delete '/api/admin/users/:username', :auth => :admin do
+		user = User.find_by_username(params[:username])
+
+		success = false
+		if user.roles.length == 0
+			user.destroy
+			success = true
+		end
+
+		{
+			success: success
+		}.to_json
+	end
 end
