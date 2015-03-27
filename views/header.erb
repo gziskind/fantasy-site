@@ -57,9 +57,9 @@
       </form>
       <ul class="nav navbar-nav pull-right" ng-show="loginSubmitted">
         <li ng-show="currentUser">
-          <a class="dropdown-toggle" data-toggle="dropdown">Logged in as: {{currentUser.username}}</a>
+          <a class="dropdown-toggle" data-toggle="dropdown">Logged in as: {{currentUser.username}} <span class="badge pull-right">{{getAlerts(['user'])}}</span></a>
           <ul class="dropdown-menu">
-            <li><a href="/user/changePassword">Change Password</a><li>
+            <li><a href="/user/changePassword" style="padding-right:0">Change Password<span class="badge">{{getAlerts(['user','changePassword'])}}</span></a><li>
             <li><a ng-click="logout()">Logout</a></li>
           </ul>
         </li>
