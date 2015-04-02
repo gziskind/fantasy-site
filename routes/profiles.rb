@@ -47,7 +47,8 @@ class FantasyServer
 				sport: sport,
 				year: result.season.year,
 				place: result.place,
-				record: "#{result.wins}-#{result.losses}-#{result.ties}"
+				record: "#{result.wins}-#{result.losses}-#{result.ties}",
+				finalized: result.season.championship_score.nil? ? false : true
 			}
 
 			json[:points] = result.points if sport == 'football'
