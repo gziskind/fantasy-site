@@ -12,6 +12,8 @@ class FantasyRecord
 	many :record_holders
 
 	belongs_to :submitted_by, :class_name => 'User'
+
+	timestamps!
 end
 
 class RecordHolder
