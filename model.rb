@@ -14,6 +14,7 @@ require_relative 'model/response'
 require_relative 'model/answer'
 require_relative 'model/rating'
 require_relative 'model/event'
+require_relative 'model/podcast'
 
 def connect(database, host = 'localhost', port = 27017, user = nil, password = nil)
 	MongoMapper.connection = Mongo::Connection.new(host, port)

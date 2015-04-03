@@ -11,7 +11,8 @@ class FantasyServer
 			},
 			user: {
 				changePassword: need_to_change_password
-			}
+			},
+			podcenter: new_podcasts
 		}.to_json
 	end
 
@@ -23,6 +24,11 @@ class FantasyServer
 		if !@user.nil? && @user.password == Digest::MD5.hexdigest('testing')
 			1
 		end
+	end
+
+	def new_podcasts
+		podcasts = Podcast.all
+		podcasts.size
 	end
 
 end

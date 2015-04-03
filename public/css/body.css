@@ -30,7 +30,7 @@
 	margin: 0 5px;
 }
 
-.dropdown.active .badge, .dropdown.open .badge {
+.dropdown.active .badge, .dropdown.open .badge, .navbar-nav .active .badge {
 	background-color: #aaaaaa;
 }
 

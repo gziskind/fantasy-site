@@ -10,6 +10,7 @@ options = Trollop::options do
 	opt :db_port, "Database Port", :default => 27017, :short => "P"
 	opt :db_user, "Database User", :short => "u"
 	opt :db_password, "Database Password"
+	opt :dropbox_token, "Dropbox Token", :short => 't', :type => :string
 end
 
 port = ENV["PORT"] || options[:port]
@@ -18,6 +19,7 @@ db_host = ENV["DB_HOST"] || options[:db_host]
 db_port = ENV["DB_PORT"] || options[:db_port]
 db_user = ENV["DB_USER"] || options[:db_user]
 db_password = ENV["DB_PASSWORD"] || options[:db_password]
+dropbox_token = ENV['DROPBOX_TOKEN'] || options[:dropbox_token]
 
 
 FantasyServer.set :bind, '0.0.0.0'
@@ -27,5 +29,6 @@ FantasyServer.set :db_host, db_host
 FantasyServer.set :db_port, db_port
 FantasyServer.set :db_user, db_user
 FantasyServer.set :db_password, db_password
+FantasyServer.set :dropbox_token, dropbox_token
 FantasyServer.start
 
