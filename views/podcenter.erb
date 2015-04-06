@@ -2,6 +2,8 @@
 <html lang="en">
   <head>
     <%= erb :head %>
+
+    <script src="/js/podcenterController.js"></script>
   </head>
 
   <body ng-app="aepi-fantasy" ng-controller="HomeController" ng-cloak>
@@ -10,33 +12,37 @@
       <!-- Static navbar -->
       <%= erb :header %>
       
-        <div class="container-fluid">
-			<h1>AEPiFantasy Podcenter</h1>
-			<br/>
+      <div class="container-fluid" ng-controller="PodcenterController">
+  			<h1>
+          AEPi Fantasy Podcenter
+          <button class="btn btn-success pull-right" ng-click="addPodcast()">Add New Podcast</button>
+        </h1>
+        <br/>
 
-      <div class="col-md-offset-1 col-lg-10 col-xs-offset-0 col-xs-12">
-        <table class="table table-condensed table-hover">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Podcast Name</th>
-              <th>Download</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @podcasts.each {|podcast| %>
+
+        <div class="col-md-offset-1 col-lg-10 col-xs-offset-0 col-xs-12">
+          <table class="table table-condensed table-hover">
+            <thead>
               <tr>
-                <td><%= podcast[:created_at].strftime("%d/%m/%Y") %></td>
-                <td><%= podcast[:name] %></td>
-                <td><a href="<%= podcast[:url] %>" target="_blank">Click Here</a></td>
+                <th>Date</th>
+                <th>Podcast Name</th>
+                <th>Download</th>
               </tr>
-            <% } %>
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              <% @podcasts.each {|podcast| %>
+                <tr>
+                  <td><%= podcast[:created_at].strftime("%d/%m/%Y") %></td>
+                  <td><%= podcast[:name] %></td>
+                  <td><a href="<%= podcast[:url] %>" target="_blank">Click Here</a></td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
 
-			
-		</div>
+  			
+  		</div>
 	</div>
 
 

@@ -25,13 +25,17 @@ class FantasyServer
 		file = params['file'][:tempfile]
 		filename = params['file'][:filename]
 
-		name = "/podcasts/#{filename}"
+		puts params
+
+		realname = params['name'];
+
+		name = "/podcasts/#{realname}"
 
 		client.put_file name, file
 		url = client.media name
 
 		podcast = Podcast.new({
-			name: filename,
+			name: realname,
 			url: url["url"]
 		})
 
