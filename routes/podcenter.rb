@@ -18,18 +18,16 @@ class FantasyServer
 
 
 	# API Calls
-	post '/api/podcenter' do
+	post '/api/podcenter', :auth => :admin do
 		token = settings.dropbox_token
 		client = DropboxClient.new(token)
 
 		file = params['file'][:tempfile]
 		filename = params['file'][:filename]
 
-		puts params
-
 		realname = params['name'];
 
-		name = "/podcasts/#{realname}"
+		name = "/podcasts/#{filename}"
 
 		client.put_file name, file
 		url = client.media name

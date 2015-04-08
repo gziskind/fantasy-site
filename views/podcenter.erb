@@ -15,7 +15,7 @@
       <div class="container-fluid" ng-controller="PodcenterController">
   			<h1>
           AEPi Fantasy Podcenter
-          <button class="btn btn-success pull-right" ng-click="addPodcast()">Add New Podcast</button>
+          <button ng-show="<%= is_admin? %>" class="btn btn-success pull-right" ng-click="addPodcast()">Add New Podcast</button>
         </h1>
         <br/>
 
@@ -32,7 +32,7 @@
             <tbody>
               <% @podcasts.each {|podcast| %>
                 <tr>
-                  <td><%= podcast[:created_at].strftime("%d/%m/%Y") %></td>
+                  <td><%= podcast[:created_at].strftime("%m/%d/%Y") %></td>
                   <td><%= podcast[:name] %></td>
                   <td><a href="<%= podcast[:url] %>" target="_blank">Click Here</a></td>
                 </tr>

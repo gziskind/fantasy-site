@@ -28,7 +28,13 @@ class FantasyServer
 
 	def new_podcasts
 		podcasts = Podcast.all
-		podcasts.size
+		recent = 0
+
+		podcasts.each {|podcast|
+			recent +=1 if podcast.created_at + 5.day > Time.now
+		}
+
+		recent
 	end
 
 end
