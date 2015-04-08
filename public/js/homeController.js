@@ -50,7 +50,12 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 				};
 
 				ipCookie(CURRENT_USER, $scope.currentUser, {path: '/'})
-				window.location.reload()
+				var path = getQueryVariable('redirect');
+				var hash = document.location.hash;
+
+				if(path) {
+					window.location = path + hash;
+				}
 			}
 		})
 	}
@@ -196,5 +201,17 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 
 	function extractUrlAfterBang() {
 		return $location.url().substr(1).replace(/%20/g,' ');
+	}
+
+	
+	function getQueryVariable(variable) {
+	    var query = window.location.search.substring(1);
+	    var vars = query.split('&');
+	    for (var i = 0; i < vars.length; i++) {
+	        var pair = vars[i].split('=');
+	        if (decodeURIComponent(pair[0]) == variable) {
+	            return decodeURIComponent(pair[1]);
+	        }
+	    }
 	}
 })

@@ -11,7 +11,7 @@ class FantasyServer < Sinatra::Base
 	register do
 		def auth(type) 
 			condition do
-				redirect '/unauthorized' unless send("is_#{type}?")
+				redirect "/unauthorized?redirect=#{request.fullpath}" unless send("is_#{type}?")
 			end
 		end
 	end
