@@ -31,6 +31,14 @@ module Helpers
 		end
 	end
 
+	def is_podcenter_active
+		if @header_index == 'podcenter'
+			return 'active'
+		else
+			return ''
+		end
+	end
+
 	def current_year(sport)
 		seasons = Season.find_all_by_sport(sport);
 		seasons = seasons.map {|season|

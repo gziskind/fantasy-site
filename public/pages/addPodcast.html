@@ -1,0 +1,26 @@
+<div style="margin:40px;">
+	<h3>Upload Podcast</h2>
+	<form class="form-horizontal" role="form">
+	  <div class="form-group">
+	    <label for="name" class="col-lg-3 control-label">Podcast Name</label>
+	    <div class="col-lg-7">
+	      <input type="text" class="form-control" id="name" ng-model="podcast.name"/>
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <label for="file" class="col-lg-3 control-label">Podcast</label>
+	    <div class="col-lg-7">
+	      <input type="file" style="color:white;" id="file" audio-file="audioFile"/>
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <div class="col-lg-offset-2 col-lg-2">
+	      <button type="submit" class="btn btn-default" ng-click="uploadPodcast()">Submit</button>
+	    </div>
+	    <div class="col-lg-4">
+			<span class="password-message">{{podcastMessage}}</span>
+		</div>
+	  </div>
+	</form>
+
+</div>

@@ -37,6 +37,11 @@
           <a href="/profiles">Profiles</a>
         </li>
       </ul>
+      <ul class="nav navbar-nav" ng-show="currentUser">
+        <li class="<%= is_podcenter_active %>">
+          <a href="/podcenter">Podcenter<span class="badge pull-right">{{getAlerts(['podcenter'])}}</span></a>
+        </li>
+      </ul>
       <ul class="nav navbar-nav" ng-show="isAdmin()">
         <li class="dropdown <%= is_admin_active %>">
           <a class="dropdown-toggle">Admin <b class="caret"></b><span class="badge pull-right">{{getAlerts(['admin'])}}</span></a>
