@@ -55,6 +55,8 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 
 				if(path) {
 					window.location = path + hash;
+				} else {
+					window.location.reload()
 				}
 			}
 		})
