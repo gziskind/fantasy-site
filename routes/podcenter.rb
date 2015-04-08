@@ -3,6 +3,8 @@ require 'dropbox_sdk'
 class FantasyServer 
 	# Views
 	get '/podcenter', :auth => :user do
+		event "Podcenter"
+
 		@header_index = 'podcenter'
 
 		podcasts = Podcast.all
