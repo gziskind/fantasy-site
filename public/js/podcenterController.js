@@ -35,6 +35,13 @@ angular.module('aepi-fantasy').controller('PodcenterController', function($scope
 		})
 	}
 
+	$scope.openPodcast = function(name) {
+		var Podcast = $resource('/api/podcenter/' + name);
+		Podcast.get(function(response) {
+			window.open(response.url);
+		});
+	}
+
 	// Watches
 
 

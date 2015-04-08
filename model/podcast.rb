@@ -4,7 +4,7 @@ class Podcast
 	include MongoMapper::Document
 
 	key :name, String
-	key :url, String
+	key :path, String
 
 	many :users
 

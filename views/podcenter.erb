@@ -34,7 +34,7 @@
                 <tr>
                   <td><%= podcast[:created_at].strftime("%m/%d/%Y") %></td>
                   <td><%= podcast[:name] %></td>
-                  <td><a href="<%= podcast[:url] %>" target="_blank">Click Here</a></td>
+                  <td><a ng-click="openPodcast('<%= podcast[:name] %>')">Click Here</a></td>
                 </tr>
               <% } %>
             </tbody>
