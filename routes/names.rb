@@ -31,15 +31,13 @@ class FantasyServer
 		users.each{|user|
 			names = TeamName.find_all_by_sport_and_owner_id(params[:sport], user._id)
 			if names.length > 0
-				names.sort_by! { |name| 
-					if name.year.nil?
-						name.created_at
-					else
-						Time.new(name.year)
-					end
+				names.sort! { |name1, name2| 
+					time1 = get_team_name_time name1
+					time2 = get_team_name_time name2
+
+					time2 <=> time1
 				}
 
-				names.reverse!
 				recent_name = names[0]
 
 				total_rating = get_total_rating(recent_name)
@@ -165,5 +163,17 @@ class FantasyServer
 		end
 
 		total_rating
+	end
+
+	def get_team_name_time(name)
+		if(name.created_at == name.updated_at)
+			if(name.year.nil?)
+				time1 = name.created_at
+			else
+				time1 = Time.new(name.year)
+			end
+		else
+			time1 = name.updated_at
+		end
 	end
 end

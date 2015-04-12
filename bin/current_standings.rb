@@ -235,6 +235,7 @@ def save_team_names(info, sport)
 			puts "Could not find owner [#{team[:owner]}]"
 		else
 			puts "Team name [#{team[:team_name]}] already in database"
+			current_team_name.save!
 		end
 	}
 end
