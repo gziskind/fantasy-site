@@ -14,16 +14,27 @@ angular.module('aepi-fantasy').controller('PodcenterController', function($scope
 				$scope.podcastMessage = '';
 
 				$scope.uploadPodcast = function() {
-					$scope.podcastMessage = 'Uploading';
-					audioUpload.uploadFileToUrl($scope.audioFile, $scope.podcast.name, '/api/podcenter', function(response) {
-						$scope.podcastMessage = 'Complete';
-						$modalInstance.close({
-							url: response.url,
-							name: $scope.name
+					if(!$scope.podcast.name) {
+						$scope.podcastMessage = 'Name Required'
+					} else if(!$scope.audioFile) {
+						$scope.podcastMessage = 'Podcast File Required';
+					} else {
+						$scope.podcastMessage = 'Uploading';
+						audioUpload.uploadFileToUrl($scope.audioFile, $scope.podcast.name, '/api/podcenter', function(response) {
+							$scope.podcastMessage = 'Complete';
+							$modalInstance.close({
+								url: response.url,
+								name: $scope.name
+							});
+						}, function(response) {
+							$scope.podcastMessage = 'Upload Failed';
 						});
-					}, function(response) {
-						$scope.podcastMessage = 'Upload Failed';
-					});
+					}
+
+				}
+
+				$scope.cancel = function() {
+					$modalInstance.close();
 				}
 			}
 		});
