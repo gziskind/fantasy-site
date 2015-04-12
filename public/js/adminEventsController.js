@@ -3,6 +3,8 @@ angular.module('aepi-fantasy').controller('AdminEventsController', function($sco
 	// Private Variables
 
 	// Public variables
+	$scope.displayedEvents = []
+
 	updateEvents();
 	updateLiveEvents();
 
@@ -11,6 +13,18 @@ angular.module('aepi-fantasy').controller('AdminEventsController', function($sco
 	// Private Functions
 
 	// Public Functions
+	$scope.checkAll = function() {
+		if($scope.displayedEvents.length < $scope.eventTypes.length) {
+			for(var c = 0; c < $scope.eventTypes.length; c++) {
+				if($scope.displayedEvents.indexOf($scope.eventTypes[c]) == -1) {
+					$scope.displayedEvents.push($scope.eventTypes[c]);
+				}
+			}
+		} else {
+			$scope.displayedEvents.length = 0;
+		}
+	}
+
 	$scope.refreshLive = function() {
 		$scope.refreshLoading = true;
 		updateLiveEvents(function() {

@@ -1,18 +1,26 @@
 <div>
-	<h1>Summary</h1>
+	<h1>Summary
+		<button type="button" class="btn btn-default btn-xs" ng-click="checkAll()">Check all</button> 
+	</h1>
+	<div class="row">
+		<label class="col-lg-3" ng-repeat="event in eventTypes">
+			<input type="checkbox" checklist-model="displayedEvents" checklist-value="event" style="margin-right:5px;">{{event}}
+		</label>
+	</div>
+	<br/>
 	<table class="table table-condensed table-hover">
 		<thead>
 			<tr>
 				<th>User</th>
 				<th>Total Hits</th>
-				<th ng-repeat="event in eventTypes">{{event}}</th>
+				<th ng-repeat="event in displayedEvents">{{event}}</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="summary in summaries">
 				<td>{{summary.name}}</td>
 				<td>{{summary.hits}}</td>
-				<td ng-repeat="event in eventTypes">{{summary[event]}}</td>
+				<td ng-repeat="event in displayedEvents">{{summary[event]}}</td>
 			</tr>
 		</tbody>
 	</table>
