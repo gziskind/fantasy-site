@@ -101,7 +101,7 @@ angular.module('aepi-fantasy').controller('ProfilesController', function($scope,
 		var results = $scope.profile.results;
 
 		for(var c = 0; c < results.length; c++) {
-			if(isSportSelected(results[c].sport)) {
+			if(isSportSelected(results[c].sport) && results[c].finalized) {
 				finishes.push(results[c]);
 				
 				if(results[c].sport == 'baseball') {
