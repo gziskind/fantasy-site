@@ -29,10 +29,14 @@ angular.module('aepi-fantasy').controller('ResultsController', function($scope, 
 	function updateResults(newValue, oldValue) {
 		var sport = $scope.$parent.getSportType()
 		var Season = $resource('/api/' + sport + '/results/:year')
+		console.info("Here");
 		var value = Season.get({year: newValue}, function(){
-			if(value.length > 0) {
-				firstPlaceNumber = value[0].wins - value[0].losses
+			if(value.results.length > 0) {
+				firstPlaceNumber = value.results[0].wins - value.results[0].losses
+				console.info(value);
 			}
+			console.info(value.length);
+			console.info(value);
 
 			$scope.leagueName = value.leagueName;
 			$scope.results = value.results;
