@@ -4,11 +4,14 @@ angular.module('aepi-fantasy').controller('AdminEventsController', function($sco
 
 	// Public variables
 	$scope.displayedEvents = []
+	$scope.currentPage = 1;
+	$scope.totalEvents = 0;
+	$scope.numPages = 2;
 
 	updateEvents();
-	updateLiveEvents();
 
 	// Watches
+	$scope.$watch('currentPage', setCurrentPage);
 
 	// Private Functions
 
@@ -27,7 +30,7 @@ angular.module('aepi-fantasy').controller('AdminEventsController', function($sco
 
 	$scope.refreshLive = function() {
 		$scope.refreshLoading = true;
-		updateLiveEvents(function() {
+		updateLiveEvents($scope.currentPage, function() {
 			$scope.refreshLoading = false
 		});
 	}
@@ -41,6 +44,9 @@ angular.module('aepi-fantasy').controller('AdminEventsController', function($sco
 	}
 
 	// Private Functions
+	function setCurrentPage(newValue, oldValue) {
+		updateLiveEvents($scope.currentPage);
+	}
 
 	function updateEvents() {
 		var Summary = $resource('/api/events/summary');
@@ -50,14 +56,15 @@ angular.module('aepi-fantasy').controller('AdminEventsController', function($sco
 		});
 	}
 
-	function updateLiveEvents(callback) {
-		var Live = $resource('/api/events/live/1');
+	function updateLiveEvents(currentPage, callback) {
+		var Live = $resource('/api/events/live/' + currentPage);
 		var results = Live.get(function() {
-			if($scope.events) {
+			if($scope.events && $scope.refreshLoading) {
 				setNewEventsAfterTime(results.events, $scope.events[0].time);
 			}
 
 			$scope.events = results.events;
+			$scope.totalEvents = results.count;
 
 			if(callback) {
 				callback();

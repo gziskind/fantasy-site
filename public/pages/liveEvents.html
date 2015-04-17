@@ -4,6 +4,7 @@
 		<span class="glyphicon glyphicon-refresh pull-right" aria-hidden="true" style="font-size: 25px; margin:10px" ng-click="refreshLive()" ng-hide="refreshLoading"></span>
 		<img class="pull-right" style="margin-top:16px; margin-right:16px;" ng-show="refreshLoading" src="/img/small-loader.gif"/>
 	</h1>
+	<pagination total-items="totalEvents" ng-model="currentPage" max-size="5" class="pagination-sm" boundary-links="true" rotate="false" items-per-page="20"></pagination>
 	<table class="table table-condensed table-hover">
 		<thead>
 			<tr>
