@@ -38,16 +38,21 @@
           </div>
           <div class="row" ng-show="currentUser">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 row-fluid">
-                <h3 class="col-lg-8 col-xs-12">New Team Names</h3>
-                <div class="col-lg-8 col-xs-12 row-fluid header">
-                  <div class="col-lg-6 col-md-6 col-xs-7">Team Name</div>
-                  <div class="col-lg-4 col-md-4 col-xs-3">Owner</div>
-                  <div class="col-lg-1 col-md-1 col-xs-2">Rating</div>
+                <h3 class="col-lg-12 col-xs-12">New Team Names</h3>
+                <div class="col-lg-10 col-xs-12 row-fluid header">
+                  <div class="col-lg-6 col-md-6 col-xs-6">Team Name</div>
+                  <div class="col-lg-3 col-md-3 col-xs-3">Owner</div>
+                  <div class="col-lg-1 col-md-1 col-xs-1">Rating</div>
+                  <div class="col-lg-2 col-md-2 col-xs-2">My Rating</div>
                 </div>
-                <div class="col-lg-8 col-xs-12 row-fluid" ng-repeat="newTeamName in newTeamNames | limitTo: 10">
-                  <div class="col-lg-6 col-md-6 col-xs-7" style="padding-right:0;">{{newTeamName.name}}</div>
-                  <div class="col-lg-4 col-md-4 col-xs-4" style="padding-right:0;">{{newTeamName.owner}}</div>
-                  <div class="col-lg-1 col-md-1 col-xs-1" style="padding-right:0;">{{newTeamName.rating}}</div>
+                <div class="col-lg-10 col-xs-12 row-fluid" ng-repeat="newTeamName in newTeamNames | limitTo: 10">
+                  <div class="col-lg-6 col-md-6 col-xs-7" style="padding-right:0;">{{newTeamName.teamName}}</div>
+                  <div class="col-lg-3 col-md-3 col-xs-3" style="padding-right:0;">{{newTeamName.owner}}</div>
+                  <div class="col-lg-1 col-md-1 col-xs-1" style="padding-right:0;" ng-show="newTeamName.rating">{{newTeamName.rating | number:2}}</div>
+                  <div class="col-lg-1 col-md-1 col-xs-1" style="padding-right:0;" ng-hide="newTeamName.rating">--</div>
+                  <div class="col-lg-2 col-md-2 col-xs-2" style="padding-right:0;">
+                    <rating ng-model="newTeamName.myRating" on-leave="changeRating(newTeamName)"></rating>
+                  </div>
                 </div>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 row-fluid">

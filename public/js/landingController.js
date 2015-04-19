@@ -15,6 +15,17 @@ angular.module('aepi-fantasy').controller('LandingController', function($scope, 
 
 
 	// Private Functions
+	$scope.changeRating = function(name) {
+		if(name.previousRating != name.myRating) {
+			name.previousRating = name.myRating
+			
+			var Rating = $resource('/api/' + name.sport + '/names/rating');
+			Rating.save(name, function(response) {
+				name.rating = response.totalRating
+			});
+		}
+	}
+
 	function updateLandingData() {
 		var Landing = $resource('/api/landing');
 		var results = Landing.get(function() {
@@ -22,8 +33,12 @@ angular.module('aepi-fantasy').controller('LandingController', function($scope, 
 			$scope.lastPlaces = results.lastPlaces;
 			$scope.bestTeamNames = results.bestTeamNames;
 			$scope.worstTeamNames = results.worstTeamNames;
-			$scope.newTeamNames = results.newTeamNames;
 			$scope.newRecords = results.newRecords;
+
+			$scope.newTeamNames = results.newTeamNames;
+			for(var c = 0; c < $scope.newTeamNames.length; c++) {
+				$scope.newTeamNames[c].previousRating = $scope.newTeamNames[c].myRating;
+			}
 
 			$scope.contentLoaded = true;
 		})

@@ -72,12 +72,18 @@ class FantasyServer
 		new_team_names = team_names.sort_by {|team_name| team_name.created_at}
 		new_team_names.each {|team_name| 
 			rating = get_total_rating(team_name)
+			userRating = Rating.find_by_team_name_id_and_user_id(team_name._id, @user._id) if !@user.nil?
 
-			@new_team_names.push({
-				name: team_name.name,
+			new_team_name = {
+				teamName: team_name.name,
 				owner: team_name.owner.name,
-				rating: rating.nil? ? '-' : rating.round(2)
-			})
+				rating: rating,
+				sport: team_name.sport
+			}
+			new_team_name[:myRating] = userRating.rating if !userRating.nil?
+
+
+			@new_team_names.push(new_team_name)
 		}
 		@new_team_names.reverse!
 		@new_team_names = @new_team_names.slice(0,10)
