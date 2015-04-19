@@ -34,15 +34,15 @@
         </div>
         <% if(@user != nil) %>
           <div class="row">
-            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 row-fluid">
-                <h3 class="col-lg-12 col-xs-12">New Team Names</h3>
-                <div class="col-lg-12 col-xs-12 row-fluid header">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 row-fluid">
+                <h3 class="col-lg-8 col-xs-12">New Team Names</h3>
+                <div class="col-lg-8 col-xs-12 row-fluid header">
                   <div class="col-lg-6 col-md-6 col-xs-7">Team Name</div>
                   <div class="col-lg-4 col-md-4 col-xs-3">Owner</div>
                   <div class="col-lg-1 col-md-1 col-xs-2">Rating</div>
                 </div>
                 <% index = 0; while index < 10 && index < @new_team_names.length %>
-                <div class="col-lg-12 col-xs-12 row-fluid">
+                <div class="col-lg-8 col-xs-12 row-fluid">
                   <div class="col-lg-6 col-md-6 col-xs-7" style="padding-right:0;"><%= @new_team_names[index][:name] %></div>
                   <div class="col-lg-4 col-md-4 col-xs-4" style="padding-right:0;"><%= @new_team_names[index][:owner] %></div>
                   <div class="col-lg-1 col-md-1 col-xs-1" style="padding-right:0;"><%= @new_team_names[index][:rating] %></div>
@@ -51,20 +51,22 @@
             </div>
             <tr>
         </tr>
-            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 row-fluid">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 row-fluid">
                 <h3 class="col-lg-12 col-xs-12">New Records</h3>
-                <div class="col-lg-12 col-xs-12 row-fluid header">
-                  <div class="col-lg-1 col-md-6 col-xs-7">Sport</div>
-                  <div class="col-lg-6 col-md-1 col-xs-2">Record</div>
-                  <div class="col-lg-1 col-md-1 col-xs-2">Value</div>
-                  <div class="col-lg-4 col-md-1 col-xs-2">Owner</div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 row-fluid header">
+                  <div class="col-lg-1 col-md-1 col-sm-2 hidden-xs">Sport</div>
+                  <div class="col-lg-1 col-md-1 col-sm-2 hidden-xs">Type</div>
+                  <div class="col-lg-3 col-md-4 col-sm-3 col-xs-7">Record</div>
+                  <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2">Value</div>
+                  <div class="col-lg-5 col-md-5 col-sm-4 col-xs-3">Owner</div>
                 </div>
                 <% index = 0; while index < 10 && index < @new_records.length %>
-                <div class="col-lg-12 col-xs-12 row-fluid">
-                  <div class="col-lg-1 col-md-6 col-xs-7" style="padding-right:0;"><%= @new_records[index][:sport] %></div>
-                  <div class="col-lg-6 col-md-4 col-xs-4" style="padding-right:0;"><%= @new_records[index][:record] %></div>
-                  <div class="col-lg-1 col-md-1 col-xs-1" style="padding-right:0;"><%= @new_records[index][:value] %></div>
-                  <div class="col-lg-4 col-md-1 col-xs-1" style="padding-right:0;"><%= @new_records[index][:owner] %></div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 row-fluid">
+                  <div class="col-lg-1 col-md-1 col-sm-2 hidden-xs" style="padding-right:0;"><%= @new_records[index][:sport] %></div>
+                  <div class="col-lg-1 col-md-1 col-sm-2 hidden-xs" style="padding-right:0;"><%= @new_records[index][:type] %></div>
+                  <div class="col-lg-3 col-md-4 col-sm-3 col-xs-7" style="padding-right:0;"><%= @new_records[index][:record] %></div>
+                  <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2" style="padding-right:0;"><%= @new_records[index][:value] %></div>
+                  <div class="col-lg-6 col-md-5 col-sm-4 col-xs-3" style="padding-right:0;"><%= @new_records[index][:owner] %></div>
                 </div>
                 <% index+=1; end %>
             </div>
@@ -74,8 +76,8 @@
                 <h3 class="col-lg-12 col-xs-12">Best Team Names</h3>
                 <div class="col-lg-12 col-xs-12 row-fluid header">
                   <div class="col-lg-6 col-md-6 col-xs-7">Team Name</div>
-                  <div class="col-lg-4 col-md-4 col-xs-3">Owner</div>
-                  <div class="col-lg-1 col-md-1 col-xs-2">Rating</div>
+                  <div class="col-lg-4 col-md-4 col-xs-4">Owner</div>
+                  <div class="col-lg-1 col-md-1 col-xs-1">Rating</div>
                 </div>
                 <% index = 0; while index < 10 && index < @team_names.length %>
                 <div class="col-lg-12 col-xs-12 row-fluid">
@@ -89,8 +91,8 @@
                 <h3 class="col-lg-12 col-xs-12">Worst Team Names</h3>
                 <div class="row-fluid col-xs-12 col-lg-12 header">
                   <div class="col-md-6 col-xs-7">Team Name</div>
-                  <div class="col-md-4 col-xs-3">Owner</div>
-                  <div class="col-md-1 col-xs-2">Rating</div>
+                  <div class="col-md-4 col-xs-4">Owner</div>
+                  <div class="col-md-1 col-xs-1">Rating</div>
                 </div>
                 <% index = 0; while index < 10 && index < @team_names.length %>
                 <div class="row-fluid col-xs-12 col-lg-12">

@@ -70,13 +70,17 @@ class FantasyServer
 
 		@new_records = []
 		records.each {|record|
+			record_holders = record.record_holders.map {|record_holder| record_holder.user.name}
+			record_holders = ['Various'] if record_holders.length == 0
+
 			@new_records.push({
-				sport: record.sport == 'baseball' ? 'BB' : 'FB',
+				sport: record.sport.capitalize,
+				type: record.type.capitalize,
 				record: record.record,
-				value: record.value.to_i.round(2), 
-				owner: record.record_holders.length == 1 ? record.record_holders[0].user.name : 'Various',
+				value: record.value,
+				owner: record_holders.join(", "),
 				created_at: record.created_at
-			})
+			}) 
 		}
 		@new_records.sort_by! {|record| record[:created_at].nil? ? Date.new(0) : record[:created_at]  }
 		@new_records.reverse!
