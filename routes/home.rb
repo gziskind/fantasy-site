@@ -59,14 +59,14 @@ class FantasyServer
 				@team_names.push({
 					name: team_name.name,
 					owner: team_name.owner.name,
-					rating: rating.round(2)
+					rating: rating
 				})
 			end
 		}
 
 		@team_names.sort_by! {|team_name| team_name[:rating]}
-		best_team_names = @team_names.slice(0,10)
-		worst_team_names = @team_names.reverse.slice(0,10)
+		best_team_names = @team_names.reverse.slice(0,10)
+		worst_team_names = @team_names.slice(0,10)
 
 		@new_team_names = []
 		new_team_names = team_names.sort_by {|team_name| team_name.created_at}
