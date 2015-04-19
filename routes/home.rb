@@ -5,6 +5,17 @@ class FantasyServer
 	get '/' do 
 		event 'Home'
 
+		erb :index
+	end
+
+	get '/unauthorized' do
+		event 'Unauthorized'
+
+		erb :unauthorized
+	end
+
+	# API Calls
+	get '/api/landing' do
 		championship_results  = Result.find_all_by_place(1)
 		last_place_results = Result.find_all_by_place(12)
 		team_names = TeamName.all
@@ -54,6 +65,8 @@ class FantasyServer
 		}
 
 		@team_names.sort_by! {|team_name| team_name[:rating]}
+		best_team_names = @team_names.slice(0,10)
+		worst_team_names = @team_names.reverse.slice(0,10)
 
 		@new_team_names = []
 		new_team_names = team_names.sort_by {|team_name| team_name.created_at}
@@ -67,6 +80,7 @@ class FantasyServer
 			})
 		}
 		@new_team_names.reverse!
+		@new_team_names = @new_team_names.slice(0,10)
 
 		@new_records = []
 		records.each {|record|
@@ -84,14 +98,20 @@ class FantasyServer
 		}
 		@new_records.sort_by! {|record| record[:created_at].nil? ? Date.new(0) : record[:created_at]  }
 		@new_records.reverse!
+		@new_records = @new_records.slice(0,10)
 
-		erb :index
-	end
-
-	get '/unauthorized' do
-		event 'Unauthorized'
-
-		erb :unauthorized
+		result = {
+			championships: @championships,
+			lastPlaces: @last_places,
+		}
+		if(!@user.nil?)
+			result[:bestTeamNames] = best_team_names
+			result[:worstTeamNames] = worst_team_names
+			result[:newTeamNames] = @new_team_names
+			result[:newRecords] = @new_records
+		end
+		
+		result.to_json
 	end
 
 	def get_total_rating(team) 

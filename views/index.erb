@@ -2,6 +2,8 @@
 <html lang="en">
   <head>
     <%= erb :head %>
+
+    <script src="/js/landingController.js"></script>
   </head>
 
   <body ng-app="aepi-fantasy" ng-controller="HomeController" ng-cloak>
@@ -10,30 +12,31 @@
       <!-- Static navbar -->
       <%= erb :header %>
       
-      <div class="container-fluid">
-        <h1>AEPi Fantasy League</h1>
-        <div class="row">
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 row-fluid">
-            <h3 class="col-lg-12 col-md-12 col-xs-12">Most Championships</h3>
-            <% @championships.each {|championship| %>
-              <div class="col-lg-12 col-xs-12 row-fluid">
-                <div class="col-md-6 col-xs-8"><%= championship[0] %></div>
-                <div class="col-md-1 col-xs-1"><%= championship[1] %></div>
-              </div>
-            <% } %>
-          </div>
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 row-fluid">
-            <h3 class="col-lg-12 col-md-12 col-xs-12">Most Last Place Finishes</h3>
-            <% @last_places.each {|last_place| %>
-              <div class="col-lg-12 row-fluid">
-                <div class="col-md-6 col-xs-8"><%= last_place[0] %></div>
-                <div class="col-md-1 col-xs-1"><%= last_place[1] %></div>
-              </div>
-            <% } %>
+      <div class="container-fluid" ng-controller="LandingController">
+        <div ng-hide="contentLoaded" class="vertical-center">
+          <div style="text-align:center; width:100%">
+            <h1>Loading...</h1>
           </div>
         </div>
-        <% if(@user != nil) %>
+        <div ng-show="contentLoaded">
+          <h1>AEPi Fantasy League</h1>
           <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 row-fluid">
+              <h3 class="col-lg-12 col-md-12 col-xs-12">Most Championships</h3>
+              <div class="col-lg-12 col-xs-12 row-fluid" ng-repeat="championship in championships">
+                <div class="col-md-6 col-xs-8">{{championship[0]}}</div>
+                <div class="col-md-1 col-xs-1">{{championship[1]}}</div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 row-fluid">
+              <h3 class="col-lg-12 col-md-12 col-xs-12">Most Last Place Finishes</h3>
+              <div class="col-lg-12 row-fluid" ng-repeat="lastPlace in lastPlaces">
+                <div class="col-md-6 col-xs-8">{{lastPlace[0]}}</div>
+                <div class="col-md-1 col-xs-1">{{lastPlace[1]}}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row" ng-show="currentUser">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 row-fluid">
                 <h3 class="col-lg-8 col-xs-12">New Team Names</h3>
                 <div class="col-lg-8 col-xs-12 row-fluid header">
@@ -41,16 +44,12 @@
                   <div class="col-lg-4 col-md-4 col-xs-3">Owner</div>
                   <div class="col-lg-1 col-md-1 col-xs-2">Rating</div>
                 </div>
-                <% index = 0; while index < 10 && index < @new_team_names.length %>
-                <div class="col-lg-8 col-xs-12 row-fluid">
-                  <div class="col-lg-6 col-md-6 col-xs-7" style="padding-right:0;"><%= @new_team_names[index][:name] %></div>
-                  <div class="col-lg-4 col-md-4 col-xs-4" style="padding-right:0;"><%= @new_team_names[index][:owner] %></div>
-                  <div class="col-lg-1 col-md-1 col-xs-1" style="padding-right:0;"><%= @new_team_names[index][:rating] %></div>
+                <div class="col-lg-8 col-xs-12 row-fluid" ng-repeat="newTeamName in newTeamNames | limitTo: 10">
+                  <div class="col-lg-6 col-md-6 col-xs-7" style="padding-right:0;">{{newTeamName.name}}</div>
+                  <div class="col-lg-4 col-md-4 col-xs-4" style="padding-right:0;">{{newTeamName.owner}}</div>
+                  <div class="col-lg-1 col-md-1 col-xs-1" style="padding-right:0;">{{newTeamName.rating}}</div>
                 </div>
-                <% index+=1; end %>
             </div>
-            <tr>
-        </tr>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 row-fluid">
                 <h3 class="col-lg-12 col-xs-12">New Records</h3>
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 row-fluid header">
@@ -60,18 +59,16 @@
                   <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2">Value</div>
                   <div class="col-lg-5 col-md-5 col-sm-4 col-xs-3">Owner</div>
                 </div>
-                <% index = 0; while index < 10 && index < @new_records.length %>
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 row-fluid">
-                  <div class="col-lg-1 col-md-1 col-sm-2 hidden-xs" style="padding-right:0;"><%= @new_records[index][:sport] %></div>
-                  <div class="col-lg-1 col-md-1 col-sm-2 hidden-xs" style="padding-right:0;"><%= @new_records[index][:type] %></div>
-                  <div class="col-lg-3 col-md-4 col-sm-3 col-xs-7" style="padding-right:0;"><%= @new_records[index][:record] %></div>
-                  <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2" style="padding-right:0;"><%= @new_records[index][:value] %></div>
-                  <div class="col-lg-6 col-md-5 col-sm-4 col-xs-3" style="padding-right:0;"><%= @new_records[index][:owner] %></div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 row-fluid" ng-repeat="newRecord in newRecords | limitTo: 10">
+                  <div class="col-lg-1 col-md-1 col-sm-2 hidden-xs" style="padding-right:0;">{{newRecord.sport}}</div>
+                  <div class="col-lg-1 col-md-1 col-sm-2 hidden-xs" style="padding-right:0;">{{newRecord.type}}</div>
+                  <div class="col-lg-3 col-md-4 col-sm-3 col-xs-7" style="padding-right:0;">{{newRecord.record}}</div>
+                  <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2" style="padding-right:0;">{{newRecord.value}}</div>
+                  <div class="col-lg-6 col-md-5 col-sm-4 col-xs-3" style="padding-right:0;">{{newRecord.owner}}</div>
                 </div>
-                <% index+=1; end %>
             </div>
           </div>
-          <div class="row">
+          <div class="row" ng-show="currentUser">
             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 row-fluid">
                 <h3 class="col-lg-12 col-xs-12">Best Team Names</h3>
                 <div class="col-lg-12 col-xs-12 row-fluid header">
@@ -79,13 +76,11 @@
                   <div class="col-lg-4 col-md-4 col-xs-4">Owner</div>
                   <div class="col-lg-1 col-md-1 col-xs-1">Rating</div>
                 </div>
-                <% index = 0; while index < 10 && index < @team_names.length %>
-                <div class="col-lg-12 col-xs-12 row-fluid">
-                  <div class="col-lg-6 col-md-6 col-xs-7" style="padding-right:0;"><%= @team_names.reverse[index][:name] %></div>
-                  <div class="col-lg-4 col-md-4 col-xs-4" style="padding-right:0;"><%= @team_names.reverse[index][:owner] %></div>
-                  <div class="col-lg-1 col-md-1 col-xs-1" style="padding-right:0;"><%= @team_names.reverse[index][:rating] %></div>
+                <div class="col-lg-12 col-xs-12 row-fluid" ng-repeat="teamName in bestTeamNames">
+                  <div class="col-lg-6 col-md-6 col-xs-7" style="padding-right:0;">{{teamName.name}}</div>
+                  <div class="col-lg-4 col-md-4 col-xs-4" style="padding-right:0;">{{teamName.owner}}</div>
+                  <div class="col-lg-1 col-md-1 col-xs-1" style="padding-right:0;">{{teamName.rating}}</div>
                 </div>
-                <% index+=1; end %>
             </div>
             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 row-fluid">
                 <h3 class="col-lg-12 col-xs-12">Worst Team Names</h3>
@@ -94,16 +89,14 @@
                   <div class="col-md-4 col-xs-4">Owner</div>
                   <div class="col-md-1 col-xs-1">Rating</div>
                 </div>
-                <% index = 0; while index < 10 && index < @team_names.length %>
-                <div class="row-fluid col-xs-12 col-lg-12">
-                  <div class="col-md-6 col-xs-7" style="padding-right:0;"><%= @team_names[index][:name] %></div>
-                  <div class="col-md-4 col-xs-4" style="padding-right:0;"><%= @team_names[index][:owner] %></div>
-                  <div class="col-md-1 col-xs-1" style="padding-right:0;"><%= @team_names[index][:rating] %></div>
+                <div class="row-fluid col-xs-12 col-lg-12" ng-repeat="teamName in worstTeamNames">
+                 <div class="col-lg-6 col-md-6 col-xs-7" style="padding-right:0;">{{teamName.name}}</div>
+                  <div class="col-lg-4 col-md-4 col-xs-4" style="padding-right:0;">{{teamName.owner}}</div>
+                  <div class="col-lg-1 col-md-1 col-xs-1" style="padding-right:0;">{{teamName.rating}}</div>
                 </div>
-                <% index+=1; end %>
             </div>
           </div>
-        <% end %>
+        </div>
       </div>  
     </div>
 
