@@ -36,8 +36,10 @@ angular.module('aepi-fantasy').controller('LandingController', function($scope, 
 			$scope.newRecords = results.newRecords;
 
 			$scope.newTeamNames = results.newTeamNames;
-			for(var c = 0; c < $scope.newTeamNames.length; c++) {
-				$scope.newTeamNames[c].previousRating = $scope.newTeamNames[c].myRating;
+			if($scope.newTeamNames) {
+				for(var c = 0; c < $scope.newTeamNames.length; c++) {
+					$scope.newTeamNames[c].previousRating = $scope.newTeamNames[c].myRating;
+				}
 			}
 
 			$scope.contentLoaded = true;
