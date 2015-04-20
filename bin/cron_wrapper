@@ -2,3 +2,5 @@
 
 . $RUBY_ENV
 $FANTASY_HOME/bin/current_standings.rb -h $DB_HOST -P $DB_PORT -u $DB_USER -p $DB_PASSWORD -U $ESPN_USER -w $ESPN_PASSWORD -b $BASEBALL_ID -f $FOOTBALL_ID
+$FANTASY_HOME/bin/roto_standings.rb -h $DB_HOST -P $DB_PORT -u $DB_USER -p $DB_PASSWORD -U $ESPN_USER -w $ESPN_PASSWORD -b $BASEBALL_ID 
+
