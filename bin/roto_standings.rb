@@ -103,11 +103,12 @@ def parse_teams(teams)
 		stat_line = team.css('td')
 
 		name = extract_user(stat_line[1].css('a')[0])
+		user = User.find_by_unique_name(name.to_s);
 
-		stat = RotoStat.find_by_name(name)
+		stat = RotoStat.find_by_name(user.name)
 		stat = RotoStat.new if stat.nil?
 
-		stat.name = name.to_s
+		stat.name = user.name
 		stat.runs = stat_line[3].content
 		stat.homeruns = stat_line[4].content
 		stat.rbi = stat_line[5].content
