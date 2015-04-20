@@ -16,8 +16,22 @@ class FantasyServer
 		erb :results
 	end
 
+	get '/baseball/results/roto' do 
+		event 'Roto'
+
+		erb :roto
+	end
 
 	# API Calls
+	get '/api/baseball/results/roto' do
+		stats = RotoStat.all
+
+		stats.sort_by! {|stat| stat.total_points}
+		stats.reverse!
+
+		stats.to_json
+	end
+
 	get '/api/:sport/results' do
 		seasons = Season.find_all_by_sport(params[:sport]);
 		results = seasons.map {|season|

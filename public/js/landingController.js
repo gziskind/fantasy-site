@@ -10,11 +10,6 @@ angular.module('aepi-fantasy').controller('LandingController', function($scope, 
 
 
 	// Public functions
-	
-	// Watches
-
-
-	// Private Functions
 	$scope.changeRating = function(name) {
 		if(name.previousRating != name.myRating) {
 			name.previousRating = name.myRating
@@ -25,7 +20,11 @@ angular.module('aepi-fantasy').controller('LandingController', function($scope, 
 			});
 		}
 	}
+	
+	// Watches
 
+
+	// Private Functions
 	function updateLandingData() {
 		var Landing = $resource('/api/landing');
 		var results = Landing.get(function() {

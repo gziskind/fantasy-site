@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%= erb :head %>
+
+    <script src="/js/rotoController.js"></script>
+  </head>
+
+  <body ng-app="aepi-fantasy" ng-controller="HomeController" ng-cloak>
+
+    <div class="container">
+      <!-- Static navbar -->
+      <%= erb :header %>
+      
+      <div class="container-fluid" ng-controller="RotoController">
+        <div ng-hide="contentLoaded" class="vertical-center">
+          <div style="text-align:center; width:100%">
+            <h1>Loading...</h1>
+          </div>
+        </div>
+        <div ng-show="contentLoaded">
+          <h1>Roto Standings</h1>
+          <div class="table-responsive col-md-12">
+			<table class="table table-condensed table-hover">
+				<thead>
+					<tr>
+						<th>Place</th>
+						<th>Owner</th>
+						<th>R</th>
+						<th>HR</th>
+						<th>RBI</th>
+						<th>SB</th>
+						<th>AVG</th>
+						<th>OPS</th>
+						<th>QS</th>
+						<th>W</th>
+						<th>SV</th>
+						<th>ERA</th>
+						<th>WHIP</th>
+						<th>K/9</th>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="result in standings">
+						<td>{{$index + 1}}</td>
+						<td>{{result.name}}</td>
+						<td>{{result.runs_points}}</td>
+						<td>{{result.homeruns_points}}</td>
+						<td>{{result.rbi_points}}</td>
+						<td>{{result.sb_points}}</td>
+						<td>{{result.average_points}}</td>
+						<td>{{result.ops_points}}</td>
+						<td>{{result.quality_starts_points}}</td>
+						<td>{{result.wins_points}}</td>
+						<td>{{result.saves_points}}</td>
+						<td>{{result.era_points}}</td>
+						<td>{{result.whip_points}}</td>
+						<td>{{result.k_per_9_points}}</td>
+						<td>{{result.total_points}}</td>
+					</tr>
+				</tbody>
+			</table>
+        </div>
+      </div>  
+    </div>
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/lib/bootstrap.min.js"></script>
+  </body>
+</html>
