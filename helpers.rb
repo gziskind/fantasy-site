@@ -70,4 +70,8 @@ module Helpers
 		ev = Event.new({username: user, event: event_name, time: Time.now});
 		ev.save!
 	end
+
+	def get_tracking_id
+		settings.ga_token
+	end
 end
