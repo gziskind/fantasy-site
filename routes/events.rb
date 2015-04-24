@@ -7,7 +7,7 @@ class FantasyServer
 
 
 	# API Calls
-	get '/api/events/summary' do
+	get '/api/events/summary', :auth => :admin do
 		events = Event.all
 
 		event_types = {}
@@ -45,7 +45,7 @@ class FantasyServer
 		}.to_json
 	end
 
-	get '/api/events/live/:page' do
+	get '/api/events/live/:page', :auth => :admin do
 		events = Event.paginate({
 			order: :time.desc,
 			per_page: 20,
