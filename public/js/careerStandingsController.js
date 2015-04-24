@@ -1,11 +1,12 @@
-angular.module('aepi-fantasy').controller('RotoController', function($scope, $location, $routeParams, $resource) {
+angular.module('aepi-fantasy').controller('CareerStandingsController', function($scope, $location, $routeParams, $resource) {
 
 	// Private Variables
 
 	// Public variables
-	$scope.contentLoaded = false;
+	$scope.contentLoaded = true;
+	$scope.sport = $scope.$parent.getSportType()
 
-	updateRotoData();
+	// updateRotoData();
 
 	// Public functions
 	
@@ -16,7 +17,6 @@ angular.module('aepi-fantasy').controller('RotoController', function($scope, $lo
 		var RotoStandings = $resource('/api/baseball/results/roto');
 		var results = RotoStandings.query(function() {
 			$scope.standings = results;
-			$scope.contentLoaded = true;
 		});
 	}
 });
