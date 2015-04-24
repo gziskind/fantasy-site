@@ -3,6 +3,7 @@ angular.module('aepi-fantasy').controller('ProfilesController', function($scope,
 	// Private Variables
 
 	// Public variables
+	$scope.contentLoaded = false;
 	$scope.user = $routeParams.user;
 	$scope.profile = getProfile();
 	$scope.sportOptions = [];
@@ -65,6 +66,7 @@ angular.module('aepi-fantasy').controller('ProfilesController', function($scope,
 		var Profile = $resource('/api/profiles/:user');
 		var profile = Profile.get({user: $scope.user}, function() {
 			$scope.profile = profile;
+			$scope.contentLoaded = true;
 
 			setSportOptions();
 		});
