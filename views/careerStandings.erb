@@ -27,21 +27,22 @@
 					<tr>
 						<th>Place</th>
 						<th>Owner</th>
-						<th>Wins</th>
-						<th>Losses</th>
-						<th>Ties</th>
-						<th ng-show="sport == 'baseball'">Win Percentage</th>
-						<th ng-show="sport == 'football'">Points</th>
+						<th ng-click="changeField('wins')">Wins <i class="fa fa-sort" ng-class="sortStatus('wins')"></i></th>
+						<th ng-click="changeField('losses')">Losses <i class="fa fa-sort" ng-class="sortStatus('losses')"></i></th>
+						<th ng-click="changeField('ties')" ng-show="sport == 'baseball'">Ties <i class="fa fa-sort" ng-class="sortStatus('ties')"></i></th>
+						<th ng-click="changeField('winPercentage')">Win Percentage <i class="fa fa-sort" ng-class="sortStatus('winPercentage')"></i></th>
+						<th ng-click="changeField('points')" ng-show="sport == 'football'">Points <i class="fa fa-sort" ng-class="sortStatus('points')"></i></th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="result in standings">
+					<tr ng-repeat="result in standings | orderBy:orderByField:reverseSort">
 						<td>{{$index + 1}}</td>
 						<td>{{result.name}}</td>
-						<td>{{result.runs_points}}</td>
-						<td>{{result.homeruns_points}}</td>
-						<td>{{result.rbi_points}}</td>
-						<td>{{result.sb_points}}</td>
+						<td>{{result.wins}}</td>
+						<td>{{result.losses}}</td>
+						<td ng-show="sport == 'baseball'">{{result.ties}}</td>
+            <td>{{result.winPercentage | number: 4}}</td>
+						<td ng-show="sport == 'football'">{{result.points | number:1}}</td>
 					</tr>
 				</tbody>
 			</table>

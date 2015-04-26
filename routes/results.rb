@@ -18,7 +18,7 @@ class FantasyServer
 
 	get '/:sport/results/career' do
 		event "#{params[:sport].capitalize}CareerResults"
-		@header_index
+		@header_index = params[:sport]
 
 		erb :careerStandings
 	end
@@ -57,8 +57,12 @@ class FantasyServer
 			user_standings[user_id][:points] += result.points if params[:sport] == 'football'
 		}
 
-		user_standings.each {|user_standing|
-			user_standing[:winPercentage] = (user_standing[:wins] + (user_standing[:ties]/2.0))/(user_standing[:wins] + user_standing[:losses] + user_standing[:ties] + 1.0)
+		user_standings.each_value {|user_standing|
+			wins = user_standing[:wins]
+			ties = user_standing[:ties]
+			losses = user_standing[:losses]
+
+			user_standing[:winPercentage] = (wins + (ties/2.0))/(wins + losses + ties + 1.0)
 		}
 
 
