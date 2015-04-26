@@ -13,9 +13,9 @@ angular.module('aepi-fantasy').controller('CareerStandingsController', function(
 	// Watches
 
 	// Private Functions
-	function updateRotoData() {
-		var RotoStandings = $resource('/api/baseball/results/roto');
-		var results = RotoStandings.query(function() {
+	function updateCareerStandings() {
+		var CareerStandings = $resource('/api/' + $scope.sport + '/results/career');
+		var results = CareerStandings.query(function() {
 			$scope.standings = results;
 		});
 	}

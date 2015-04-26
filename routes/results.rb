@@ -16,13 +16,55 @@ class FantasyServer
 		erb :results
 	end
 
+	get '/:sport/results/career' do
+		event "#{params[:sport].capitalize}CareerResults"
+		@header_index
+
+		erb :careerStandings
+	end
+
 	get '/baseball/results/roto' do 
 		event 'Roto'
+		@header_index = params[:sport]
 
 		erb :roto
 	end
 
 	# API Calls
+	get '/api/:sport/results/career' do
+		result_class = FootballResult
+		if params[:sport] == 'baseball'
+			result_class = BaseballResult
+		end
+
+		user_standings = {}
+		results = result_class.all
+		results.each {|result|
+			user_id = result.user.name
+
+			if user_standings[user_id].nil?
+				user_standings[user_id] = {
+					wins: 0,
+					losses: 0,
+					ties: 0,
+					points: 0
+				}
+			end
+
+			user_standings[user_id][:wins] += result.wins
+			user_standings[user_id][:losses] += result.losses
+			user_standings[user_id][:ties] += result.ties
+			user_standings[user_id][:points] += result.points if params[:sport] == 'football'
+		}
+
+		user_standings.each {|user_standing|
+			user_standing[:winPercentage] = (user_standing[:wins] + (user_standing[:ties]/2.0))/(user_standing[:wins] + user_standing[:losses] + user_standing[:ties] + 1.0)
+		}
+
+
+		user_standings.to_json
+	end
+
 	get '/api/baseball/results/roto' do
 		stats = RotoStat.all
 

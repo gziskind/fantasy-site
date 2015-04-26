@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%= erb :head %>
+
+    <script src="/js/careerStandingsController.js"></script>
+  </head>
+
+  <body ng-app="aepi-fantasy" ng-controller="HomeController" ng-cloak>
+
+    <div class="container">
+      <!-- Static navbar -->
+      <%= erb :header %>
+      
+      <div class="container-fluid" ng-controller="CareerStandingsController">
+        <div ng-hide="contentLoaded" class="vertical-center">
+          <div style="text-align:center; width:100%">
+            <h1>Loading</h1>
+            <img src="/img/loading-page.gif"/>
+          </div>
+        </div>
+        <div ng-show="contentLoaded">
+          <h1>Career Standings - {{sport | capitalize}}</h1>
+          <div class="table-responsive col-md-12">
+			<table class="table table-condensed table-hover">
+				<thead>
+					<tr>
+						<th>Place</th>
+						<th>Owner</th>
+						<th>Wins</th>
+						<th>Losses</th>
+						<th>Ties</th>
+						<th ng-show="sport == 'baseball'">Win Percentage</th>
+						<th ng-show="sport == 'football'">Points</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="result in standings">
+						<td>{{$index + 1}}</td>
+						<td>{{result.name}}</td>
+						<td>{{result.runs_points}}</td>
+						<td>{{result.homeruns_points}}</td>
+						<td>{{result.rbi_points}}</td>
+						<td>{{result.sb_points}}</td>
+					</tr>
+				</tbody>
+			</table>
+        </div>
+      </div>  
+    </div>
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/lib/bootstrap.min.js"></script>
+  </body>
+</html>
