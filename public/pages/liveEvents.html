@@ -15,7 +15,7 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="event in events" ng-class="isNewEvent(event)">
-				<td>{{event.time | date:"MM/dd/yy hh:mm:ss"}}</td>
+				<td>{{event.time | date:"MM/dd/yy hh:mm:ss a"}}</td>
 				<td>{{event.username}}</td>
 				<td>{{event.event}}</td>
 			</tr>
