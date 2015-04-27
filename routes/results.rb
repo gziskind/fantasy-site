@@ -25,7 +25,7 @@ class FantasyServer
 
 	get '/baseball/results/roto' do 
 		event 'Roto'
-		@header_index = params[:sport]
+		@header_index = 'baseball'
 
 		erb :roto
 	end
