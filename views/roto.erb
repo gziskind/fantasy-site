@@ -27,23 +27,23 @@
 					<tr>
 						<th>Place</th>
 						<th>Owner</th>
-						<th>R</th>
-						<th>HR</th>
-						<th>RBI</th>
-						<th>SB</th>
-						<th>AVG</th>
-						<th>OPS</th>
-						<th>QS</th>
-						<th>W</th>
-						<th>SV</th>
-						<th>ERA</th>
-						<th>WHIP</th>
-						<th>K/9</th>
-						<th>Total</th>
+						<th ng-click="changeField('runs_points')">R <i class="fa fa-sort" ng-class="sortStatus('runs_points')"></i></th>
+						<th ng-click="changeField('homeruns_points')">HR <i class="fa fa-sort" ng-class="sortStatus('homeruns_points')"></i></th>
+						<th ng-click="changeField('rbi_points')">RBI <i class="fa fa-sort" ng-class="sortStatus('rbi_points')"></i></th>
+						<th ng-click="changeField('sb_points')">SB <i class="fa fa-sort" ng-class="sortStatus('sb_points')"></i></th>
+						<th ng-click="changeField('average_points')">AVG <i class="fa fa-sort" ng-class="sortStatus('average_points')"></i></th>
+						<th ng-click="changeField('ops_points')">OPS <i class="fa fa-sort" ng-class="sortStatus('ops_points')"></i></th>
+						<th ng-click="changeField('quality_starts_points')">QS <i class="fa fa-sort" ng-class="sortStatus('quality_starts_points')"></i></th>
+						<th ng-click="changeField('wins_points')">W <i class="fa fa-sort" ng-class="sortStatus('wins_points')"></i></th>
+						<th ng-click="changeField('saves_points')">SV <i class="fa fa-sort" ng-class="sortStatus('saves_points')"></i></th>
+						<th ng-click="changeField('era_points')">ERA <i class="fa fa-sort" ng-class="sortStatus('era_points')"></i></th>
+						<th ng-click="changeField('whip_points')">WHIP <i class="fa fa-sort" ng-class="sortStatus('whip_points')"></i></th>
+						<th ng-click="changeField('k_per_9_points')">K/9 <i class="fa fa-sort" ng-class="sortStatus('k_per_9_points')"></i></th>
+						<th ng-click="changeField('total_points')">Total <i class="fa fa-sort" ng-class="sortStatus('total_points')"></i></th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="result in standings">
+					<tr ng-repeat="result in standings | orderBy:orderByField:reverseSort">
 						<td>{{$index + 1}}</td>
 						<td>{{result.name}}</td>
 						<td>{{result.runs_points}}</td>
