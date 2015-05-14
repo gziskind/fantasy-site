@@ -7,3 +7,5 @@ gem 'mongo_mapper', "0.13.1"
 gem 'httparty'
 gem 'nokogiri'
 gem 'dropbox-sdk'
+gem 'redis'
+gem 'moneta'

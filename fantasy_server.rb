@@ -1,12 +1,13 @@
 require 'sinatra/base'
 require 'json'
 require 'digest/md5'
+require 'rack/session/moneta'
+
 require_relative 'model'
 require_relative 'helpers'
 
 class FantasyServer < Sinatra::Base
 
-	set :sessions => true
 
 	register do
 		def auth(type) 
@@ -17,6 +18,10 @@ class FantasyServer < Sinatra::Base
 	end
 
 	def self.start
+		use Rack::Session::Moneta, key: 'rack.session',
+			expire_after: 2592000,
+			store: Moneta.new(:Redis, expires: true, :host => settings.redis_host, :port => settings.redis_port, :password => settings.redis_password)
+
 		init_db
 
 		run!

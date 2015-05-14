@@ -11,7 +11,10 @@ options = Trollop::options do
 	opt :db_user, "Database User", :short => "u"
 	opt :db_password, "Database Password"
 	opt :dropbox_token, "Dropbox Token", :short => 't', :type => :string
-	opt :ga_token, "Google Analytics Token", :sort => 'g', :type => :string
+	opt :ga_token, "Google Analytics Token", :short => 'g', :type => :string
+	opt :redis_host, "Redis Host", :type => :string
+	opt :redis_port, "Redis Port", :type => :integer
+	opt :redis_password, "Redis Password", :type => :string
 end
 
 port = ENV["PORT"] || options[:port]
@@ -22,6 +25,9 @@ db_user = ENV["DB_USER"] || options[:db_user]
 db_password = ENV["DB_PASSWORD"] || options[:db_password]
 dropbox_token = ENV['DROPBOX_TOKEN'] || options[:dropbox_token]
 ga_token = ENV['GA_TOKEN'] || options[:ga_token]
+redis_host = ENV["REDIS_HOST"] || options[:redis_host]
+redis_port = ENV["REDIS_PORT"] || options[:redis_port]
+redis_password = ENV["REDIS_PASSWORD"] || options[:redis_password]
 
 
 FantasyServer.set :bind, '0.0.0.0'
@@ -33,5 +39,8 @@ FantasyServer.set :db_user, db_user
 FantasyServer.set :db_password, db_password
 FantasyServer.set :dropbox_token, dropbox_token
 FantasyServer.set :ga_token, ga_token
+FantasyServer.set :redis_host, redis_host
+FantasyServer.set :redis_port, redis_port
+FantasyServer.set :redis_password, redis_password
 FantasyServer.start
 
