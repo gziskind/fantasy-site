@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'json'
 require 'digest/md5'
 require 'rack/session/moneta'
+require 'sinatra/cookies'
 
 require_relative 'model'
 require_relative 'helpers'
@@ -34,6 +35,7 @@ class FantasyServer < Sinatra::Base
 	end
 
 	helpers Helpers
+	helpers Sinatra::Cookies
 end
 
 # Include routes

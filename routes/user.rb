@@ -2,6 +2,14 @@ class FantasyServer
 	
 	before do
 		@user = User.find_by_id(session[:user_id])
+		if(!@user.nil?)
+			response.set_cookie("currentUser", :value => {
+				id: @user._id,
+				username: @user.username,
+				roles: @user.roles,
+				name: @user.name
+			}.to_json, :path => '/')
+		end
 	end
 
 

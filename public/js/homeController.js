@@ -42,14 +42,6 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 				$scope.loginFailed = true;
 				$scope.loginSubmitted = false;
 			} else {
-				var user = {
-					id: response.id,
-					username: response.username,
-					roles: response.roles,
-					name: response.name
-				};
-
-				ipCookie(CURRENT_USER, user, {path: '/'})
 				var path = getQueryVariable('redirect');
 				var hash = document.location.hash;
 
