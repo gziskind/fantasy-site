@@ -9,7 +9,7 @@ angular.module('aepi-fantasy').controller('UploadImageController', function($sco
 
 	// Public functions
 	$scope.fileUpload = function() {
-        var currentSrc = angular.element("#croppedImage")[0].currentSrc;
+        var currentSrc = angular.element("#croppedImage")[0].src;
         var base64 = currentSrc.replace("data:image/png;base64,","");
 
         $scope.sending = true;
@@ -51,7 +51,6 @@ angular.module('aepi-fantasy').directive('fileModel', function ($parse) {
                 var reader = new FileReader();
                 reader.onload = function(evt) {
                     scope.$apply(function(){
-                        console.info(evt.target.result);
                         modelSetter(scope.$parent, evt.target.result);
                     });
                 };

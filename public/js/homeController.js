@@ -10,7 +10,7 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 		}
 	});
 
-	$scope.currentUser = ipCookie(CURRENT_USER);
+	$scope.currentUser = parseOutPluses(ipCookie(CURRENT_USER));
 	if($scope.currentUser) {
 		$scope.loginSubmitted = true;
 	} else {
@@ -207,5 +207,11 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 	            return decodeURIComponent(pair[1]);
 	        }
 	    }
+	}
+
+	function parseOutPluses(obj) {
+		obj.name = obj.name.replace(/[+]/g," ");
+
+		return obj;
 	}
 })
