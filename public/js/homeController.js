@@ -210,7 +210,9 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 	}
 
 	function parseOutPluses(obj) {
-		obj.name = obj.name.replace(/[+]/g," ");
+		if(obj) {
+			obj.name = obj.name.replace(/[+]/g," ");
+		}
 
 		return obj;
 	}
