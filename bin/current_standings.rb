@@ -43,12 +43,11 @@ end
 
 def query_espn(standings_uri)
 	hostname = "r.espn.go.com"
-	login_uri = "https://#{hostname}/espn/memberservices/pc/login"
+	login_uri = "https://#{hostname}/members/util/loginUser"
 
 	query_options = {
 		"username" => ESPN_USER,
-		"password" => ESPN_PASSWORD,
-		"SUBMIT" => 1
+		"password" => ESPN_PASSWORD
 	}
 
 	cookie_header = nil
@@ -74,7 +73,7 @@ def parse_cookies(cookie_header)
 	match_data = cookie_header.scan(/\S+=\S+;/)
 	cookie_string = ''
 
-	cookies = ['BLUE','espnAuth','RED','SWID']
+	cookies = ['BLUE','espnAuth={','SWID={']
 	match_data.each { |cookie|
 		cookies.each {|name|
 			if(cookie.start_with? name)
