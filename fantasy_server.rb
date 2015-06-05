@@ -20,7 +20,7 @@ class FantasyServer < Sinatra::Base
 
 	def self.start
 		use Rack::Session::Moneta, key: 'rack.session',
-			expire_after: 2592000,
+			expire_after: 259200000,
 			store: Moneta.new(:Redis, expires: true, :host => settings.redis_host, :port => settings.redis_port, :password => settings.redis_password)
 
 		init_db
