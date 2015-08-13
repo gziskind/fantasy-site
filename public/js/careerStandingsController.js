@@ -1,6 +1,7 @@
 angular.module('aepi-fantasy').controller('CareerStandingsController', function($scope, $location, $routeParams, $resource) {
 
 	// Private Variables
+	var firstPlaceNumber = 0;
 
 	// Public variables
 	$scope.contentLoaded = true;
@@ -31,6 +32,16 @@ angular.module('aepi-fantasy').controller('CareerStandingsController', function(
 			return '';
 		}
 	}
+
+	$scope.getGamesBack = function(result) {
+		var resultNumber = result.wins - result.losses;
+
+		if(resultNumber == firstPlaceNumber) {
+			return '-'
+		} else {
+			return (firstPlaceNumber - resultNumber) / 2
+		}
+	}
 	
 	// Watches
 
@@ -51,6 +62,11 @@ angular.module('aepi-fantasy').controller('CareerStandingsController', function(
 					};
 
 					$scope.standings.push(standing);
+
+					var newFirstPlaceNumber = result[name].wins - result[name].losses;
+					if(newFirstPlaceNumber > firstPlaceNumber) {
+						firstPlaceNumber = newFirstPlaceNumber;
+					}
 				}
 			}
 
@@ -59,15 +75,6 @@ angular.module('aepi-fantasy').controller('CareerStandingsController', function(
 				$scope.orderByField = 'points';
 			}
 			$scope.reverseSort = true;
-
-
-			// $scope.standings.sort(function(standing1, standing2) {
-			// 	if(standing1[sortBy] > standing2[sortBy]) {
-			// 		return -1
-			// 	} else {
-			// 		return 1;
-			// 	}
-			// })
 		});
 	}
 });

@@ -32,6 +32,7 @@
 						<th ng-click="changeField('ties')" ng-show="sport == 'baseball'">Ties <i class="fa fa-sort" ng-class="sortStatus('ties')"></i></th>
 						<th ng-click="changeField('winPercentage')">Win Percentage <i class="fa fa-sort" ng-class="sortStatus('winPercentage')"></i></th>
 						<th ng-click="changeField('points')" ng-show="sport == 'football'">Points <i class="fa fa-sort" ng-class="sortStatus('points')"></i></th>
+            <th ng-show="sport == 'baseball'">Games Back</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -43,6 +44,7 @@
 						<td ng-show="sport == 'baseball'">{{result.ties}}</td>
             <td>{{result.winPercentage | number: 4}}</td>
 						<td ng-show="sport == 'football'">{{result.points | number:1}}</td>
+            <td ng-show="sport == 'baseball'">{{getGamesBack(result)}}</td>
 					</tr>
 				</tbody>
 			</table>
