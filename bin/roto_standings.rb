@@ -36,47 +36,21 @@ def query_espn_baseball
 end
 
 def query_espn(standings_uri)
-	hostname = "r.espn.go.com"
-	login_uri = "https://#{hostname}/members/util/loginUser"
+	login_uri = "https://registerdisney.go.com/jgc/v2/client/ESPN-ESPNCOM-PROD/guest/login?langPref=en-US"
 
-	query_options = {
-		"username" => ESPN_USER,
-		"password" => ESPN_PASSWORD
-	}
+	body = {
+		loginValue: ESPN_USER,
+		password: ESPN_PASSWORD
+	}.to_json
 
-	cookie_header = nil
+	login_response = HTTParty.post(login_uri, body: body, headers: {'Content-type'=>'application/json'});
 
-	request = Net::HTTP::Post.new(login_uri)
-	request.form_data = query_options
-	Net::HTTP::start(hostname, 443, :use_ssl => true) { |http|
-		http.use_ssl = true
-		http.verify_mode = OpenSSL::SSL::VERIFY_NONE # read into this
-		response = http.request(request);
-
-		cookie_header = response['set-cookie']
-	}
-
-	cookie_string = parse_cookies(cookie_header)
+	login_swid = login_response['data']['token']['swid']
+	cookie_string = "SWID=#{login_swid}; espnAuth={\"swid\":\"#{login_swid}\"};" 
 
 	response = HTTParty.get(standings_uri, :headers => {"Cookie" => cookie_string});
 
 	return response.body
-end
-
-def parse_cookies(cookie_header)
-	match_data = cookie_header.scan(/\S+=\S+;/)
-	cookie_string = ''
-
-	cookies = ['BLUE','espnAuth={','SWID={']
-	match_data.each { |cookie|
-		cookies.each {|name|
-			if(cookie.start_with? name)
-				cookie_string += cookie
-			end
-		}
-	}
-
-	cookie_string
 end
 
 def parse_roto
