@@ -165,16 +165,20 @@ def save_standings(league_name, info, sport)
 		results: results
 	}
 	season = Season.find_by_sport_and_year sport, YEAR
-	if !season.nil?
-		season.results.each {|result|
-			result.destroy
-		}
-		season.destroy
+	if season.championship_score.nil?
+		if !season.nil?
+			season.results.each {|result|
+				result.destroy
+			}
+			season.destroy
+		end
+
+		season = Season.new(season_data);
+
+		season.save!
+	else
+		puts "Season #{YEAR} Results already final"
 	end
-
-	season = Season.new(season_data);
-
-	season.save!
 end
 
 def save_team_names_baseball(info)
