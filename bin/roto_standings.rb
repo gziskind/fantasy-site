@@ -179,4 +179,4 @@ end
 
 connect DATABASE, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD
 
-parse_roto
+parse_roto if (YEAR != Time.now.year || (Time.now.month >= 4 && Time.now.month <= 9))
