@@ -9,4 +9,5 @@ class Season
 	key :championship_score, String
 
 	many :results
+	many :week_results
 end

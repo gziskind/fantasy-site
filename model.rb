@@ -16,6 +16,9 @@ require_relative 'model/rating'
 require_relative 'model/event'
 require_relative 'model/podcast'
 require_relative 'model/roto_stat'
+require_relative 'model/week_result'
+require_relative 'model/team_result'
+require_relative 'model/matchup'
 
 def connect(database, host = 'localhost', port = 27017, user = nil, password = nil)
 	MongoMapper.connection = Mongo::Connection.new(host, port)
@@ -65,6 +68,21 @@ def create_user(username, password, name, unique_name, roles)
 	password_digest = Digest::MD5.hexdigest(password);
 	user = User.new({username: username, password: password_digest, name: name, unique_name: unique_name, roles: role_objects});
 	user.save!
+end
+
+def create_weekly_result
+	season = Season.new(year: 2016, sport: 'football', league_name: 'Test')
+	user1 = User.all[0]
+	user2 = User.all[1]
+
+	result1 = TeamResult.new({points: 150, user: user1})
+	result2 = TeamResult.new({points:75, user: user2})
+	matchup = Matchup.new({team_results: [result1, result2]})
+	week_result = WeekResult.new({week:1, matchups: [matchup]})
+
+	season.week_results.push(week_result);
+
+	season.save
 end
 
 def create_season(year, sport)
