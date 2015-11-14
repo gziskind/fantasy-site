@@ -44,22 +44,6 @@ def query_espn(standings_uri)
 	return response.body
 end
 
-def parse_cookies(cookie_header)
-	match_data = cookie_header.scan(/\S+=\S+;/)
-	cookie_string = ''
-
-	cookies = ['BLUE','espnAuth={','SWID={']
-	match_data.each { |cookie|
-		cookies.each {|name|
-			if(cookie.start_with? name)
-				cookie_string += cookie
-			end
-		}
-	}
-
-	cookie_string
-end
-
 def parse_auction
 	puts "Parsing #{YEAR} Baseball Draft"
 
