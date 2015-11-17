@@ -1,0 +1,168 @@
+#! /usr/bin/env ruby
+
+require 'net/http'
+require 'httparty'
+require 'nokogiri'
+require 'trollop'
+require 'date'
+require_relative '../model'
+
+options = Trollop::options do
+	opt :year, "Year", :default => Time.now.year
+	opt :espn_user, "ESPN User", :short => "U", :type => :string, :required => true
+	opt :espn_password, "ESPN Password", :short => "w", :type => :string, :required => true
+	opt :football_league, "Football League ID", :short => "f", :type => :int, :required => true
+	opt :database, "Database", :default => "test_database"
+	opt :db_host, "Database Host", :default => "localhost", :short => "h"
+	opt :db_port, "Database Port", :default => 27017, :short => "P"
+	opt :db_user, "Database User", :short => "u", :type => :string
+	opt :db_password, "Database Password", :short => "p", :type => :string
+end
+
+YEAR = options[:year]
+ESPN_USER = options[:espn_user]
+ESPN_PASSWORD = options[:espn_password]
+FOOTBALL_ID = options[:football_league]
+DATABASE = options[:database]
+DB_HOST = options[:db_host]
+DB_PORT = options[:db_port]
+DB_USER = options[:db_user]
+DB_PASSWORD = options[:db_password]
+
+def query_espn_football(matchup = nil)
+	path = "http://games.espn.go.com/ffl/scoreboard?leagueId=#{FOOTBALL_ID}"
+	path += "&matchupPeriodId=#{matchup}" if !matchup.nil?
+
+	query_espn path
+end
+
+def query_espn(url)
+	login_uri = "https://registerdisney.go.com/jgc/v2/client/ESPN-ESPNCOM-PROD/guest/login?langPref=en-US"
+
+	body = {
+		loginValue: ESPN_USER,
+		password: ESPN_PASSWORD
+	}.to_json
+
+	login_response = HTTParty.post(login_uri, body: body, headers: {'Content-type'=>'application/json'});
+
+	login_swid = login_response['data']['token']['swid']
+	cookie_string = "SWID=#{login_swid}; espnAuth={\"swid\":\"#{login_swid}\"};" 
+
+	response = HTTParty.get(url, :headers => {"Cookie" => cookie_string});
+
+	return response.body
+end
+
+def parse_scoreboard
+	puts "Parsing Current Football Scoreboard"
+
+	response_body = query_espn_football;
+	html = Nokogiri::HTML(response_body);
+
+	matchups = extract_matchups(html)
+	week = extract_week(html)
+	if verify_scoreboard_data(matchups)
+		puts "Scoreboard data valid [#{Time.now}]"
+		save_scores(matchups, week)
+	else
+		puts "Scoreboard data Invalid [#{Time.now}]"
+		puts matchups
+	end
+end
+
+def extract_week(html)
+	week_element = html.css '//em'
+
+	match_data = week_element[0].content.match(/Week (\d+)/)
+	return match_data[1].to_i
+end
+
+def extract_matchups(html)
+	matchups = []
+	scoreboard_div = html.css('//div#scoreboardMatchups')
+
+	matchup_elements = scoreboard_div[0].css("td/table[@class='ptsBased matchup']")
+	matchup_elements.each {|matchup_element|
+		matchup = {}
+		name_elements = matchup_element.css("div[@class='name']/a")
+
+		team_and_user = name_elements[0].attribute("title").content
+		match_data = team_and_user.match(/.*\((.*, )?(.*)\)/)
+		matchup[:user1] = match_data[2]
+
+		team_and_user = name_elements[1].attribute("title").content
+		match_data = team_and_user.match(/.*\((.*, )?(.*)\)/)
+		matchup[:user2] = match_data[2]
+
+		points_elements = matchup_element.css("td[@class='score']")
+		
+		matchup[:points1] = points_elements[0].content
+		matchup[:points2] = points_elements[1].content
+
+		matchups.push(matchup)
+	}
+
+	return matchups
+end
+
+def verify_scoreboard_data(scoreboard_data)
+	valid = true
+
+	puts scoreboard_data
+	if(scoreboard_data.size != 6)
+		puts "Invalid matchup length"
+		valid = false
+	end
+
+	fields = [:user1,:user2, :points1, :points2]
+	scoreboard_data.each {|matchup|
+		fields.each{ |field|
+			if matchup[field].nil?
+				valid = false
+			end
+		}
+	}
+
+	return valid;
+end
+
+def save_scores(matchup_data, week)
+	season = Season.find_by_sport_and_year('football', YEAR)
+
+	week_result = WeekResult.find_by_week_and_season_id(week, season._id)
+
+	if(week_result.nil?)
+		matchups = []
+		matchup_data.each{|matchup_data|
+			user1 = User.find_by_unique_name(matchup_data[:user1]);
+			user2 = User.find_by_unique_name(matchup_data[:user2]);
+
+			result1 = TeamResult.new({points: matchup_data[:points1], user: user1})
+			result2 = TeamResult.new({points: matchup_data[:points2], user: user2})
+
+			matchups.push(Matchup.new(team_results:[result1, result2]))
+		}
+		
+		season.week_results.push(WeekResult.new({week: week, matchups: matchups}))
+		season.save!
+	else
+		week_result.week = week
+		week_result.matchups.each_with_index {|matchup, index|
+			user1 = User.find_by_unique_name(matchup_data[index][:user1]);
+			user2 = User.find_by_unique_name(matchup_data[index][:user2]);
+
+			matchup.team_results[0].points = matchup_data[index][:points1]
+			matchup.team_results[0].user = user1
+
+			matchup.team_results[1].points = matchup_data[index][:points2]
+			matchup.team_results[1].user = user2
+		}
+
+		week_result.save!
+	end
+end
+
+connect DATABASE, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD
+
+parse_scoreboard
