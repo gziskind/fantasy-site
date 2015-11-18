@@ -155,30 +155,44 @@ def save_standings(league_name, info, sport)
 			user: user
 		}
 		result_data[:points] = team[:points] if !team[:points].nil?
-		results.push(result_class.new(result_data));
+		results.push(result_data);
 	}
 
-	season_data = {
-		year: YEAR,
-		sport: sport,
-		league_name: league_name,
-		results: results
-	}
 	season = Season.find_by_sport_and_year sport, YEAR
-	if season.championship_score.nil?
-		if !season.nil?
-			season.results.each {|result|
-				result.destroy
-			}
-			season.destroy
-		end
+	if !season.nil?
+		puts "Updating Existing Season"
+		season.results.each_with_index {|result, index|
+			result.place = results[index][:place]
+			result.team_name = results[index][:team_name]
+			result.wins = results[index][:wins]
+			result.losses = results[index][:losses]
+			result.ties = results[index][:ties]
+			result.user = results[index][:user]
 
-		season = Season.new(season_data);
+			result.points = results[index][:points] if !results[index][:points].nil?
+		}
 
-		season.save!
+		season.year = YEAR
+		season.sport = sport
+		season.league_name = league_name
 	else
-		puts "Season #{YEAR} Results already final"
+		puts "Creating new season"
+		new_results = []
+		results.each{|result_data|
+			new_results.push(result_class.new(result_data))
+		}
+
+		season_data = {
+			year: YEAR,
+			sport: sport,
+			league_name: league_name,
+			results: new_results
+		}
+
+		season = Season.new(season_data);	
 	end
+
+	season.save!
 end
 
 def save_team_names_baseball(info)
