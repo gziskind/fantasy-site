@@ -17,6 +17,7 @@ options = Trollop::options do
 	opt :db_port, "Database Port", :default => 27017, :short => "P"
 	opt :db_user, "Database User", :short => "u", :type => :string
 	opt :db_password, "Database Password", :short => "p", :type => :string
+	opt :full_season, "Full Season", :short => "s", :type => :boolean, :default => false
 end
 
 YEAR = options[:year]
@@ -28,9 +29,11 @@ DB_HOST = options[:db_host]
 DB_PORT = options[:db_port]
 DB_USER = options[:db_user]
 DB_PASSWORD = options[:db_password]
+FULL_SEASON = options[:full_season]
 
+# Might need to consider following a redirect
 def query_espn_football(matchup = nil)
-	path = "http://games.espn.go.com/ffl/scoreboard?leagueId=#{FOOTBALL_ID}"
+	path = "http://games.espn.go.com/ffl/scoreboard?leagueId=#{FOOTBALL_ID}&seasonId=#{YEAR}"
 	path += "&matchupPeriodId=#{matchup}" if !matchup.nil?
 
 	query_espn path
@@ -54,10 +57,14 @@ def query_espn(url)
 	return response.body
 end
 
-def parse_scoreboard
-	puts "Parsing Current Football Scoreboard"
+def parse_scoreboard(matchup = nil)
+	if matchup == nil
+		puts "Parsing Football Scoreboard"
+	else
+		puts "Parsing Football Scoreboard for week #{matchup}"
+	end
 
-	response_body = query_espn_football;
+	response_body = query_espn_football(matchup);
 	html = Nokogiri::HTML(response_body);
 
 	matchups = extract_matchups(html)
@@ -68,40 +75,49 @@ def parse_scoreboard
 	else
 		puts "Scoreboard data Invalid [#{Time.now}]"
 		puts matchups
+		puts html if matchups.size == 0
 	end
 end
 
 def extract_week(html)
 	week_element = html.css '//em'
 
-	match_data = week_element[0].content.match(/Week (\d+)/)
-	return match_data[1].to_i
+	if(week_element.length > 0) 
+		match_data = week_element[0].content.match(/Week (\d+)/)
+		return match_data[1].to_i
+	else
+		return nil
+	end
 end
 
 def extract_matchups(html)
 	matchups = []
 	scoreboard_div = html.css('//div#scoreboardMatchups')
 
-	matchup_elements = scoreboard_div[0].css("td/table[@class='ptsBased matchup']")
-	matchup_elements.each {|matchup_element|
-		matchup = {}
-		name_elements = matchup_element.css("div[@class='name']/a")
+	if(scoreboard_div.length > 0) 
+		matchup_elements = scoreboard_div[0].css("td/table[@class='ptsBased matchup']")
+		matchup_elements.each {|matchup_element|
+			matchup = {}
+			name_elements = matchup_element.css("div[@class='name']/a")
 
-		team_and_user = name_elements[0].attribute("title").content
-		match_data = team_and_user.match(/.*\((.*, )?(.*)\)/)
-		matchup[:user1] = match_data[2]
+			team_and_user = name_elements[0].attribute("title").content
+			match_data = team_and_user.match(/.*\((.*, )?(.*)\)/)
+			matchup[:user1] = match_data[2]
 
-		team_and_user = name_elements[1].attribute("title").content
-		match_data = team_and_user.match(/.*\((.*, )?(.*)\)/)
-		matchup[:user2] = match_data[2]
+			team_and_user = name_elements[1].attribute("title").content
+			match_data = team_and_user.match(/.*\((.*, )?(.*)\)/)
+			matchup[:user2] = match_data[2]
 
-		points_elements = matchup_element.css("td[@class='score']")
-		
-		matchup[:points1] = points_elements[0].content
-		matchup[:points2] = points_elements[1].content
+			points_elements = matchup_element.css("td[@class~='score']")
+			
+			matchup[:points1] = points_elements[0].content
+			matchup[:points2] = points_elements[1].content
 
-		matchups.push(matchup)
-	}
+			matchups.push(matchup)
+		}
+	else
+		puts "Not scoreboard data found"
+	end
 
 	return matchups
 end
@@ -109,7 +125,6 @@ end
 def verify_scoreboard_data(scoreboard_data)
 	valid = true
 
-	puts scoreboard_data
 	if(scoreboard_data.size != 6)
 		puts "Invalid matchup length"
 		valid = false
@@ -165,4 +180,10 @@ end
 
 connect DATABASE, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD
 
-parse_scoreboard
+if(FULL_SEASON)
+	13.times{|x|
+		parse_scoreboard(x+1)
+	}
+else
+	parse_scoreboard
+end

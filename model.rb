@@ -77,7 +77,7 @@ def create_weekly_result
 
 	result1 = TeamResult.new({points: 150, user: user1})
 	result2 = TeamResult.new({points:75, user: user2})
-	matchup = Matchup.new({team_results: [result1, result2]})
+	matchup = Matchup.new({team1: result1, team2: result2})
 	week_result = WeekResult.new({week:1, matchups: [matchup]})
 
 	season.week_results.push(week_result);
