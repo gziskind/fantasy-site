@@ -30,6 +30,13 @@ class FantasyServer
 		erb :roto
 	end
 
+	get '/football/results/zender' do
+		event 'Zender'
+		@header_index = 'football'
+
+		erb :zenderStandings
+	end
+
 	# API Calls
 	get '/api/:sport/results/career' do
 		result_class = FootballResult
@@ -62,9 +69,8 @@ class FantasyServer
 			ties = user_standing[:ties]
 			losses = user_standing[:losses]
 
-			user_standing[:winPercentage] = (wins + (ties/2.0))/(wins + losses + ties + 1.0)
+			user_standing[:winPercentage] = (wins + (ties/2.0))/(wins + losses + ties)
 		}
-
 
 		user_standings.to_json
 	end
@@ -112,6 +118,64 @@ class FantasyServer
 		results.reverse!
 
 		results.to_json
+	end
+
+	get '/api/football/results/zender/:matchup/:points' do
+		season = Season.find_by_sport_and_year('football',2015)
+		matchup_wins = params[:matchup].to_i
+		points_wins = params[:points].to_i
+
+		zender_results = {}
+		season.results.each{|result|
+			zender_results[result.user.name] = {
+				wins: result.wins * matchup_wins,
+				losses: result.losses * matchup_wins,
+				ties: result.ties * matchup_wins,
+				points: result.points
+			}
+		}
+
+		season.week_results.each {|week_result|
+			team_results = []
+			week_result.matchups.each{|matchup|
+				team_results.push(matchup.team_results[0])
+				team_results.push(matchup.team_results[1])
+			}
+
+			team_results.sort_by! {|team_result| team_result[:points]}
+			team_results.reverse!
+
+			team_results.each_with_index {|team_result,index|
+				if(index < 6)
+					zender_results[team_result.user.name][:wins] += points_wins
+				else
+					zender_results[team_result.user.name][:losses] += points_wins
+				end
+			}
+		}
+
+		final_results = []
+		zender_results.each {|user,data|
+			wins = data[:wins]
+			ties = data[:ties]
+			losses = data[:losses]
+
+			win_percentage = (wins + (ties/2.0))/(wins + losses + ties)
+
+			final_results.push({
+				owner: user,
+				wins: wins,
+				losses: losses,
+				ties: ties,
+				points: data[:points],
+				winPercentage: win_percentage
+			})
+		}
+
+		final_results.sort_by! {|result| [result[:winPercentage],result[:points]]}
+		final_results.reverse!
+
+		final_results.to_json
 	end
 
 	get '/api/:sport/results/:year' do
