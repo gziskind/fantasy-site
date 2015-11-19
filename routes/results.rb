@@ -62,7 +62,7 @@ class FantasyServer
 			ties = user_standing[:ties]
 			losses = user_standing[:losses]
 
-			user_standing[:winPercentage] = (wins + (ties/2.0))/(wins + losses + ties + 1.0)
+			user_standing[:winPercentage] = (wins + (ties/2.0))/(wins + losses + ties)
 		}
 
 
