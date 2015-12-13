@@ -120,18 +120,19 @@ class FantasyServer
 		results.to_json
 	end
 
-	get '/api/football/results/zender/:matchup/:points' do
+	get '/api/football/results/zender' do
 		season = Season.find_by_sport_and_year('football',2015)
-		matchup_wins = params[:matchup].to_i
-		points_wins = params[:points].to_i
 
 		zender_results = {}
 		season.results.each{|result|
 			zender_results[result.user.name] = {
-				wins: result.wins * matchup_wins,
-				losses: result.losses * matchup_wins,
-				ties: result.ties * matchup_wins,
-				points: result.points
+				wins: result.wins,
+				losses: result.losses,
+				ties: result.ties,
+				team_name: result.team_name,
+				points: result.points,
+				points_wins: 0,
+				points_losses: 0
 			}
 		}
 
@@ -147,35 +148,14 @@ class FantasyServer
 
 			team_results.each_with_index {|team_result,index|
 				if(index < 6)
-					zender_results[team_result.user.name][:wins] += points_wins
+					zender_results[team_result.user.name][:points_wins] += 1
 				else
-					zender_results[team_result.user.name][:losses] += points_wins
+					zender_results[team_result.user.name][:points_losses] += 1
 				end
 			}
 		}
 
-		final_results = []
-		zender_results.each {|user,data|
-			wins = data[:wins]
-			ties = data[:ties]
-			losses = data[:losses]
-
-			win_percentage = (wins + (ties/2.0))/(wins + losses + ties)
-
-			final_results.push({
-				owner: user,
-				wins: wins,
-				losses: losses,
-				ties: ties,
-				points: data[:points],
-				winPercentage: win_percentage
-			})
-		}
-
-		final_results.sort_by! {|result| [result[:winPercentage],result[:points]]}
-		final_results.reverse!
-
-		final_results.to_json
+		zender_results.to_json
 	end
 
 	get '/api/:sport/results/:year' do

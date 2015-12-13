@@ -69,7 +69,7 @@ def parse_scoreboard(matchup = nil)
 
 	matchups = extract_matchups(html)
 	week = extract_week(html)
-	if verify_scoreboard_data(matchups)
+	if !week.nil? && verify_scoreboard_data(matchups)
 		puts "Scoreboard data valid [#{Time.now}]"
 		save_scores(matchups, week)
 	else
@@ -84,7 +84,14 @@ def extract_week(html)
 
 	if(week_element.length > 0) 
 		match_data = week_element[0].content.match(/Week (\d+)/)
-		return match_data[1].to_i
+
+		if(!match_data.nil?)
+			return match_data[1].to_i
+		else
+			match_data = week_element[0].content.match(/Round (\d+)/)
+			puts "Playoff Round #{match_data[1]}" if !match_data.nil?
+			return nil
+		end
 	else
 		return nil
 	end
