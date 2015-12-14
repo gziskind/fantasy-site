@@ -97,6 +97,6 @@ angular.module('aepi-fantasy').controller('ResultsController', function($scope, 
 	}
 
 	function calculateWinPercentage(result) {
-		return (result.wins + (result.ties/2.0))/(result.wins + result.losses + result.ties + 1.0);
+		return (result.wins + (result.ties/2.0))/(result.wins + result.losses + result.ties);
 	}
 });

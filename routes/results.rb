@@ -129,11 +129,12 @@ class FantasyServer
 				wins: result.wins,
 				losses: result.losses,
 				ties: result.ties,
-				team_name: result.team_name,
 				points: result.points,
 				points_wins: 0,
 				points_losses: 0
 			}
+
+			zender_results[result.user.name][:team_name] = result.team_name if !@user.nil?
 		}
 
 		season.week_results.each {|week_result|

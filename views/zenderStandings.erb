@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%= erb :head %>
+
+    <script src="/js/zenderStandingsController.js"></script>
+  </head>
+
+  <body ng-app="aepi-fantasy" ng-controller="HomeController" ng-cloak>
+
+    <div class="container">
+      <!-- Static navbar -->
+      <%= erb :header %>
+      
+      <div class="container-fluid" ng-controller="ZenderStandingsController">
+        <div ng-hide="contentLoaded" class="vertical-center">
+          <div style="text-align:center; width:100%">
+            <h1>Loading</h1>
+            <img src="/img/loading-page.gif"/>
+          </div>
+        </div>
+        <div ng-show="contentLoaded">
+			<div class="col-xs-12 col-md-12">
+          		<h1>Zender Doctrine Standings</h1>
+			</div>
+			<form class="form-horizontal" role="form">
+				<div class="col-xs-12 col-md-6 row">
+					<div class="col-xs-12 col-md-6 row form-group">
+						<label class="col-xs-8 col-md-8 control-label">Wins Value</label>
+						<div class="col-xs-4 col-md-4 row" style="padding-top:5px">
+							<a class="glyphicon glyphicon-chevron-left" ng-click="decrementWinValue()"></a><span style="font-size:20px; padding: 0 4px;">{{winValue}}</span><a class="glyphicon glyphicon-chevron-right" ng-click="incrementWinValue()"></a>
+						</div>
+					</div>
+					<div class="col-xs-12 col-md-6 row">
+				        <label class="col-xs-8 col-md-8 control-label">Points Value</label>
+						<div class="col-xs-4 col-md-4 row" style="padding-top:5px;">
+			       			<a class="glyphicon glyphicon-chevron-left" ng-click="decrementPointsValue()"></a><span style="font-size:20px; padding: 0 4px;">{{pointsValue}}</span><a class="glyphicon glyphicon-chevron-right" ng-click="incrementPointsValue()"></a>
+						</div>
+					</div>
+				</div>
+			</form>
+		    <div class="table-responsive col-md-12">
+				<table class="table table-condensed table-hover">
+					<thead>
+						<tr>
+							<th>Place</th>
+							<th ng-show="currentUser">Team Name</th>
+							<th>Owner</th>
+							<th>Wins</th>
+							<th>Losses</th>
+							<th>Win Percentage</th>
+							<th>Points</th>
+							<!-- <th>Games Back</th> -->
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="standing in standings">
+							<td>{{$index + 1}}</td>
+							<td ng-show="currentUser">{{standing.name}}</td>
+							<td>{{standing.owner}}</td>
+							<td>{{standing.wins}}</td>
+							<td>{{standing.losses}}</td>
+							<td>{{standing.winPercentage}}</td>
+							<td>{{standing.points}}</td>
+							<!-- <td>{{getGamesBack(result)}}</td> -->
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	  </div>	
+	</div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/lib/bootstrap.min.js"></script>
+  </body>
+</html>
