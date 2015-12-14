@@ -30,7 +30,9 @@ angular.module('aepi-fantasy').controller('ZenderStandingsController', function(
 	}
 
 	$scope.incrementWinValue = function() {
-		$scope.winValue++;
+		if($scope.winValue < 99) {
+			$scope.winValue++;
+		}
 	}
 
 	$scope.decrementPointsValue = function() {
@@ -40,7 +42,9 @@ angular.module('aepi-fantasy').controller('ZenderStandingsController', function(
 	}
 
 	$scope.incrementPointsValue = function() {
-		$scope.pointsValue++;
+		if($scope.pointsValue < 99) {
+			$scope.pointsValue++;
+		}
 	}
 	
 	// Watches
