@@ -4,7 +4,7 @@ angular.module('aepi-fantasy').controller('CareerStandingsController', function(
 	var firstPlaceNumber = 0;
 
 	// Public variables
-	$scope.contentLoaded = true;
+	$scope.contentLoaded = false;
 	$scope.sport = $scope.$parent.getSportType()
 
 	updateCareerStandings();
@@ -75,6 +75,7 @@ angular.module('aepi-fantasy').controller('CareerStandingsController', function(
 				$scope.orderByField = 'points';
 			}
 			$scope.reverseSort = true;
+			$scope.contentLoaded = true;
 		});
 	}
 });
