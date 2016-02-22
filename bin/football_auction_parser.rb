@@ -6,6 +6,7 @@ require 'nokogiri'
 require 'trollop'
 require 'date'
 require_relative '../model'
+require_relative '../lib/espn_fantasy'
 
 options = Trollop::options do
 	opt :year, "Year", :default => Time.now.year
@@ -21,33 +22,12 @@ FOOTBALL_ID = options[:football_league]
 
 ORDER = ["QB","RB","WR","TE"]
 
-def query_espn_football
-	hostname = "games.espn.go.com"
-	query_espn "http://#{hostname}/ffl/tools/draftrecap?leagueId=#{FOOTBALL_ID}&seasonId=#{YEAR}"
-end
-
-def query_espn(standings_uri)
-	login_uri = "https://registerdisney.go.com/jgc/v2/client/ESPN-ESPNCOM-PROD/guest/login?langPref=en-US"
-
-	body = {
-		loginValue: ESPN_USER,
-		password: ESPN_PASSWORD
-	}.to_json
-
-	login_response = HTTParty.post(login_uri, body: body, headers: {'Content-type'=>'application/json'});
-
-	login_swid = login_response['data']['token']['swid']
-	cookie_string = "SWID=#{login_swid}; espnAuth={\"swid\":\"#{login_swid}\"};" 
-
-	response = HTTParty.get(standings_uri, :headers => {"Cookie" => cookie_string});
-
-	return response.body
-end
-
 def parse_auction
 	puts "Parsing #{YEAR} Football Draft"
 
-	response_body = query_espn_football;
+	football_url = "http://games.espn.go.com/ffl/tools/draftrecap?leagueId=#{FOOTBALL_ID}&seasonId=#{YEAR}"
+
+	response_body = EspnFantasy.get_page(football_url, ESPN_USER, ESPN_PASSWORD);
 	html = Nokogiri::HTML(response_body);
 
 	draft_data = extract_draft_data(html)

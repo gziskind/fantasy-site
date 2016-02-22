@@ -5,6 +5,7 @@ require 'httparty'
 require 'nokogiri'
 require 'trollop'
 require_relative '../model'
+require_relative '../lib/espn_fantasy'
 
 options = Trollop::options do
 	opt :year, "Year", :default => Time.now.year
@@ -29,35 +30,6 @@ ESPN_USER = options[:espn_user]
 ESPN_PASSWORD = options[:espn_password]
 BASEBALL_ID = options[:baseball_league]
 FOOTBALL_ID = options[:football_league]
-
-
-def query_espn_baseball
-	hostname = "games.espn.go.com"
-	query_espn "http://#{hostname}/flb/standings?leagueId=#{BASEBALL_ID}&seasonId=#{YEAR}"
-end
-
-def query_espn_football
-	hostname = "games.espn.go.com"
-	query_espn "http://#{hostname}/ffl/standings?leagueId=#{FOOTBALL_ID}&seasonId=#{YEAR}"
-end
-
-def query_espn(standings_uri)
-	login_uri = "https://registerdisney.go.com/jgc/v2/client/ESPN-ESPNCOM-PROD/guest/login?langPref=en-US"
-
-	body = {
-		loginValue: ESPN_USER,
-		password: ESPN_PASSWORD
-	}.to_json
-
-	login_response = HTTParty.post(login_uri, body: body, headers: {'Content-type'=>'application/json'});
-
-	login_swid = login_response['data']['token']['swid']
-	cookie_string = "SWID=#{login_swid}; espnAuth={\"swid\":\"#{login_swid}\"};" 
-
-	response = HTTParty.get(standings_uri, :headers => {"Cookie" => cookie_string});
-
-	return response.body
-end
 
 def extract_league_name(html) 
 	name = html.css "//h1";
@@ -260,7 +232,10 @@ end
 
 def parse_baseball
 	puts "Parsing #{YEAR} Baseball Standings"
-	response_body = query_espn_baseball;
+
+	baseball_url = "http://games.espn.go.com/flb/standings?leagueId=#{BASEBALL_ID}&seasonId=#{YEAR}"
+	response_body = EspnFantasy.get_page(baseball_url, ESPN_USER, ESPN_PASSWORD);
+
 	html = Nokogiri::HTML(response_body);
 	league_name = extract_league_name html;
 	team_info = extract_team_baseball_info html
@@ -277,7 +252,9 @@ end
 
 def parse_football
 	puts "Parsing #{YEAR} Football Standings"
-	response_body = query_espn_football;
+
+	football_url = "http://games.espn.go.com/ffl/standings?leagueId=#{FOOTBALL_ID}&seasonId=#{YEAR}"
+	response_body = EspnFantasy.get_page(football_url, ESPN_USER, ESPN_PASSWORD);
 
 	html = Nokogiri::HTML(response_body);
 	league_name = extract_league_name html;

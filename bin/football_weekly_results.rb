@@ -6,6 +6,7 @@ require 'nokogiri'
 require 'trollop'
 require 'date'
 require_relative '../model'
+require_relative '../lib/espn_fantasy'
 
 options = Trollop::options do
 	opt :year, "Year", :default => Time.now.year
@@ -31,40 +32,17 @@ DB_USER = options[:db_user]
 DB_PASSWORD = options[:db_password]
 FULL_SEASON = options[:full_season]
 
-# Might need to consider following a redirect
-def query_espn_football(matchup = nil)
-	path = "http://games.espn.go.com/ffl/scoreboard?leagueId=#{FOOTBALL_ID}&seasonId=#{YEAR}"
-	path += "&matchupPeriodId=#{matchup}" if !matchup.nil?
-
-	query_espn path
-end
-
-def query_espn(url)
-	login_uri = "https://registerdisney.go.com/jgc/v2/client/ESPN-ESPNCOM-PROD/guest/login?langPref=en-US"
-
-	body = {
-		loginValue: ESPN_USER,
-		password: ESPN_PASSWORD
-	}.to_json
-
-	login_response = HTTParty.post(login_uri, body: body, headers: {'Content-type'=>'application/json'});
-
-	login_swid = login_response['data']['token']['swid']
-	cookie_string = "SWID=#{login_swid}; espnAuth={\"swid\":\"#{login_swid}\"};" 
-
-	response = HTTParty.get(url, :headers => {"Cookie" => cookie_string});
-
-	return response.body
-end
-
 def parse_scoreboard(matchup = nil)
+	# Might need to consider following a redirect
+	path = "http://games.espn.go.com/ffl/scoreboard?leagueId=#{FOOTBALL_ID}&seasonId=#{YEAR}"
 	if matchup == nil
 		puts "Parsing Football Scoreboard"
 	else
 		puts "Parsing Football Scoreboard for week #{matchup}"
+		path += "&matchupPeriodId=#{matchup}"
 	end
 
-	response_body = query_espn_football(matchup);
+	response_body = EspnFantasy.get_page(path, ESPN_USER, ESPN_PASSWORD);
 	html = Nokogiri::HTML(response_body);
 
 	matchups = extract_matchups(html)

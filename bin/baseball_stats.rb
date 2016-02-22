@@ -6,6 +6,7 @@ require 'nokogiri'
 require 'trollop'
 require 'date'
 require_relative '../model'
+require_relative '../lib/espn_fantasy'
 
 options = Trollop::options do
 	opt :year, "Year", :default => Time.now.year
@@ -28,36 +29,16 @@ DISPLAY_ALL_STATS = options[:all_stats]
 COUNTING = ["R","HR","RBI","SB","QS","W","SV"]
 REVERSE_STATS = ["ERA","WHIP"]
 
-def query_espn_baseball(matchup)
-	hostname = "games.espn.go.com"
-	query_espn "http://#{hostname}/flb/scoreboard?leagueId=#{BASEBALL_ID}&seasonId=#{YEAR}&matchupPeriodId=#{matchup}"
-end
-
-def query_espn(standings_uri)
-	login_uri = "https://registerdisney.go.com/jgc/v2/client/ESPN-ESPNCOM-PROD/guest/login?langPref=en-US"
-
-	body = {
-		loginValue: ESPN_USER,
-		password: ESPN_PASSWORD
-	}.to_json
-
-	login_response = HTTParty.post(login_uri, body: body, headers: {'Content-type'=>'application/json'});
-
-	login_swid = login_response['data']['token']['swid']
-	cookie_string = "SWID=#{login_swid}; espnAuth={\"swid\":\"#{login_swid}\"};" 
-
-	response = HTTParty.get(standings_uri, :headers => {"Cookie" => cookie_string});
-
-	return response.body
-end
-
 def parse_baseball
 	puts "Parsing #{YEAR} Baseball Scoreboards"
 	season_stats = []
 
 	for index in 1..NUMBER_OF_MATCHUPS
 		puts "Parsing Week #{index}"
-		response_body = query_espn_baseball(index);
+
+		baseball_url = "http://games.espn.go.com/flb/scoreboard?leagueId=#{BASEBALL_ID}&seasonId=#{YEAR}&matchupPeriodId=#{index}"
+
+		response_body = EspnFantasy.get_page(baseball_url, ESPN_USER, ESPN_PASSWORD;
 		html = Nokogiri::HTML(response_body);
 
 		matchup_length = extract_matchup_length html
