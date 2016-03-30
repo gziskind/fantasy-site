@@ -49,7 +49,12 @@ angular.module('aepi-fantasy').controller('PodcenterController', function($scope
 	$scope.openPodcast = function(name) {
 		var Podcast = $resource('/api/podcenter/' + name);
 		Podcast.get(function(response) {
-			window.open(response.url);
+            var userAgent = window.navigator.userAgent.toLowerCase();
+            if(userAgent.indexOf("safari") != -1 && userAgent.indexOf("chrome") == -1) {
+			    window.location = response.url;
+            } else {
+                window.open(response.url);
+            }
 		});
 	}
 
