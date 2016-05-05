@@ -8,6 +8,7 @@ class DraftPick
     key :pick, Integer
     key :year, Integer
     key :sport, String
+    key :keeper, Boolean
 
     belongs_to :user
     belongs_to :player

@@ -15,6 +15,11 @@ options = Trollop::options do
 	opt :baseball_league, "Baseball League ID", :short => "b", :type => :int, :required => true
 	opt :test, "Run against test page", :type => :boolean, :short => "t", :default => false
 	opt :download, "Download test page", :type => :boolean, :short => "d", :default => false
+	opt :database, "Database", :short => "D", :default => "test_database"
+	opt :db_host, "Database Host", :default => "localhost", :short => "h"
+	opt :db_port, "Database Port", :default => 27017, :short => "P"
+	opt :db_user, "Database User", :short => "U", :type => :string
+	opt :db_password, "Database Password", :short => "w", :type => :string
 end
 
 YEAR = options[:year]
@@ -22,6 +27,11 @@ ESPN_USER = options[:espn_user]
 ESPN_PASSWORD = options[:espn_password]
 BASEBALL_ID = options[:baseball_league]
 TEST_PAGE = options[:test]
+DATABASE = options[:database]
+DB_HOST = options[:db_host]
+DB_PORT = options[:db_port]
+DB_USER = options[:db_user]
+DB_PASSWORD = options[:db_password]
 
 TEST_FILE = "/tmp/auction_data.html"
 
@@ -86,9 +96,40 @@ def extract_auction_data(html)
 	end
 	
 	save_draft_data draft_data
+
+	puts "Draft data for #{YEAR} saved."
 end
 
 def save_draft_data(draft_data)
+	draft_data.each {|draft_pick_data|
+		user = User.find_by_unique_name(draft_pick_data[:user]);
+
+		first_name, last_name = parse_player_name(draft_pick_data[:name])
+
+		player = Player.find_by_first_name_and_last_name(first_name, last_name)
+		if(player.nil?)
+			player = Player.new({
+				first_name: first_name,
+				last_name: last_name,
+				sport: 'baseball'
+			})
+
+			player.save!
+		end
+
+		draft_pick = DraftPick.new({
+			position: draft_pick_data[:position],
+			cost: draft_pick_data[:amount],
+			pick: draft_pick_data[:pick],
+			keeper: draft_pick_data[:keeper],
+			year: YEAR,
+			sport: 'baseball',
+			user: user,
+			player: player
+		})
+
+		draft_pick.save!
+	}
 end
 
 def get_draft_data_team(draft_data, team)
@@ -133,8 +174,13 @@ end
 def parse_player(player)
 	match_data = player.match(/(.*)[,]\s\w*.(\w*).*(\w?)/);
 
-	puts match_data
 	return match_data[1].chomp("*"), match_data[2]
+end
+
+def parse_player_name(name)
+	match_data = name.match(/(.+)\s(.+)/)
+
+	return match_data[1], match_data[2]
 end
 
 def extract_user(a)
@@ -147,5 +193,7 @@ end
 if options[:download]
 	download_test_page
 else
+	connect DATABASE, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD
+
 	parse_draft
 end
