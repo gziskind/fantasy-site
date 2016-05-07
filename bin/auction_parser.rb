@@ -86,6 +86,36 @@ def get_draft_type(html)
 	return nil
 end
 
+def extract_snake_data(html) 
+	picks = html.css "//table/tr[@class='tableBody']"
+	draft_data = []
+
+	for index in 0..(picks.size - 1)
+		pick_data = get_pick_data(picks[index])
+		draft_data.push(pick_data)
+	end
+
+	save_draft_data draft_data
+
+	puts "Draft data for #{YEAR} saved."
+end
+
+def get_pick_data(pick)
+	pick_num = pick.css("/td[1]")[0].content
+	player = pick.css("/td[2]")[0].content
+	user_data = pick.css("/td[3]/a")
+	user = extract_user(user_data)
+
+	name, position = parse_player(player)
+	
+	{
+		name: name,
+		position: position,
+		pick: pick_num,
+		user: user,
+		keeper: false
+	}
+end
 
 def extract_auction_data(html) 
 	teams = html.css "//table"
@@ -106,6 +136,7 @@ def save_draft_data(draft_data)
 
 		first_name, last_name = parse_player_name(draft_pick_data[:name])
 
+
 		player = Player.find_by_first_name_and_last_name(first_name, last_name)
 		if(player.nil?)
 			player = Player.new({
@@ -117,16 +148,19 @@ def save_draft_data(draft_data)
 			player.save!
 		end
 
-		draft_pick = DraftPick.new({
+		pick_conf = {
 			position: draft_pick_data[:position],
-			cost: draft_pick_data[:amount],
 			pick: draft_pick_data[:pick],
 			keeper: draft_pick_data[:keeper],
 			year: YEAR,
 			sport: 'baseball',
 			user: user,
 			player: player
-		})
+		};
+
+		pick_conf[:cost] = draft_pick_data[:amount] if !draft_pick_data[:amount].nil?
+
+		draft_pick = DraftPick.new(pick_conf)
 
 		draft_pick.save!
 	}
