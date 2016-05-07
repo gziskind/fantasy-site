@@ -37,7 +37,7 @@ TEST_FILE = "/tmp/auction_data.html"
 
 
 def download_test_page 
-	baseball_url = "http://games.espn.go.com/flb/tools/draftrecap?leagueId=#{BASEBALL_ID}&seasonId=#{YEAR}"
+	baseball_url = EspnFantasy.get_baseball_draft_url(BASEBALL_ID, YEAR)
 
 	response_body = EspnFantasy.get_page(baseball_url, ESPN_USER, ESPN_PASSWORD);
 	File.open(TEST_FILE, 'w') { |file| file.write(response_body) }
@@ -46,91 +46,20 @@ end
 def parse_draft
 	puts "Parsing #{YEAR} Baseball Draft"
 
-	baseball_url = "http://games.espn.go.com/flb/tools/draftrecap?leagueId=#{BASEBALL_ID}&seasonId=#{YEAR}"
-
 	if(!TEST_PAGE)
-		response_body = EspnFantasy.get_page(baseball_url, ESPN_USER, ESPN_PASSWORD);
+		draft_data = EspnFantasy.get_baseball_draft_data(ESPN_USER, ESPN_PASSWORD, BASEBALL_ID, YEAR)
 	else
 		puts "Reading from test file #{TEST_FILE}"
-		response_body = File.read(TEST_FILE)
-	end
-	html = Nokogiri::HTML(response_body);
-
-	draft_data = extract_draft_data(html)
-end
-
-def extract_draft_data(html)
-	draft_type = get_draft_type(html)
-	if(draft_type == :auction)
-		puts "Parsing Auction Draft"
-		extract_auction_data(html)
-	elsif(draft_type == :snake)
-		puts "Parsing Snake Draft"
-		extract_snake_data(html)
-	else
-		puts "Could not determine draft type"
-	end
-end
-
-def get_draft_type(html) 
-	draft_info = html.css "//div[@class='games-alert-mod alert-mod2 games-grey-alert']"
-
-	if(draft_info && draft_info.children.length >= 6)
-		if(draft_info.children[5].content.include? "Auction")
-			return :auction
-		elsif(draft_info.children[5].content.include? "Snake")
-			return :snake
-		end
+		page = File.read(TEST_FILE)
+		draft_data = EspnFantasy.parse_baseball_draft_data(page)
 	end
 
-	return nil
-end
-
-def extract_snake_data(html) 
-	picks = html.css "//table/tr[@class='tableBody']"
-	draft_data = []
-
-	for index in 0..(picks.size - 1)
-		pick_data = get_pick_data(picks[index])
-		draft_data.push(pick_data)
-	end
-
-	save_draft_data draft_data
+	save_draft_data(draft_data, 'baseball')
 
 	puts "Draft data for #{YEAR} saved."
 end
 
-def get_pick_data(pick)
-	pick_num = pick.css("/td[1]")[0].content
-	player = pick.css("/td[2]")[0].content
-	user_data = pick.css("/td[3]/a")
-	user = extract_user(user_data)
-
-	name, position = parse_player(player)
-	
-	{
-		name: name,
-		position: position,
-		pick: pick_num,
-		user: user,
-		keeper: false
-	}
-end
-
-def extract_auction_data(html) 
-	teams = html.css "//table"
-	draft_data = []
-
-	for index in 2..(teams.size - 1)
-		get_draft_data_team(draft_data, teams[index])
-	end
-	
-	save_draft_data draft_data
-
-	puts "Draft data for #{YEAR} saved."
-end
-
-def save_draft_data(draft_data)
+def save_draft_data(draft_data, sport)
 	draft_data.each {|draft_pick_data|
 		user = User.find_by_unique_name(draft_pick_data[:user]);
 
@@ -142,7 +71,7 @@ def save_draft_data(draft_data)
 			player = Player.new({
 				first_name: first_name,
 				last_name: last_name,
-				sport: 'baseball'
+				sport: sport
 			})
 
 			player.save!
@@ -153,7 +82,7 @@ def save_draft_data(draft_data)
 			pick: draft_pick_data[:pick],
 			keeper: draft_pick_data[:keeper],
 			year: YEAR,
-			sport: 'baseball',
+			sport: sport,
 			user: user,
 			player: player
 		};
@@ -166,61 +95,10 @@ def save_draft_data(draft_data)
 	}
 end
 
-def get_draft_data_team(draft_data, team)
-	user_data = team.css "/tr[1]/td/a"
-	user = extract_user user_data
-
-	picks = team.css "tr[@class='tableBody']"
-	picks.each {|pick|
-		data = extract_pick_data pick
-		data[:user] = user
-		draft_data.push(data)
-	}
-end
-
-def extract_pick_data(pick)
-	dollar = pick.css("/td[3]")[0].content
-	dollar[0] = ''
-	player = pick.css("/td[2]")[0].content
-	pick_num = pick.css("/td[1]")[0].content
-	keeper = is_keeper(pick)
-
-	name, position = parse_player(player)
-
-	{
-		name: name,
-		position: position,
-		amount: dollar,
-		pick: pick_num,
-		keeper: keeper
-	}
-end
-
-def is_keeper(pick)
-	keeper = pick.css('/td[2]/span')[0]
-	if(keeper)
-		return true
-	else
-		return false
-	end
-end
-
-def parse_player(player)
-	match_data = player.match(/(.*)[,]\s\w*.(\w*).*(\w?)/);
-
-	return match_data[1].chomp("*"), match_data[2]
-end
-
 def parse_player_name(name)
 	match_data = name.match(/(.+)\s(.+)/)
 
 	return match_data[1], match_data[2]
-end
-
-def extract_user(a)
-	team_and_user = a.attribute("title").content
-	match_data = team_and_user.match(/.*\((.*)\)/)
-	match_data[1]
 end
 
 
