@@ -1,8 +1,5 @@
 #! /usr/bin/env ruby
 
-require 'net/http'
-require 'httparty'
-require 'nokogiri'
 require 'trollop'
 require 'date'
 require_relative '../model'
@@ -12,7 +9,8 @@ options = Trollop::options do
 	opt :year, "Year", :default => Time.now.year
 	opt :espn_user, "ESPN User", :short => "u", :type => :string, :required => true
 	opt :espn_password, "ESPN Password", :short => "p", :type => :string, :required => true
-	opt :baseball_league, "Baseball League ID", :short => "b", :type => :int, :required => true
+	opt :baseball_league, "Baseball League ID", :short => "b", :type => :int
+	opt :football_league, "Football League ID", :short => "f", :type => :int
 	opt :test, "Run against test page", :type => :boolean, :short => "t", :default => false
 	opt :download, "Download test page", :type => :boolean, :short => "d", :default => false
 	opt :database, "Database", :short => "D", :default => "test_database"
@@ -26,6 +24,7 @@ YEAR = options[:year]
 ESPN_USER = options[:espn_user]
 ESPN_PASSWORD = options[:espn_password]
 BASEBALL_ID = options[:baseball_league]
+FOOTBALL_ID = options[:football_league]
 TEST_PAGE = options[:test]
 DATABASE = options[:database]
 DB_HOST = options[:db_host]
@@ -37,22 +36,61 @@ TEST_FILE = "/tmp/auction_data.html"
 
 
 def download_test_page 
-	baseball_url = EspnFantasy.get_baseball_draft_url(BASEBALL_ID, YEAR)
+	if !BASEBALL_ID.nil?
+		baseball_url = EspnFantasy.get_baseball_draft_url(BASEBALL_ID, YEAR)
 
-	response_body = EspnFantasy.get_page(baseball_url, ESPN_USER, ESPN_PASSWORD);
-	File.open(TEST_FILE, 'w') { |file| file.write(response_body) }
+		response_body = EspnFantasy.get_page(baseball_url, ESPN_USER, ESPN_PASSWORD);
+		File.open(TEST_FILE, 'w') { |file| file.write(response_body) }
+	elsif !FOOTBALL_ID.nil?
+		football_url = EspnFantasy.get_football_draft_url(FOOTBALL_ID, YEAR)
+
+		response_body = EspnFantasy.get_page(football_url, ESPN_USER, ESPN_PASSWORD)
+		File.open(TEST_FILE, "w") { |file| file.write(response_body) }
+	else
+		puts "Must specify football or baseball id"
+	end
 end
 
-def parse_draft
+def parse_football_draft
+	puts "Parsing #{YEAR} Football Draft"
+
+	if(!TEST_PAGE)
+		draft_data = EspnFantasy.get_football_draft_data(ESPN_USER, ESPN_PASSWORD, FOOTBALL_ID, YEAR)
+	else
+		puts "Reading from test file #{TEST_FILE}"
+		if File.exists? TEST_FILE
+			page = File.read(TEST_FILE)
+			draft_data = EspnFantasy.parse_draft_data(page)
+		else
+			puts "Test file [#{TEST_FILE}] not found"
+			Process.exit(0)
+		end
+	end
+
+	verify_draft_data(draft_data)
+
+	save_draft_data(draft_data, 'football')
+
+	puts "Draft data for #{YEAR} saved."
+end
+
+def parse_baseball_draft
 	puts "Parsing #{YEAR} Baseball Draft"
 
 	if(!TEST_PAGE)
 		draft_data = EspnFantasy.get_baseball_draft_data(ESPN_USER, ESPN_PASSWORD, BASEBALL_ID, YEAR)
 	else
 		puts "Reading from test file #{TEST_FILE}"
-		page = File.read(TEST_FILE)
-		draft_data = EspnFantasy.parse_baseball_draft_data(page)
+		if File.exists? TEST_FILE
+			page = File.read(TEST_FILE)
+			draft_data = EspnFantasy.parse_draft_data(page)
+		else
+			puts "Test file [#{TEST_FILE}] not found"
+			Process.exit(0)
+		end
 	end
+
+	verify_draft_data(draft_data)
 
 	save_draft_data(draft_data, 'baseball')
 
@@ -101,11 +139,22 @@ def parse_player_name(name)
 	return match_data[1], match_data[2]
 end
 
+def verify_draft_data(draft_data)
+	if draft_data.nil?
+		raise "Draft data invalid"
+	end
+end
+
 
 if options[:download]
 	download_test_page
 else
 	connect DATABASE, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD
-
-	parse_draft
+	if !BASEBALL_ID.nil?
+		parse_baseball_draft
+	elsif !FOOTBALL_ID.nil?
+		parse_football_draft
+	else
+		puts "Must specify either a football or baseball league id"
+	end
 end

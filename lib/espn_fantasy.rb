@@ -27,15 +27,27 @@ module EspnFantasy
     return "http://games.espn.go.com/flb/tools/draftrecap?leagueId=#{leagueId}&seasonId=#{year}"
   end
 
+  def self.get_football_draft_url(leagueId, year)
+    return "http://games.espn.go.com/ffl/tools/draftrecap?leagueId=#{leagueId}&seasonId=#{year}"
+  end
+
   def self.get_baseball_draft_data(user, password, leagueId, year)
     url = get_baseball_draft_url(leagueId, year)
 
     response_body = get_page(url, user, password)
 
-    return parse_baseball_draft_data(response_body)
+    return parse_draft_data(response_body)
   end
 
-  def self.parse_baseball_draft_data(page)
+  def self.get_football_draft_data(user, password, leagueId, year)
+    url = get_football_draft_url(leagueId, year)
+
+    response_body = get_page(url, user, password)
+
+    return parse_draft_data(response_body)
+  end
+
+  def self.parse_draft_data(page)
     html = Nokogiri::HTML(page);
 
     return extract_draft_data(html)
