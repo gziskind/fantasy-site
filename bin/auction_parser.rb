@@ -4,6 +4,7 @@ require 'trollop'
 require 'date'
 require_relative '../model'
 require_relative '../lib/espn_fantasy'
+require_relative '../lib/draft_parser'
 
 options = Trollop::options do
 	opt :year, "Year", :default => Time.now.year
@@ -13,6 +14,7 @@ options = Trollop::options do
 	opt :football_league, "Football League ID", :short => "f", :type => :int
 	opt :test, "Run against test page", :type => :boolean, :short => "t", :default => false
 	opt :download, "Download test page", :type => :boolean, :short => "d", :default => false
+	opt :parse_file, "Parse draft from file", :type => :string, :short => "F"
 	opt :database, "Database", :short => "D", :default => "test_database"
 	opt :db_host, "Database Host", :default => "localhost", :short => "h"
 	opt :db_port, "Database Port", :default => 27017, :short => "P"
@@ -26,6 +28,7 @@ ESPN_PASSWORD = options[:espn_password]
 BASEBALL_ID = options[:baseball_league]
 FOOTBALL_ID = options[:football_league]
 TEST_PAGE = options[:test]
+FILE = options[:parse_file]
 DATABASE = options[:database]
 DB_HOST = options[:db_host]
 DB_PORT = options[:db_port]
@@ -77,8 +80,10 @@ end
 def parse_baseball_draft
 	puts "Parsing #{YEAR} Baseball Draft"
 
-	if(!TEST_PAGE)
+	if(!TEST_PAGE && !FILE)
 		draft_data = EspnFantasy.get_baseball_draft_data(ESPN_USER, ESPN_PASSWORD, BASEBALL_ID, YEAR)
+	elsif(!TEST_PAGE && FILE)
+		draft_data = DraftParser.get_baseball_draft_data(FILE)
 	else
 		puts "Reading from test file #{TEST_FILE}"
 		if File.exists? TEST_FILE
@@ -134,7 +139,7 @@ def save_draft_data(draft_data, sport)
 end
 
 def parse_player_name(name)
-	match_data = name.match(/(.+)\s(.+)/)
+	match_data = name.match(/([A-Za-z.\-']+)\s(.+)/)
 
 	return match_data[1], match_data[2]
 end
