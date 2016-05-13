@@ -109,7 +109,7 @@ def save_draft_data(draft_data, sport)
 		first_name, last_name = parse_player_name(draft_pick_data[:name])
 
 
-		player = Player.find_by_first_name_and_last_name(first_name, last_name)
+		player = Player.find_by_first_name_and_last_name_and_sport(first_name, last_name, sport)
 		if(player.nil?)
 			player = Player.new({
 				first_name: first_name,

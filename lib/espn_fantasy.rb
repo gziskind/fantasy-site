@@ -16,7 +16,8 @@ module EspnFantasy
     login_response = HTTParty.post(LOGIN_URI, body: body, headers: {'Content-type'=>'application/json'});
 
     login_swid = login_response['data']['token']['swid']
-    cookie_string = "SWID=#{login_swid}; espnAuth={\"swid\":\"#{login_swid}\"};" 
+    s2_value = login_response['data']['s2']
+    cookie_string = "SWID=#{login_swid}; espnAuth={\"swid\":\"#{login_swid}\"}; espn_s2=#{s2_value}; utag_main=test" 
 
     response = HTTParty.get(espn_url, :headers => {"Cookie" => cookie_string});
 
