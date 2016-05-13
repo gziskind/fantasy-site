@@ -124,8 +124,8 @@ module EspnFantasy
 
   def self.extract_user(a)
     team_and_user = a.attribute("title").content
-    match_data = team_and_user.match(/.*\((.*)\)/)
-    match_data[1]
+    match_data = team_and_user.match(/.*\((.*, )?(.*)\)/)
+    match_data[2]
   end
 
   def self.parse_player(player)
