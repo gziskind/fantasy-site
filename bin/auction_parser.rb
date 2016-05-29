@@ -35,7 +35,7 @@ DB_PORT = options[:db_port]
 DB_USER = options[:db_user]
 DB_PASSWORD = options[:db_password]
 
-TEST_FILE = "/tmp/auction_data.html"
+TEST_FILE = "/tmp/draft_data.html"
 
 
 def download_test_page 
@@ -139,7 +139,7 @@ def save_draft_data(draft_data, sport)
 end
 
 def parse_player_name(name)
-	match_data = name.match(/([A-Za-z.\-']+)\s(.+)/)
+	match_data = name.match(/([49A-Za-z.\-']+)\s(.+)/)
 
 	return match_data[1], match_data[2]
 end
