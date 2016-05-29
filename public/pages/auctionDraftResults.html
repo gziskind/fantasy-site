@@ -1,0 +1,77 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1>Draft Results - {{year}}</span></h1>
+    </div>
+    <div class="col-md-9 btn-group" style="margin:20px 0">
+        <!-- Parent scope needed because ng-repeat creates a new scope -->
+        <label class="btn btn-primary" ng-model="selectedDraftType" btn-radio="'pick'">By Pick</label>
+        <label class="btn btn-primary" ng-model="selectedDraftType" btn-radio="'team'">By Team</label>
+        <label class="btn btn-primary" ng-model="selectedDraftType" btn-radio="'position'">By Position</label>
+    </div>
+    <div class="table-responsive col-md-12" ng-show="selectedDraftType == 'pick'">
+        <table class="table table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th>Pick</th>
+                    <th>Cost</th>
+                    <th>Player</th>
+                    <th>Position</th>
+                    <th>User</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="pick in draft | orderBy:'pick'">
+                    <td>{{pick.pick}}</td>
+                    <td>${{pick.cost}}</td>
+                    <td>{{pick.player}}</td>
+                    <td>{{pick.position}}</td>
+                    <td>{{pick.user}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-12 row" ng-show="selectedDraftType == 'team'">
+        <div class="table-responsive col-md-6" ng-repeat="user in users">
+            <h3>{{user}}</h3>
+            <table class="table table-condensed table-hover">
+                <thead>
+                    <tr>
+                        <th>Pick</th>
+                        <th>Cost</th>
+                        <th>Player</th>
+                        <th>Position</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="pick in draft | filter:{'user':user} | orderBy:'pick'">
+                        <td>{{pick.pick}}</td>
+                        <td>${{pick.cost}}</td>
+                        <td>{{pick.player}}</td>
+                        <td>{{pick.position}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="table-responsive col-md-12" ng-show="selectedDraftType == 'position'" ng-repeat="position in positions | orderBy: sortPosition">
+        <h3>{{position}}</h3>
+        <table class="table table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th>Pick</th>
+                    <th>Cost</th>
+                    <th>Player</th>
+                    <th>User</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="pick in draft | filter:{'position':position} | orderBy:'pick'">
+                    <td>{{pick.pick}}</td>
+                    <td>${{pick.cost}}</td>
+                    <td>{{pick.player}}</td>
+                    <td>{{pick.user}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

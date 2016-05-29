@@ -72,7 +72,14 @@ angular.module('aepi-fantasy',['ngRoute','ngResource','ipCookie','ui.sortable','
 	$routeProvider.when('/admin/events/live',{
 		controller: 'AdminEventsController',
 		templateUrl: '/pages/liveEvents.html'
+	});	
+
+	$routeProvider.when('/draft/:year',{
+		controller: 'DraftResultsController',
+		templateUrl: '/pages/auctionDraftResults.html'
 	});
+
+
 
 	// $routeProvider.otherwise({
 	// 	redirectTo: '/home'

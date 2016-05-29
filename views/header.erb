@@ -20,6 +20,7 @@
             <li><a href="/baseball/results/roto">Roto Standings</a></li>
             <li ng-show="currentUser"><a href="/baseball/names#/names">Team Names</a></li>
             <li><a href="/baseball/records#/records/current">Records</a></li>
+            <li><a href="/baseball/draft#/draft/<%= draft_current_year('baseball') %>">Draft Results</a></li>
           </ul>
         </li>
       </ul>
@@ -33,6 +34,7 @@
             <li><a href="/football/results/current">Current Standings</a></li>
             <li ng-show="currentUser"><a href="/football/names#/names">Team Names</a></li>
             <li><a href="/football/records#/records/current">Records</a></li>
+            <li><a href="/football/draft#/draft/<%= draft_current_year('football') %>">Draft Results</a></li>
           </ul>
         </li>
       </ul>

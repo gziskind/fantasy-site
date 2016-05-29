@@ -49,6 +49,12 @@ module Helpers
 		seasons[0]
 	end
 
+	def draft_current_year(sport)
+		seasons = DraftPick.where(sport: sport).distinct(:year)
+		seasons.sort!.reverse!
+		seasons[0]
+	end
+
 	def is_user?
 		@user != nil
 	end
