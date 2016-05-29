@@ -8,6 +8,8 @@ angular.module('aepi-fantasy').controller('DraftResultsController', function($sc
     $scope.currentYear = new Date().getFullYear();
     $scope.selectedDraftType = 'pick';
     $scope.orderByField = 'pick'
+    $scope.isAuction = true
+    $scope.showKeepers = true
 
     // Private Variables
     var positionOrder = ["C","1B","2B","SS","3B","OF","DH","SP","RP","QB","RB","WR","TE","K","D"]
@@ -43,6 +45,18 @@ angular.module('aepi-fantasy').controller('DraftResultsController', function($sc
         return positionOrder.indexOf(pick.position)
     }
 
+    $scope.getRound = function(pick) {
+        return Math.ceil(pick/12);
+    }
+
+    $scope.keeperFilter = function(value, index, array) {
+        if($scope.showKeepers) {
+            return true
+        } else {
+            return !value.keeper
+        }
+    }
+
     // Watches
     $scope.$watch('year', updateDraft);
 
@@ -53,8 +67,10 @@ angular.module('aepi-fantasy').controller('DraftResultsController', function($sc
         var value = Draft.query({year: newValue}, function(){
             $scope.draft = value
             var usersAndPositions = getUniqueUsersAndPositions(value)
-            $scope.users = usersAndPositions.users;
+            $scope.users = usersAndPositions.users.sort();
             $scope.positions = usersAndPositions.positions;
+            $scope.isAuction = isAuction(value);
+            $scope.hasKeepers = hasKeepers(value)
         });
     }
 
@@ -71,4 +87,23 @@ angular.module('aepi-fantasy').controller('DraftResultsController', function($sc
             positions: Object.keys(positions)
         };
     }
+
+    function isAuction(picks) {
+        if(picks[0].cost) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    function hasKeepers(picks) {
+        for(var c = 0; c < picks.length; c++) {
+            if(picks[c].keeper) {
+                return true
+            }
+        }
+
+        return false
+    }
+
 });

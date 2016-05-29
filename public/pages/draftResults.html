@@ -2,28 +2,33 @@
     <div class="col-md-12">
         <h1>Draft Results - {{year}}</span></h1>
     </div>
-    <div class="col-md-9 btn-group" style="margin:20px 0">
+    <div class="col-md-4 btn-group" style="margin:20px 0">
         <!-- Parent scope needed because ng-repeat creates a new scope -->
         <label class="btn btn-primary" ng-model="selectedDraftType" btn-radio="'pick'">By Pick</label>
         <label class="btn btn-primary" ng-model="selectedDraftType" btn-radio="'team'">By Team</label>
         <label class="btn btn-primary" ng-model="selectedDraftType" btn-radio="'position'">By Position</label>
     </div>
+    <div class="col-md-2" style="margin-top:25px" ng-show="hasKeepers">
+        <input type="checkbox" id="keepers" value="keepers" ng-model="showKeepers"> Show Keepers
+    </div>
     <div class="table-responsive col-md-12" ng-show="selectedDraftType == 'pick'">
         <table class="table table-condensed table-hover">
             <thead>
                 <tr>
+                    <th ng-hide="isAuction">Round</th>
                     <th ng-click="changeField('pick')">Pick <i class="fa fa-sort" ng-class="sortStatus('pick')"></i></th>
-                    <th ng-click="changeField('cost', true)">Cost <i class="fa fa-sort" ng-class="sortStatus('cost')"></i></th>
+                    <th ng-show="isAuction" ng-click="changeField('cost', true)">Cost <i class="fa fa-sort" ng-class="sortStatus('cost')"></i></th>
                     <th>Player</th>
                     <th ng-click="changeField(positionField)">Position <i class="fa fa-sort" ng-class="sortStatus(positionField)"></i></th>
                     <th>User</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="pick in draft | orderBy:orderByField:reverseSort">
+                <tr ng-repeat="pick in draft | orderBy:orderByField:reverseSort | filter:keeperFilter">
+                    <td ng-hide="isAuction">{{getRound(pick.pick)}}</td>
                     <td>{{pick.pick}}</td>
-                    <td>${{pick.cost}}</td>
-                    <td>{{pick.player}}</td>
+                    <td ng-show="isAuction">${{pick.cost}}</td>
+                    <td>{{pick.player}} <span class="keeper" ng-show="pick.keeper">K</span></td>
                     <td>{{pick.position}}</td>
                     <td>{{pick.user}}</td>
                 </tr>
@@ -36,17 +41,19 @@
             <table class="table table-condensed table-hover">
                 <thead>
                     <tr>
+                        <th ng-hide="isAuction">Round</th>
                         <th ng-click="changeField('pick')">Pick <i class="fa fa-sort" ng-class="sortStatus('pick')"></i></th>
-                        <th ng-click="changeField('cost', true)">Cost <i class="fa fa-sort" ng-class="sortStatus('cost')"></i></th>
+                        <th ng-show="isAuction" ng-click="changeField('cost', true)">Cost <i class="fa fa-sort" ng-class="sortStatus('cost')"></i></th>
                         <th>Player</th>
                         <th ng-click="changeField(positionField)">Position <i class="fa fa-sort" ng-class="sortStatus(positionField)"></i></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="pick in draft | filter:{'user':user} | orderBy:orderByField:reverseSort">
+                    <tr ng-repeat="pick in draft | filter:{'user':user} | filter: keeperFilter | orderBy:orderByField:reverseSort">
+                        <td ng-hide="isAuction">{{getRound(pick.pick)}}</td>
                         <td>{{pick.pick}}</td>
-                        <td>${{pick.cost}}</td>
-                        <td>{{pick.player}}</td>
+                        <td ng-show="isAuction">${{pick.cost}}</td>
+                        <td>{{pick.player}} <span class="keeper" ng-show="pick.keeper">K</span></td>
                         <td>{{pick.position}}</td>
                     </tr>
                 </tbody>
@@ -58,17 +65,19 @@
         <table class="table table-condensed table-hover">
             <thead>
                 <tr>
+                    <th ng-hide="isAuction">Round</th>
                     <th ng-click="changeField('pick')">Pick <i class="fa fa-sort" ng-class="sortStatus('pick')"></i></th>
-                    <th ng-click="changeField('cost', true)">Cost <i class="fa fa-sort" ng-class="sortStatus('cost')"></i></th>   
+                    <th ng-show="isAuction" ng-click="changeField('cost', true)">Cost <i class="fa fa-sort" ng-class="sortStatus('cost')"></i></th>   
                     <th>Player</th>
-                    <th>User</th>
+                    <th ng-click="changeField('user')">User <i class="fa fa-sort" ng-class="sortStatus('user')"></i></th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="pick in draft | filter:{'position':position} | orderBy:orderByField:reverseSort">
+                <tr ng-repeat="pick in draft | filter:{'position':position} | filter:keeperFilter | orderBy:orderByField:reverseSort">
+                    <td ng-hide="isAuction">{{getRound(pick.pick)}}</td>
                     <td>{{pick.pick}}</td>
-                    <td>${{pick.cost}}</td>
-                    <td>{{pick.player}}</td>
+                    <td ng-show="isAuction">${{pick.cost}}</td>
+                    <td>{{pick.player}} <span class="keeper" ng-show="pick.keeper">K</span></td>
                     <td>{{pick.user}}</td>
                 </tr>
             </tbody>

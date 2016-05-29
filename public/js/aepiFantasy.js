@@ -76,7 +76,7 @@ angular.module('aepi-fantasy',['ngRoute','ngResource','ipCookie','ui.sortable','
 
 	$routeProvider.when('/draft/:year',{
 		controller: 'DraftResultsController',
-		templateUrl: '/pages/auctionDraftResults.html'
+		templateUrl: '/pages/draftResults.html'
 	});
 
 
