@@ -25,7 +25,7 @@ module DraftParser
             position: position,
             pick: pick_num,
             user: name_map[team],
-            keeper: false
+            keeper: keeper
           })
         else
           puts "Position invalid [#{name}] [#{position}]"
