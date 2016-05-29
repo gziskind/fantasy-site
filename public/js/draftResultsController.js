@@ -7,6 +7,7 @@ angular.module('aepi-fantasy').controller('DraftResultsController', function($sc
     $scope.positions = [];
     $scope.currentYear = new Date().getFullYear();
     $scope.selectedDraftType = 'pick';
+    $scope.orderByField = 'pick'
 
     // Private Variables
     var positionOrder = ["C","1B","2B","SS","3B","OF","DH","SP","RP","QB","RB","WR","TE","K","D"]
@@ -14,6 +15,32 @@ angular.module('aepi-fantasy').controller('DraftResultsController', function($sc
     // Public Functions
     $scope.sortPosition = function(position) {
         return positionOrder.indexOf(position)
+    }
+
+    $scope.changeField = function(column, reverse) {
+        if($scope.orderByField != column) {
+            $scope.orderByField = column;
+            console.info(reverse)
+            $scope.reverseSort = !!reverse;
+        } else {
+            $scope.reverseSort = !$scope.reverseSort;
+        }
+    }
+    
+    $scope.sortStatus = function(column) {
+        if($scope.orderByField == column) {
+            if($scope.reverseSort) {
+                return 'fa-sort-up';
+            } else {
+                return 'fa-sort-down';
+            }
+        } else {
+            return '';
+        }
+    }
+
+    $scope.positionField = function(pick) {
+        return positionOrder.indexOf(pick.position)
     }
 
     // Watches

@@ -12,15 +12,15 @@
         <table class="table table-condensed table-hover">
             <thead>
                 <tr>
-                    <th>Pick</th>
-                    <th>Cost</th>
+                    <th ng-click="changeField('pick')">Pick <i class="fa fa-sort" ng-class="sortStatus('pick')"></i></th>
+                    <th ng-click="changeField('cost', true)">Cost <i class="fa fa-sort" ng-class="sortStatus('cost')"></i></th>
                     <th>Player</th>
-                    <th>Position</th>
+                    <th ng-click="changeField(positionField)">Position <i class="fa fa-sort" ng-class="sortStatus(positionField)"></i></th>
                     <th>User</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="pick in draft | orderBy:'pick'">
+                <tr ng-repeat="pick in draft | orderBy:orderByField:reverseSort">
                     <td>{{pick.pick}}</td>
                     <td>${{pick.cost}}</td>
                     <td>{{pick.player}}</td>
@@ -36,14 +36,14 @@
             <table class="table table-condensed table-hover">
                 <thead>
                     <tr>
-                        <th>Pick</th>
-                        <th>Cost</th>
+                        <th ng-click="changeField('pick')">Pick <i class="fa fa-sort" ng-class="sortStatus('pick')"></i></th>
+                        <th ng-click="changeField('cost', true)">Cost <i class="fa fa-sort" ng-class="sortStatus('cost')"></i></th>
                         <th>Player</th>
-                        <th>Position</th>
+                        <th ng-click="changeField(positionField)">Position <i class="fa fa-sort" ng-class="sortStatus(positionField)"></i></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="pick in draft | filter:{'user':user} | orderBy:'pick'">
+                    <tr ng-repeat="pick in draft | filter:{'user':user} | orderBy:orderByField:reverseSort">
                         <td>{{pick.pick}}</td>
                         <td>${{pick.cost}}</td>
                         <td>{{pick.player}}</td>
@@ -58,14 +58,14 @@
         <table class="table table-condensed table-hover">
             <thead>
                 <tr>
-                    <th>Pick</th>
-                    <th>Cost</th>
+                    <th ng-click="changeField('pick')">Pick <i class="fa fa-sort" ng-class="sortStatus('pick')"></i></th>
+                    <th ng-click="changeField('cost', true)">Cost <i class="fa fa-sort" ng-class="sortStatus('cost')"></i></th>   
                     <th>Player</th>
                     <th>User</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="pick in draft | filter:{'position':position} | orderBy:'pick'">
+                <tr ng-repeat="pick in draft | filter:{'position':position} | orderBy:orderByField:reverseSort">
                     <td>{{pick.pick}}</td>
                     <td>${{pick.cost}}</td>
                     <td>{{pick.player}}</td>
