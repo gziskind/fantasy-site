@@ -166,7 +166,7 @@ module EspnFantasy
 
   def self.is_keeper(pick)
     keeper = pick.css('/td[2]/span')[0]
-    if(keeper)
+    if(keeper && keeper.content == 'K')
       return true
     else
       return false
