@@ -56,25 +56,27 @@ angular.module('aepi-fantasy').controller('ZenderStandingsController', function(
 		$scope.standings = [];
 		for(name in $scope.zenderResults) {
 			var result = $scope.zenderResults[name]
-			var wins = result.wins * $scope.winValue + result.points_wins * $scope.pointsValue;
-			var losses = result.losses * $scope.winValue + result.points_losses * $scope.pointsValue;
+			if(result.wins !== null) {
+				var wins = result.wins * $scope.winValue + result.points_wins * $scope.pointsValue;
+				var losses = result.losses * $scope.winValue + result.points_losses * $scope.pointsValue;
 
-			var winPercentage = Math.round((wins / ((wins + losses)*1.0)) * 1000)/1000
+				var winPercentage = Math.round((wins / ((wins + losses)*1.0)) * 1000)/1000
 
-			var standing = {
-				owner: name,
-				name: result.team_name,
-				wins: wins,
-				losses: losses,
-				winPercentage: winPercentage,
-				points: result.points
-			};
+				var standing = {
+					owner: name,
+					name: result.team_name,
+					wins: wins,
+					losses: losses,
+					winPercentage: winPercentage,
+					points: result.points
+				};
 
-			$scope.standings.push(standing);
+				$scope.standings.push(standing);
 
-			var newFirstPlaceNumber = result.wins - result.losses;
-			if(newFirstPlaceNumber > firstPlaceNumber) {
-				firstPlaceNumber = newFirstPlaceNumber;
+				var newFirstPlaceNumber = result.wins - result.losses;
+				if(newFirstPlaceNumber > firstPlaceNumber) {
+					firstPlaceNumber = newFirstPlaceNumber;
+				}
 			}
 		}
 
