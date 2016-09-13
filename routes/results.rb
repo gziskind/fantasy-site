@@ -121,7 +121,7 @@ class FantasyServer
 	end
 
 	get '/api/football/results/current' do
-		season = Season.find_by_sport_and_year('football',2015)
+		season = Season.find_by_sport_and_year('football',Time.now.year)
 
 		zender_results = {}
 		season.results.each{|result|
