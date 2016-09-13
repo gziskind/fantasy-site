@@ -56,7 +56,7 @@ angular.module('aepi-fantasy').controller('ZenderStandingsController', function(
 		$scope.standings = [];
 		for(name in $scope.zenderResults) {
 			var result = $scope.zenderResults[name]
-			if(result.wins || results.losses) {
+			if(result.wins || result.losses) {
 				var wins = result.wins * $scope.winValue + result.points_wins * $scope.pointsValue;
 				var losses = result.losses * $scope.winValue + result.points_losses * $scope.pointsValue;
 
