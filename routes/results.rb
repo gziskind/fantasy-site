@@ -30,7 +30,7 @@ class FantasyServer
 		erb :roto
 	end
 
-	get '/football/results/zender' do
+	get '/football/results/current' do
 		event 'Zender'
 		@header_index = 'football'
 
@@ -120,7 +120,7 @@ class FantasyServer
 		results.to_json
 	end
 
-	get '/api/football/results/zender' do
+	get '/api/football/results/current' do
 		season = Season.find_by_sport_and_year('football',2015)
 
 		zender_results = {}

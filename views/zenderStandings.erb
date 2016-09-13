@@ -21,20 +21,24 @@
         </div>
         <div ng-show="contentLoaded">
 			<div class="col-xs-12 col-md-12">
-          		<h1>Zender Doctrine Standings</h1>
+          		<h1>Current Standings</h1>
 			</div>
 			<form class="form-horizontal" role="form">
 				<div class="col-xs-12 col-md-6 row">
 					<div class="col-xs-12 col-md-6 row form-group">
 						<label class="col-xs-7 col-md-7 control-label">Wins Value</label>
 						<div class="col-xs-5 col-md-5 row" style="padding-top:5px">
-							<a class="glyphicon glyphicon-chevron-left" ng-click="decrementWinValue()"></a><span style="font-size:20px; padding: 0 4px;">{{winValue}}</span><a class="glyphicon glyphicon-chevron-right" ng-click="incrementWinValue()"></a>
+							<!-- <a class="glyphicon glyphicon-chevron-left" ng-click="decrementWinValue()"></a> -->
+                            <span style="font-size:20px; padding: 0 4px;">{{winValue}}</span>
+                            <!-- <a class="glyphicon glyphicon-chevron-right" ng-click="incrementWinValue()"></a> -->
 						</div>
 					</div>
 					<div class="col-xs-12 col-md-6 row">
 				        <label class="col-xs-7 col-md-7 control-label">Points Value</label>
 						<div class="col-xs-5 col-md-5 row" style="padding-top:5px;">
-			       			<a class="glyphicon glyphicon-chevron-left" ng-click="decrementPointsValue()"></a><span style="font-size:20px; padding: 0 4px;">{{pointsValue}}</span><a class="glyphicon glyphicon-chevron-right" ng-click="incrementPointsValue()"></a>
+			       			<!-- <a class="glyphicon glyphicon-chevron-left" ng-click="decrementPointsValue()"></a> -->
+                            <span style="font-size:20px; padding: 0 4px;">{{pointsValue}}</span>
+                            <!-- <a class="glyphicon glyphicon-chevron-right" ng-click="incrementPointsValue()"></a> -->
 						</div>
 					</div>
 				</div>

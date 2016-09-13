@@ -5,7 +5,7 @@ angular.module('aepi-fantasy').controller('ZenderStandingsController', function(
 
 	// Public variables
 	$scope.contentLoaded = false;
-	$scope.winValue = 1;
+	$scope.winValue = 2;
 	$scope.pointsValue = 1;
 
 	getStandings();
@@ -90,7 +90,7 @@ angular.module('aepi-fantasy').controller('ZenderStandingsController', function(
 	}
 
 	function getStandings() {
-		var ZenderStandings = $resource('/api/football/results/zender');
+		var ZenderStandings = $resource('/api/football/results/current');
 		var result = ZenderStandings.get(function() {
 			$scope.zenderResults= result;
 
