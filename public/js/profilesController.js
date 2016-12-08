@@ -13,6 +13,7 @@ angular.module('aepi-fantasy').controller('ProfilesController', function($scope,
 	$scope.bestTeamNames = [];
 	$scope.worstTeamNames = [];
 	$scope.records = [];
+	$scope.mostDrafted = [];
 
 	// Public functions
 	$scope.capitaliseFirstLetter = function(str) {
@@ -78,7 +79,16 @@ angular.module('aepi-fantasy').controller('ProfilesController', function($scope,
 			setFinishes();
 			setTeamNames();
 			setRecords();
+			setDraftedPlayers();
 		}
+	}
+
+	function setDraftedPlayers() {
+		var draftedPlayers = $scope.profile.most_drafted;
+
+		$scope.mostDrafted = draftedPlayers.filter(function(player) {
+			return isSportSelected(player.sport) && player.count > 2;
+		})
 	}
 
 	function setTrophies() {

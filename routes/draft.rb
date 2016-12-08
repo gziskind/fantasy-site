@@ -18,6 +18,12 @@ class FantasyServer
         picks = DraftPick.find_all_by_sport_and_year(params[:sport],params[:year].to_i)
 
         pick_data = picks.map {|pick|
+            if pick.user.nil?
+                puts pick.pick
+                puts pick.position
+                puts pick.user
+            end
+
             data = {
                 player: "#{pick.player.first_name} #{pick.player.last_name}",
                 pick: pick.pick,
