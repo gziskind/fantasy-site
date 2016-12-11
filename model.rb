@@ -19,6 +19,8 @@ require_relative 'model/roto_stat'
 require_relative 'model/week_result'
 require_relative 'model/team_result'
 require_relative 'model/matchup'
+require_relative 'model/player'
+require_relative 'model/draft_pick'
 
 def connect(database, host = 'localhost', port = 27017, user = nil, password = nil)
 	MongoMapper.connection = Mongo::Connection.new(host, port)

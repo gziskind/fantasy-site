@@ -8,8 +8,8 @@ options = Trollop::options do
 	opt :port, "Server port", :default => 8080
 	opt :db_host, "Database Host", :default => "localhost", :short => "h"
 	opt :db_port, "Database Port", :default => 27017, :short => "P"
-	opt :db_user, "Database User", :short => "u"
-	opt :db_password, "Database Password"
+	opt :db_user, "Database User", :short => "u", :type => :string
+	opt :db_password, "Database Password", :type => :string
 	opt :dropbox_token, "Dropbox Token", :short => 't', :type => :string
 	opt :ga_token, "Google Analytics Token", :short => 'g', :type => :string
 	opt :redis_host, "Redis Host", :type => :string
@@ -28,7 +28,6 @@ ga_token = ENV['GA_TOKEN'] || options[:ga_token]
 redis_host = ENV["REDIS_HOST"] || options[:redis_host]
 redis_port = ENV["REDIS_PORT"] || options[:redis_port]
 redis_password = ENV["REDIS_PASSWORD"] || options[:redis_password]
-
 
 FantasyServer.set :bind, '0.0.0.0'
 FantasyServer.set :port, port

@@ -80,6 +80,10 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 		return activeUrlCompare('records/season');
 	}
 
+	$scope.isActiveDraftYear = function(year) {
+		return activeUrlCompare('draft/' + year);
+	}
+
 	$scope.isActiveWeeklyRecords = function() {
 		return activeUrlCompare('records/weekly');
 	}

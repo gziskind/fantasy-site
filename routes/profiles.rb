@@ -87,13 +87,33 @@ class FantasyServer
 			}
 		}
 
+		drafted = DraftPick.find_all_by_user_id(user._id)
+		drafted_map = {}
+		drafted.each {|pick|
+			name = "#{pick.player.first_name} #{pick.player.last_name}"
+			if drafted_map[name].nil?
+				drafted_map[name] = {
+					count: 0,
+					position: pick.position,
+					first_name: pick.player.first_name,
+					last_name: pick.player.last_name,
+					sport: pick.player.sport
+				} 
+			end
+			drafted_map[name][:count] += 1
+		}
+
+		drafted_json = drafted_map.map {|name, pick| pick}
+		drafted_json.sort_by! {|pick| [-pick[:count], pick[:sport], pick[:position]]}
+
 		{
 			roles: roles,
 			imageUrl: image_url,
 			bio: user.bio,
 			results: results_json,
 			team_names: team_names_json,
-			records: records_json
+			records: records_json,
+			most_drafted: drafted_json
 		}.to_json
 	end
 
