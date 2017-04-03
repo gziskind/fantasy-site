@@ -38,7 +38,7 @@ def parse_baseball
 
 		baseball_url = "http://games.espn.go.com/flb/scoreboard?leagueId=#{BASEBALL_ID}&seasonId=#{YEAR}&matchupPeriodId=#{index}"
 
-		response_body = EspnFantasy.get_page(baseball_url, ESPN_USER, ESPN_PASSWORD;
+		response_body = EspnFantasy.get_page(baseball_url, ESPN_USER, ESPN_PASSWORD);
 		html = Nokogiri::HTML(response_body);
 
 		matchup_length = extract_matchup_length html
