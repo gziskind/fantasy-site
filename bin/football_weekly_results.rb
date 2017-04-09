@@ -28,13 +28,13 @@ DB_USER = options[:db_user]
 DB_PASSWORD = options[:db_password]
 FULL_SEASON = options[:full_season]
 
-parser = ScoreboardParser.new(ESPN_USER, ESPN_PASSWORD)
+parser = ScoreboardParser.new(ESPN_USER, ESPN_PASSWORD, YEAR)
 connect DATABASE, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD
 
 if(FULL_SEASON)
 	13.times{|x|
-		parser.parse_scoreboard(FOOTBALL_ID, YEAR, x+1)
+		parser.parse_scoreboard(FOOTBALL_ID, x+1)
 	}
 else
-	parser.parse_scoreboard(FOOTBALL_ID, YEAR)
+	parser.parse_scoreboard(FOOTBALL_ID)
 end

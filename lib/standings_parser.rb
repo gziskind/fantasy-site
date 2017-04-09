@@ -8,15 +8,16 @@ class StandingsParser
 
   ORDER =["C","1B","2B","SS","3B","OF","DH","SP","RP"]
 
-  def initialize(user, password) 
+  def initialize(user, password, year) 
     @user = user
     @password = password
+    @year = year
   end
 
-  def parse_baseball(league_id, year)
-    puts "Parsing #{year} Baseball Standings"
+  def parse_baseball(league_id)
+    puts "Parsing #{@year} Baseball Standings"
 
-    baseball_url = "http://games.espn.go.com/flb/standings?leagueId=#{league_id}&seasonId=#{year}"
+    baseball_url = "http://games.espn.go.com/flb/standings?leagueId=#{league_id}&seasonId=#{@year}"
     response_body = EspnFantasy.get_page(baseball_url, @user, @password);
 
     html = Nokogiri::HTML(response_body);
@@ -33,10 +34,10 @@ class StandingsParser
     end
   end
 
-  def parse_football(league_id, year)
-    puts "Parsing #{year} Football Standings"
+  def parse_football(league_id)
+    puts "Parsing #{@year} Football Standings"
 
-    football_url = "http://games.espn.go.com/ffl/standings?leagueId=#{league_id}&seasonId=#{year}"
+    football_url = "http://games.espn.go.com/ffl/standings?leagueId=#{league_id}&seasonId=#{@year}"
     response_body = EspnFantasy.get_page(football_url, @user, @password);
 
     html = Nokogiri::HTML(response_body);
@@ -53,10 +54,10 @@ class StandingsParser
     end
   end
 
-  def parse_roto(league_id, year)
-    puts "Parsing #{year} Baseball Roto Stats"
+  def parse_roto(league_id)
+    puts "Parsing #{@year} Baseball Roto Stats"
 
-    baseball_url = "http://games.espn.go.com/flb/standings?leagueId=#{league_id}&seasonId=#{year}"
+    baseball_url = "http://games.espn.go.com/flb/standings?leagueId=#{league_id}&seasonId=#{@year}"
 
     response_body = EspnFantasy.get_page(baseball_url, @user, @password);
     html = Nokogiri::HTML(response_body);
@@ -173,7 +174,7 @@ class StandingsParser
       results.push(result_data);
     }
 
-    season = Season.find_by_sport_and_year sport, YEAR
+    season = Season.find_by_sport_and_year sport, @year
     if !season.nil?
       puts "Updating Existing Season"
       season.results.each_with_index {|result, index|
@@ -187,7 +188,7 @@ class StandingsParser
         result.points = results[index][:points] if !results[index][:points].nil?
       }
 
-      season.year = YEAR
+      season.year = @year
       season.sport = sport
       season.league_name = league_name
     else
@@ -198,7 +199,7 @@ class StandingsParser
       }
 
       season_data = {
-        year: YEAR,
+        year: @year,
         sport: sport,
         league_name: league_name,
         results: new_results
@@ -230,8 +231,8 @@ class StandingsParser
           sport: sport,
         })
 
-        if YEAR != Time.now.year
-          team_name.year = YEAR;
+        if @year != Time.now.year
+          team_name.year = @year;
         end
 
         puts "Adding team name [#{team[:team_name]}]"

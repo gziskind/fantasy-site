@@ -26,7 +26,7 @@ ESPN_PASSWORD = options[:espn_password]
 BASEBALL_ID = options[:baseball_league]
 
 
-parser = StandingsParser.new(ESPN_USER, ESPN_PASSWORD)
+parser = StandingsParser.new(ESPN_USER, ESPN_PASSWORD, YEAR)
 connect DATABASE, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD
 
-parser.parse_roto(BASEBALL_ID, YEAR) if (YEAR != Time.now.year || (Time.now.month >= 4 && Time.now.month <= 9))
+parser.parse_roto(BASEBALL_ID) if (YEAR != Time.now.year || (Time.now.month >= 4 && Time.now.month <= 9))

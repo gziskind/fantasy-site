@@ -28,8 +28,8 @@ ESPN_PASSWORD = options[:espn_password]
 BASEBALL_ID = options[:baseball_league]
 FOOTBALL_ID = options[:football_league]
 
-parser = StandingsParser.new(ESPN_USER, ESPN_PASSWORD)
+parser = StandingsParser.new(ESPN_USER, ESPN_PASSWORD, YEAR)
 connect DATABASE, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD
 
-parser.parse_football(FOOTBALL_ID, YEAR) if (YEAR != Time.now.year || (Time.now.month >= 9 && Time.now.month <= 12))
-parser.parse_baseball(BASEBALL_ID, YEAR) if (YEAR != Time.now.year || (Time.now.month >= 4 && Time.now.month <= 9))
+parser.parse_football(FOOTBALL_ID) if (YEAR != Time.now.year || (Time.now.month >= 9 && Time.now.month <= 12))
+parser.parse_baseball(BASEBALL_ID) if (YEAR != Time.now.year || (Time.now.month >= 4 && Time.now.month <= 9))

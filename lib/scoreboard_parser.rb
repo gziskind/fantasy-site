@@ -6,14 +6,15 @@ require_relative '../lib/espn_fantasy'
 
 class ScoreboardParser
 
-  def initialize(user, password) 
+  def initialize(user, password, year) 
     @user = user
     @password = password
+    @year = year
   end
 
-  def parse_scoreboard(league_id, year, matchup = nil)
+  def parse_scoreboard(league_id, matchup = nil)
     # Might need to consider following a redirect
-    path = "http://games.espn.go.com/ffl/scoreboard?leagueId=#{league_id}&seasonId=#{year}"
+    path = "http://games.espn.go.com/ffl/scoreboard?leagueId=#{league_id}&seasonId=#{@year}"
     if matchup == nil
       puts "Parsing Football Scoreboard"
     else
@@ -109,7 +110,7 @@ class ScoreboardParser
   end
 
   def save_scores(matchup_data, week)
-    season = Season.find_by_sport_and_year('football', YEAR)
+    season = Season.find_by_sport_and_year('football', @year)
 
     week_result = WeekResult.find_by_week_and_season_id(week, season._id)
 
