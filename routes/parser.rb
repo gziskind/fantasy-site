@@ -19,6 +19,7 @@ class FantasyServer
         }.to_json
       elsif(Time.now.month >= 4 && Time.now.month <= 9)
         parser.parse_baseball(settings.espn_baseball_id) 
+        parser.parse_roto(settings.espn_baseball_id)
 
         {
           success:true

@@ -14,62 +14,91 @@ class StandingsParser
     @year = year
   end
 
+  def log_message(message, level = "INFO")
+    log = Log.new({
+      logger: "StandingsParser",
+      level: level,
+      log_message: message,
+      time: Time.now
+    });
+
+    log.save!
+  end
+
   def parse_baseball(league_id)
-    puts "Parsing #{@year} Baseball Standings"
+    begin
+      log_message "Parsing #{@year} Baseball Standings"
 
-    baseball_url = "http://games.espn.go.com/flb/standings?leagueId=#{league_id}&seasonId=#{@year}"
-    response_body = EspnFantasy.get_page(baseball_url, @user, @password);
+      baseball_url = "http://games.espn.go.com/flb/standings?leagueId=#{league_id}&seasonId=#{@year}"
+      response_body = EspnFantasy.get_page(baseball_url, @user, @password);
 
-    html = Nokogiri::HTML(response_body);
-    league_name = extract_league_name html;
-    team_info = extract_team_baseball_info html
+      html = Nokogiri::HTML(response_body);
+      league_name = extract_league_name html;
+      team_info = extract_team_baseball_info html
 
-    if verify_team_baseball_info(team_info)
-      puts "Team info valid [#{Time.now}]"
-      save_standings_baseball league_name, team_info
-      save_team_names_baseball team_info
-    else
-      puts "Team info Invalid [#{Time.now}]"
-      puts team_info
+      if verify_team_baseball_info(team_info)
+        log_message "Team info valid [#{Time.now}]"
+        save_standings_baseball league_name, team_info
+        save_team_names_baseball team_info
+
+        Status.update_service("Baseball Standings")
+      else
+        log_message "Team info Invalid [#{Time.now}]"
+        log_message team_info
+      end
+    rescue Exception => e
+      log_message e, "ERROR"
     end
   end
 
   def parse_football(league_id)
-    puts "Parsing #{@year} Football Standings"
+    begin
+      log_message "Parsing #{@year} Football Standings"
 
-    football_url = "http://games.espn.go.com/ffl/standings?leagueId=#{league_id}&seasonId=#{@year}"
-    response_body = EspnFantasy.get_page(football_url, @user, @password);
+      football_url = "http://games.espn.go.com/ffl/standings?leagueId=#{league_id}&seasonId=#{@year}"
+      response_body = EspnFantasy.get_page(football_url, @user, @password);
 
-    html = Nokogiri::HTML(response_body);
-    league_name = extract_league_name html;
-    team_info = extract_team_info html, true
+      html = Nokogiri::HTML(response_body);
+      league_name = extract_league_name html;
+      team_info = extract_team_info html, true
 
-    if verify_team_football_info(team_info)
-      puts "Team info valid [#{Time.now}]"
-      save_standings_football league_name, team_info
-      save_team_names_football team_info
-    else
-      puts "Team info Invalid [#{Time.now}]"
-      puts team_info
+      if verify_team_football_info(team_info)
+        log_message "Team info valid [#{Time.now}]"
+        save_standings_football league_name, team_info
+        save_team_names_football team_info
+
+        Status.update_service("Football Standings")
+      else
+        log_message "Team info Invalid [#{Time.now}]"
+        log_message team_info
+      end
+    rescue Exception => e
+      log_message e, "ERROR"
     end
   end
 
   def parse_roto(league_id)
-    puts "Parsing #{@year} Baseball Roto Stats"
+    begin
+      log_message "Parsing #{@year} Baseball Roto Stats"
 
-    baseball_url = "http://games.espn.go.com/flb/standings?leagueId=#{league_id}&seasonId=#{@year}"
+      baseball_url = "http://games.espn.go.com/flb/standings?leagueId=#{league_id}&seasonId=#{@year}"
 
-    response_body = EspnFantasy.get_page(baseball_url, @user, @password);
-    html = Nokogiri::HTML(response_body);
+      response_body = EspnFantasy.get_page(baseball_url, @user, @password);
+      html = Nokogiri::HTML(response_body);
 
-    stats = parse_roto_data(html)
+      stats = parse_roto_data(html)
 
-    if verify_roto_stats(stats)
-      puts "Roto stats valid [#{Time.now}]"
-      calculate_points(stats) 
-    else
-      puts "Roto stats invalid [#{Time.now}]"
-      puts stats.to_s
+      if verify_roto_stats(stats)
+        log_message "Roto stats valid [#{Time.now}]"
+        calculate_points(stats) 
+
+        Status.update_service("Roto Standings")
+      else
+        log_message "Roto stats invalid [#{Time.now}]"
+        log_message stats.to_s
+      end
+    rescue Exception => e
+      log_message e, "ERROR"
     end
   end
 
@@ -176,7 +205,7 @@ class StandingsParser
 
     season = Season.find_by_sport_and_year sport, @year
     if !season.nil?
-      puts "Updating Existing Season"
+      log_message "Updating Existing Season"
       season.results.each_with_index {|result, index|
         result.place = results[index][:place]
         result.team_name = results[index][:team_name]
@@ -192,7 +221,7 @@ class StandingsParser
       season.sport = sport
       season.league_name = league_name
     else
-      puts "Creating new season"
+      log_message "Creating new season"
       new_results = []
       results.each{|result_data|
         new_results.push(result_class.new(result_data))
@@ -235,13 +264,13 @@ class StandingsParser
           team_name.year = @year;
         end
 
-        puts "Adding team name [#{team[:team_name]}]"
+        log_message "Adding team name [#{team[:team_name]}]"
 
         team_name.save!
       elsif owner.nil?
-        puts "Could not find owner [#{team[:owner]}]"
+        log_message "Could not find owner [#{team[:owner]}]"
       else
-        puts "Team name [#{team[:team_name]}] already in database"
+        log_message "Team name [#{team[:team_name]}] already in database"
         current_team_name.save!
       end
     }
