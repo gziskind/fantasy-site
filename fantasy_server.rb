@@ -16,6 +16,17 @@ class FantasyServer < Sinatra::Base
 				redirect "/unauthorized?redirect=#{request.fullpath}" unless send("is_#{type}?")
 			end
 		end
+
+		def token(value)
+			condition do
+				body = request.body.read
+				if !body.empty? && JSON.parse(body)['token'] == settings.api_token
+					true
+				else
+					halt 401, "Unauthorized"
+				end
+			end
+		end
 	end
 
 	def self.start
@@ -52,3 +63,4 @@ require_relative 'routes/alerts'
 require_relative 'routes/events'
 require_relative 'routes/podcenter'
 require_relative 'routes/draft'
+require_relative 'routes/parser'

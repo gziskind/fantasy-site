@@ -1,6 +1,7 @@
 #! /usr/bin/env ruby
 
 require 'trollop'
+require 'dotenv/load'
 require_relative '../fantasy_server'
 
 options = Trollop::options do
@@ -15,6 +16,9 @@ options = Trollop::options do
 	opt :redis_host, "Redis Host", :type => :string
 	opt :redis_port, "Redis Port", :type => :integer
 	opt :redis_password, "Redis Password", :type => :string
+	opt :espn_football_id, "Espn Football League ID", :type => :string, :short => 'f'
+	opt :espn_baseball_id, "Espn Baseball League ID", :type => :string, :short => 'b'
+	opt :api_token, "API Token", :type => :string, :short => 'a'
 end
 
 port = ENV["PORT"] || options[:port]
@@ -28,6 +32,10 @@ ga_token = ENV['GA_TOKEN'] || options[:ga_token]
 redis_host = ENV["REDIS_HOST"] || options[:redis_host]
 redis_port = ENV["REDIS_PORT"] || options[:redis_port]
 redis_password = ENV["REDIS_PASSWORD"] || options[:redis_password]
+espn_football_id = ENV["ESPN_FOOTBALL_ID"] || options[:espn_football_id] 
+espn_baseball_id = ENV["ESPN_BASEBALL_ID"] || options[:espn_baseball_id] 
+api_token = ENV["API_TOKEN"] || options[:api_token]
+cookie_string = ENV["COOKIE_STRING"]
 
 FantasyServer.set :bind, '0.0.0.0'
 FantasyServer.set :port, port
@@ -41,5 +49,9 @@ FantasyServer.set :ga_token, ga_token
 FantasyServer.set :redis_host, redis_host
 FantasyServer.set :redis_port, redis_port
 FantasyServer.set :redis_password, redis_password
+FantasyServer.set :cookie_string, cookie_string
+FantasyServer.set :espn_football_id, espn_football_id
+FantasyServer.set :espn_baseball_id, espn_baseball_id
+FantasyServer.set :api_token, api_token
 FantasyServer.start
 

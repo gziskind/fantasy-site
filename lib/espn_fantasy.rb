@@ -4,21 +4,7 @@ require 'nokogiri'
 
 module EspnFantasy
 
-  LOGIN_URI = "https://registerdisney.go.com/jgc/v2/client/ESPN-ESPNCOM-PROD/guest/login?langPref=en-US"
-
-  def self.get_page(espn_url, user, password)
-
-    body = {
-      loginValue: user,
-      password: password
-    }.to_json
-
-    login_response = HTTParty.post(LOGIN_URI, body: body, headers: {'Content-type'=>'application/json'});
-
-    login_swid = login_response['data']['token']['swid']
-    s2_value = login_response['data']['s2']
-    cookie_string = "SWID=#{login_swid}; espnAuth={\"swid\":\"#{login_swid}\"}; espn_s2=#{s2_value}; utag_main=test" 
-
+  def self.get_page(espn_url, cookie_string)
     response = HTTParty.get(espn_url, :headers => {"Cookie" => cookie_string});
 
     return response.body
@@ -32,18 +18,18 @@ module EspnFantasy
     return "http://games.espn.go.com/ffl/tools/draftrecap?leagueId=#{leagueId}&seasonId=#{year}"
   end
 
-  def self.get_baseball_draft_data(user, password, leagueId, year)
+  def self.get_baseball_draft_data(cookie_string, leagueId, year)
     url = get_baseball_draft_url(leagueId, year)
 
-    response_body = get_page(url, user, password)
+    response_body = get_page(url, cookie_string)
 
     return parse_draft_data(response_body)
   end
 
-  def self.get_football_draft_data(user, password, leagueId, year)
+  def self.get_football_draft_data(cookie_string, leagueId, year)
     url = get_football_draft_url(leagueId, year)
 
-    response_body = get_page(url, user, password)
+    response_body = get_page(url, cookie_string)
 
     return parse_draft_data(response_body)
   end

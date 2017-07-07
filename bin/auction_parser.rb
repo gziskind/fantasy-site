@@ -2,14 +2,14 @@
 
 require 'trollop'
 require 'date'
+require 'dotenv/load'
+
 require_relative '../model'
 require_relative '../lib/espn_fantasy'
 require_relative '../lib/draft_parser'
 
 options = Trollop::options do
 	opt :year, "Year", :default => Time.now.year
-	opt :espn_user, "ESPN User", :short => "u", :type => :string, :required => true
-	opt :espn_password, "ESPN Password", :short => "p", :type => :string, :required => true
 	opt :baseball_league, "Baseball League ID", :short => "b", :type => :int
 	opt :football_league, "Football League ID", :short => "f", :type => :int
 	opt :test, "Run against test page", :type => :boolean, :short => "t", :default => false
@@ -18,13 +18,11 @@ options = Trollop::options do
 	opt :database, "Database", :short => "D", :default => "test_database"
 	opt :db_host, "Database Host", :default => "localhost", :short => "h"
 	opt :db_port, "Database Port", :default => 27017, :short => "P"
-	opt :db_user, "Database User", :short => "U", :type => :string
-	opt :db_password, "Database Password", :short => "w", :type => :string
+	opt :db_user, "Database User", :short => "u", :type => :string
+	opt :db_password, "Database Password", :short => "p", :type => :string
 end
 
 YEAR = options[:year]
-ESPN_USER = options[:espn_user]
-ESPN_PASSWORD = options[:espn_password]
 BASEBALL_ID = options[:baseball_league]
 FOOTBALL_ID = options[:football_league]
 TEST_PAGE = options[:test]
@@ -34,6 +32,7 @@ DB_HOST = options[:db_host]
 DB_PORT = options[:db_port]
 DB_USER = options[:db_user]
 DB_PASSWORD = options[:db_password]
+COOKIE_STRING = ENV["COOKIE_STRING"]
 
 TEST_FILE = "/tmp/draft_data.html"
 
@@ -42,12 +41,12 @@ def download_test_page
 	if !BASEBALL_ID.nil?
 		baseball_url = EspnFantasy.get_baseball_draft_url(BASEBALL_ID, YEAR)
 
-		response_body = EspnFantasy.get_page(baseball_url, ESPN_USER, ESPN_PASSWORD);
+		response_body = EspnFantasy.get_page(baseball_url, COOKIE_STRING);
 		File.open(TEST_FILE, 'w') { |file| file.write(response_body) }
 	elsif !FOOTBALL_ID.nil?
 		football_url = EspnFantasy.get_football_draft_url(FOOTBALL_ID, YEAR)
 
-		response_body = EspnFantasy.get_page(football_url, ESPN_USER, ESPN_PASSWORD)
+		response_body = EspnFantasy.get_page(football_url, COOKIE_STRING)
 		File.open(TEST_FILE, "w") { |file| file.write(response_body) }
 	else
 		puts "Must specify football or baseball id"
@@ -58,7 +57,7 @@ def parse_football_draft
 	puts "Parsing #{YEAR} Football Draft"
 
 	if(!TEST_PAGE)
-		draft_data = EspnFantasy.get_football_draft_data(ESPN_USER, ESPN_PASSWORD, FOOTBALL_ID, YEAR)
+		draft_data = EspnFantasy.get_football_draft_data(COOKIE_STRING, FOOTBALL_ID, YEAR)
 	else
 		puts "Reading from test file #{TEST_FILE}"
 		if File.exists? TEST_FILE
@@ -81,7 +80,7 @@ def parse_baseball_draft
 	puts "Parsing #{YEAR} Baseball Draft"
 
 	if(!TEST_PAGE && !FILE)
-		draft_data = EspnFantasy.get_baseball_draft_data(ESPN_USER, ESPN_PASSWORD, BASEBALL_ID, YEAR)
+		draft_data = EspnFantasy.get_baseball_draft_data(COOKIE_STRING, BASEBALL_ID, YEAR)
 	elsif(!TEST_PAGE && FILE)
 		draft_data = DraftParser.get_baseball_draft_data(FILE)
 	else
