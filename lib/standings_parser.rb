@@ -8,9 +8,8 @@ class StandingsParser
 
   ORDER =["C","1B","2B","SS","3B","OF","DH","SP","RP"]
 
-  def initialize(user, password, year) 
-    @user = user
-    @password = password
+  def initialize(cookie_string, year) 
+    @cookie_string = cookie_string
     @year = year
   end
 
@@ -22,6 +21,7 @@ class StandingsParser
       time: Time.now
     });
 
+    puts message
     log.save!
   end
 
@@ -30,7 +30,7 @@ class StandingsParser
       log_message "Parsing #{@year} Baseball Standings"
 
       baseball_url = "http://games.espn.go.com/flb/standings?leagueId=#{league_id}&seasonId=#{@year}"
-      response_body = EspnFantasy.get_page(baseball_url, @user, @password);
+      response_body = EspnFantasy.get_page(baseball_url, @cookie_string);
 
       html = Nokogiri::HTML(response_body);
       league_name = extract_league_name html;
@@ -56,7 +56,7 @@ class StandingsParser
       log_message "Parsing #{@year} Football Standings"
 
       football_url = "http://games.espn.go.com/ffl/standings?leagueId=#{league_id}&seasonId=#{@year}"
-      response_body = EspnFantasy.get_page(football_url, @user, @password);
+      response_body = EspnFantasy.get_page(football_url, @cookie_string);
 
       html = Nokogiri::HTML(response_body);
       league_name = extract_league_name html;
@@ -83,7 +83,7 @@ class StandingsParser
 
       baseball_url = "http://games.espn.go.com/flb/standings?leagueId=#{league_id}&seasonId=#{@year}"
 
-      response_body = EspnFantasy.get_page(baseball_url, @user, @password);
+      response_body = EspnFantasy.get_page(baseball_url, @cookie_string);
       html = Nokogiri::HTML(response_body);
 
       stats = parse_roto_data(html)

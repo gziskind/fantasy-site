@@ -7,9 +7,9 @@ class FantasyServer
 
   # API Calls
   post '/api/parser/standings/run', :token => true do
-    if settings.espn_user && settings.espn_password && settings.espn_football_id && settings.espn_baseball_id
+    if settings.cookie_string && settings.espn_football_id && settings.espn_baseball_id
 
-      parser = StandingsParser.new(settings.espn_user, settings.espn_password, Time.now.year)
+      parser = StandingsParser.new(settings.cookie_string, Time.now.year)
 
       if(Time.now.month >= 9 && Time.now.month <= 12)
         parser.parse_football(settings.espn_football_id)
@@ -37,9 +37,9 @@ class FantasyServer
   end
 
   post '/api/parser/scoreboard/run', :token => true do
-    if settings.espn_user && settings.espn_password && settings.espn_football_id
+    if settings.cookie_string && settings.espn_football_id
 
-      parser = ScoreboardParser.new(settings.espn_user, settings.espn_password, Time.now.year)
+      parser = ScoreboardParser.new(settings.cookie_string, Time.now.year)
 
       parser.parse_scoreboard(settings.espn_football_id)
 

@@ -6,9 +6,8 @@ require_relative '../lib/espn_fantasy'
 
 class ScoreboardParser
 
-  def initialize(user, password, year) 
-    @user = user
-    @password = password
+  def initialize(cookie_string, year) 
+    @cookie_string = cookie_string
     @year = year
   end
 
@@ -19,7 +18,8 @@ class ScoreboardParser
       log_message: message,
       time: Time.now
     });
-
+    
+    puts message
     log.save!
   end
 
@@ -34,7 +34,7 @@ class ScoreboardParser
         path += "&matchupPeriodId=#{matchup}"
       end
 
-      response_body = EspnFantasy.get_page(path, @user, @password);
+      response_body = EspnFantasy.get_page(path, @cookie_string);
       html = Nokogiri::HTML(response_body);
 
       matchups = extract_matchups(html)
