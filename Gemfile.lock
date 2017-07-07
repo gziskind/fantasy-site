@@ -13,6 +13,7 @@ GEM
     backports (3.6.4)
     bson (1.12.0)
     builder (3.2.2)
+    dotenv (2.2.1)
     dropbox-sdk (1.6.4)
       json
     httparty (0.14.0)
@@ -62,6 +63,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  dotenv
   dropbox-sdk
   httparty
   moneta
