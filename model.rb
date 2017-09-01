@@ -1,3 +1,6 @@
+require 'bundler/setup'
+require 'active_model/serializers'
+
 require_relative 'model/user'
 require_relative 'model/role'
 require_relative 'model/team_name'
