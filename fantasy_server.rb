@@ -40,9 +40,8 @@ class FantasyServer < Sinatra::Base
 	end
 
 	def self.init_db
-		MongoMapper.connection = Mongo::Connection.new(settings.db_host, settings.db_port)
-		MongoMapper.database = settings.database
-		MongoMapper.database.authenticate(settings.db_user, settings.db_password) if settings.db_user && settings.db_password
+		Mongo::Logger.logger.level = ::Logger::INFO
+		MongoMapper.connection = Mongo::Client.new(["#{settings.db_host}:#{settings.db_port}"], user: settings.db_user, password: settings.db_password, database: settings.database)
 	end
 
 	helpers Helpers
