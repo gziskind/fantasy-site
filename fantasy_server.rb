@@ -40,6 +40,7 @@ class FantasyServer < Sinatra::Base
 	end
 
 	def self.init_db
+		Mongo::Logger.logger.level = ::Logger::INFO
 		MongoMapper.connection = Mongo::Client.new(["#{settings.db_host}:#{settings.db_port}"], user: settings.db_user, password: settings.db_password, database: settings.database)
 	end
 
