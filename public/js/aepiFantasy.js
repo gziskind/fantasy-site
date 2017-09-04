@@ -74,6 +74,11 @@ angular.module('aepi-fantasy',['ngRoute','ngResource','ipCookie','ui.sortable','
 		templateUrl: '/pages/liveEvents.html'
 	});	
 
+	$routeProvider.when('/admin/parsing',{
+		controller: 'AdminParsingController',
+		templateUrl: '/pages/parsing.html'
+	});
+	
 	$routeProvider.when('/draft/:year',{
 		controller: 'DraftResultsController',
 		templateUrl: '/pages/draftResults.html'

@@ -6,21 +6,22 @@ class FantasyServer
   # Views
 
   # API Calls
+  get '/api/parser/token', :auth => :admin do
+    {
+      token: settings.api_token
+    }.to_json
+  end
+
   post '/api/parser/standings/run', :token => true do
     if settings.cookie_string && settings.espn_football_id && settings.espn_baseball_id
 
       parser = StandingsParser.new(settings.cookie_string, Time.now.year)
 
-      if(Time.now.month >= 9 && Time.now.month <= 12)
-        parser.parse_football(settings.espn_football_id)
+      parser.parse_football(settings.espn_football_id) if(Time.now.month >= 9)
+      parser.parse_baseball(settings.espn_baseball_id) if(Time.now.month >= 4 && Time.now.month <= 9)
+      parser.parse_roto(settings.espn_baseball_id) if(Time.now.month >= 4 && Time.now.month <= 9)
 
-        {
-          success:true
-        }.to_json
-      elsif(Time.now.month >= 4 && Time.now.month <= 9)
-        parser.parse_baseball(settings.espn_baseball_id) 
-        parser.parse_roto(settings.espn_baseball_id)
-
+      if(Time.now.month >= 4)
         {
           success:true
         }.to_json

@@ -15,6 +15,10 @@ class FantasyServer
 		erb :adminRecords
 	end
 
+	get '/admin/parsing', :auth => :admin do
+		@header_index = 'admin'
+		erb :adminParsing
+	end
 
 	# API Calls
 	get '/api/admin/roles', :auth => :admin do
