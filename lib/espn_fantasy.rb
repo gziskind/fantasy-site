@@ -10,153 +10,30 @@ module EspnFantasy
     return response.body
   end
 
-  def self.get_baseball_draft_url(leagueId, year)
-    return "http://games.espn.go.com/flb/tools/draftrecap?leagueId=#{leagueId}&seasonId=#{year}"
+  def self.get_baseball_draft_page(year, league_id, cookie_string)
+    return get_page("http://games.espn.go.com/flb/tools/draftrecap?leagueId=#{league_id}&seasonId=#{year}", cookie_string)
   end
 
-  def self.get_football_draft_url(leagueId, year)
-    return "http://games.espn.go.com/ffl/tools/draftrecap?leagueId=#{leagueId}&seasonId=#{year}"
+  def self.get_football_draft_page(year, league_id, cookie_string)
+    return get_page("http://games.espn.go.com/ffl/tools/draftrecap?leagueId=#{league_id}&seasonId=#{year}", cookie_string)
   end
 
-  def self.get_baseball_draft_data(cookie_string, leagueId, year)
-    url = get_baseball_draft_url(leagueId, year)
-
-    response_body = get_page(url, cookie_string)
-
-    return parse_draft_data(response_body)
+  def self.get_baseball_standings_page(year, league_id, cookie_string)
+    return get_page("http://games.espn.go.com/flb/standings?leagueId=#{league_id}&seasonId=#{year}",cookie_string)
   end
 
-  def self.get_football_draft_data(cookie_string, leagueId, year)
-    url = get_football_draft_url(leagueId, year)
-
-    response_body = get_page(url, cookie_string)
-
-    return parse_draft_data(response_body)
+  def self.get_football_standings_page(year, league_id, cookie_string)
+    return get_page("http://games.espn.go.com/ffl/standings?leagueId=#{league_id}&seasonId=#{year}", cookie_string)
   end
 
-  def self.parse_draft_data(page)
-    html = Nokogiri::HTML(page);
-
-    return extract_draft_data(html)
-  end
-
-  def self.extract_draft_data(html)
-    draft_type = get_draft_type(html)
-    if(draft_type == :auction)
-      puts "Parsing Auction Draft"
-      extract_auction_data(html)
-    elsif(draft_type == :snake)
-      puts "Parsing Snake Draft"
-      extract_snake_data(html)
-    else
-      puts "Could not determine draft type"
-    end
-  end
-
-
-  def self.get_draft_type(html) 
-    draft_info = html.css "//div[@class='games-alert-mod alert-mod2 games-grey-alert']"
-
-    if(draft_info && draft_info.children.length >= 6)
-      if(draft_info.children[5].content.include? "Auction")
-        return :auction
-      elsif(draft_info.children[5].content.include? "Snake")
-        return :snake
-      end
+  def self.get_football_scoreboard_page(year, league_id, cookie_string, matchup = nil)
+    path = "http://games.espn.go.com/ffl/scoreboard?leagueId=#{league_id}&seasonId=#{year}"
+    unless matchup == nil
+      path += "&matchupPeriodId=#{matchup}"
     end
 
-    return nil
+    return path
   end
 
-  def self.extract_snake_data(html) 
-    picks = html.css "//table/tr[@class='tableBody']"
-    draft_data = []
-
-    for index in 0..(picks.size - 1)
-      pick_data = get_pick_data(picks[index])
-      draft_data.push(pick_data)
-    end
-
-    return draft_data
-  end
-
-  def self.extract_auction_data(html) 
-    teams = html.css "//table"
-    draft_data = []
-
-    for index in 2..(teams.size - 1)
-      get_draft_data_team(draft_data, teams[index])
-    end
-    
-    return draft_data
-  end
-
-  def self.get_pick_data(pick)
-    pick_num = pick.css("/td[1]")[0].content
-    player = pick.css("/td[2]")[0].content
-    user_data = pick.css("/td[3]/a")
-    user = extract_user(user_data)
-
-    name, position = parse_player(player)
-    
-    {
-      name: name,
-      position: position,
-      pick: pick_num,
-      user: user,
-      keeper: false
-    }
-  end
-
-  def self.extract_user(a)
-    team_and_user = a.attribute("title").content
-    match_data = team_and_user.match(/.*\((.*, )?(.*)\)/)
-    match_data[2]
-  end
-
-  def self.parse_player(player)
-    match_data = player.match(/(.*)[,]\s\w*.(\w*).*(\w?)/);
-
-    return match_data[1].chomp("*"), match_data[2]
-  end
-
-  def self.get_draft_data_team(draft_data, team)
-    user_data = team.css "/tr[1]/td/a"
-    user = extract_user user_data
-
-    picks = team.css "tr[@class='tableBody']"
-    picks.each {|pick|
-      data = extract_pick_data pick
-      data[:user] = user
-      draft_data.push(data)
-    }
-  end
-
-  def self.extract_pick_data(pick)
-    dollar = pick.css("/td[3]")[0].content
-    dollar[0] = ''
-    player = pick.css("/td[2]")[0].content
-    pick_num = pick.css("/td[1]")[0].content
-    keeper = is_keeper(pick)
-
-    name, position = parse_player(player)
-
-    {
-      name: name,
-      position: position,
-      amount: dollar,
-      pick: pick_num,
-      keeper: keeper
-    }
-  end
-
-  def self.is_keeper(pick)
-    keeper = pick.css('/td[2]/span')[0]
-    if(keeper && keeper.content == 'K')
-      return true
-    else
-      return false
-    end
-  end
 end
 

@@ -13,24 +13,11 @@ class StandingsParser
     @year = year
   end
 
-  def log_message(message, level = "INFO")
-    log = Log.new({
-      logger: "StandingsParser",
-      level: level,
-      log_message: message,
-      time: Time.now
-    });
-
-    puts message
-    log.save!
-  end
-
   def parse_baseball(league_id)
     begin
       log_message "Parsing #{@year} Baseball Standings"
 
-      baseball_url = "http://games.espn.go.com/flb/standings?leagueId=#{league_id}&seasonId=#{@year}"
-      response_body = EspnFantasy.get_page(baseball_url, @cookie_string);
+      response_body = EspnFantasy.get_baseball_standings_page(@year, league_id, @cookie_string);
 
       html = Nokogiri::HTML(response_body);
       league_name = extract_league_name html;
@@ -55,8 +42,7 @@ class StandingsParser
     begin
       log_message "Parsing #{@year} Football Standings"
 
-      football_url = "http://games.espn.go.com/ffl/standings?leagueId=#{league_id}&seasonId=#{@year}"
-      response_body = EspnFantasy.get_page(football_url, @cookie_string);
+      response_body = EspnFantasy.get_football_standings_page(@year, league_id, @cookie_string);
 
       html = Nokogiri::HTML(response_body);
       league_name = extract_league_name html;
@@ -81,9 +67,7 @@ class StandingsParser
     begin
       log_message "Parsing #{@year} Baseball Roto Stats"
 
-      baseball_url = "http://games.espn.go.com/flb/standings?leagueId=#{league_id}&seasonId=#{@year}"
-
-      response_body = EspnFantasy.get_page(baseball_url, @cookie_string);
+      response_body = EspnFantasy.get_baseball_standings_page(@year, league_id, @cookie_string);
       html = Nokogiri::HTML(response_body);
 
       stats = parse_roto_data(html)
@@ -103,6 +87,18 @@ class StandingsParser
   end
 
   private
+
+  def log_message(message, level = "INFO")
+    log = Log.new({
+      logger: "StandingsParser",
+      level: level,
+      log_message: message,
+      time: Time.now
+    });
+
+    puts message
+    log.save!
+  end
 
   def extract_league_name(html) 
     name = html.css "//h1";

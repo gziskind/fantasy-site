@@ -53,5 +53,21 @@ class FantasyServer
       }.to_json
     end
   end
+
+  post '/api/parser/draft/:sport/run', :token => true do
+    sport = params[:sport]
+
+    if settings.cookie_string && sport == 'football' && settings.espn_football_id
+      parser = DraftParser.new(settings.cookie_string, Time.now.year)
+
+      parser.parse_football_draft(settings.espn_football_id)
+    elsif settings.cookie_string && sport == 'baseball' && settings.espn_baseball_id
+      parser = DraftParser.new(settings.cookie_string, Time.now.year)
+    else
+      {
+        error: "Missing server configuration"
+      }.to_json
+    end
+  end
 end
 

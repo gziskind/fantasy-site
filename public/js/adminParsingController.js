@@ -17,8 +17,11 @@ angular.module('aepi-fantasy').controller('AdminParsingController', function($sc
             name:"Football Scoreboard",
             id: "scoreboard"
         },{
-            name:"Draft",
-            id: "draft"
+            name:"Football Draft",
+            id: "draft/football"
+        },{
+            name:"Baseball Draft",
+            id: 'draft/baseball'
         }
     ]
 

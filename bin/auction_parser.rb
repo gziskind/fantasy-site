@@ -12,8 +12,6 @@ options = Trollop::options do
 	opt :year, "Year", :default => Time.now.year
 	opt :baseball_league, "Baseball League ID", :short => "b", :type => :int
 	opt :football_league, "Football League ID", :short => "f", :type => :int
-	opt :test, "Run against test page", :type => :boolean, :short => "t", :default => false
-	opt :download, "Download test page", :type => :boolean, :short => "d", :default => false
 	opt :parse_file, "Parse draft from file", :type => :string, :short => "F"
 	opt :database, "Database", :short => "D", :default => "test_database"
 	opt :db_host, "Database Host", :default => "localhost", :short => "h"
@@ -25,7 +23,6 @@ end
 YEAR = options[:year]
 BASEBALL_ID = options[:baseball_league]
 FOOTBALL_ID = options[:football_league]
-TEST_PAGE = options[:test]
 FILE = options[:parse_file]
 DATABASE = options[:database]
 DB_HOST = options[:db_host]
@@ -34,131 +31,8 @@ DB_USER = options[:db_user]
 DB_PASSWORD = options[:db_password]
 COOKIE_STRING = ENV["COOKIE_STRING"]
 
-TEST_FILE = "/tmp/draft_data.html"
+parser = DraftParser.new(COOKIE_STRING, YEAR)
+connect DATABASE, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD
 
-
-def download_test_page 
-	if !BASEBALL_ID.nil?
-		baseball_url = EspnFantasy.get_baseball_draft_url(BASEBALL_ID, YEAR)
-
-		response_body = EspnFantasy.get_page(baseball_url, COOKIE_STRING);
-		File.open(TEST_FILE, 'w') { |file| file.write(response_body) }
-	elsif !FOOTBALL_ID.nil?
-		football_url = EspnFantasy.get_football_draft_url(FOOTBALL_ID, YEAR)
-
-		response_body = EspnFantasy.get_page(football_url, COOKIE_STRING)
-		File.open(TEST_FILE, "w") { |file| file.write(response_body) }
-	else
-		puts "Must specify football or baseball id"
-	end
-end
-
-def parse_football_draft
-	puts "Parsing #{YEAR} Football Draft"
-
-	if(!TEST_PAGE)
-		draft_data = EspnFantasy.get_football_draft_data(COOKIE_STRING, FOOTBALL_ID, YEAR)
-	else
-		puts "Reading from test file #{TEST_FILE}"
-		if File.exists? TEST_FILE
-			page = File.read(TEST_FILE)
-			draft_data = EspnFantasy.parse_draft_data(page)
-		else
-			puts "Test file [#{TEST_FILE}] not found"
-			Process.exit(0)
-		end
-	end
-
-	verify_draft_data(draft_data)
-
-	save_draft_data(draft_data, 'football')
-
-	puts "Draft data for #{YEAR} saved."
-end
-
-def parse_baseball_draft
-	puts "Parsing #{YEAR} Baseball Draft"
-
-	if(!TEST_PAGE && !FILE)
-		draft_data = EspnFantasy.get_baseball_draft_data(COOKIE_STRING, BASEBALL_ID, YEAR)
-	elsif(!TEST_PAGE && FILE)
-		draft_data = DraftParser.get_baseball_draft_data(FILE)
-	else
-		puts "Reading from test file #{TEST_FILE}"
-		if File.exists? TEST_FILE
-			page = File.read(TEST_FILE)
-			draft_data = EspnFantasy.parse_draft_data(page)
-		else
-			puts "Test file [#{TEST_FILE}] not found"
-			Process.exit(0)
-		end
-	end
-
-	verify_draft_data(draft_data)
-
-	save_draft_data(draft_data, 'baseball')
-
-	puts "Draft data for #{YEAR} saved."
-end
-
-def save_draft_data(draft_data, sport)
-	draft_data.each {|draft_pick_data|
-		user = User.find_by_unique_name(draft_pick_data[:user]);
-
-		first_name, last_name = parse_player_name(draft_pick_data[:name])
-
-
-		player = Player.find_by_first_name_and_last_name_and_sport(first_name, last_name, sport)
-		if(player.nil?)
-			player = Player.new({
-				first_name: first_name,
-				last_name: last_name,
-				sport: sport
-			})
-
-			player.save!
-		end
-
-		pick_conf = {
-			position: draft_pick_data[:position],
-			pick: draft_pick_data[:pick],
-			keeper: draft_pick_data[:keeper],
-			year: YEAR,
-			sport: sport,
-			user: user,
-			player: player
-		};
-
-		pick_conf[:cost] = draft_pick_data[:amount] if !draft_pick_data[:amount].nil?
-
-		draft_pick = DraftPick.new(pick_conf)
-
-		draft_pick.save!
-	}
-end
-
-def parse_player_name(name)
-	match_data = name.match(/([49A-Za-z.\-']+)\s(.+)/)
-
-	return match_data[1], match_data[2]
-end
-
-def verify_draft_data(draft_data)
-	if draft_data.nil?
-		raise "Draft data invalid"
-	end
-end
-
-
-if options[:download]
-	download_test_page
-else
-	connect DATABASE, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD
-	if !BASEBALL_ID.nil?
-		parse_baseball_draft
-	elsif !FOOTBALL_ID.nil?
-		parse_football_draft
-	else
-		puts "Must specify either a football or baseball league id"
-	end
-end
+parser.parse_football_draft(FOOTBALL_ID) unless FOOTBALL_ID.nil?
+parser.parse_baseball_draft(BASEBALL_ID) unless BASEBALL_ID.nil?
