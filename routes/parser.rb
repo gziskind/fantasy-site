@@ -1,5 +1,6 @@
 require_relative '../lib/standings_parser'
 require_relative '../lib/scoreboard_parser'
+require_relative '../lib/draft_parser'
 
 class FantasyServer 
 
@@ -61,8 +62,18 @@ class FantasyServer
       parser = DraftParser.new(settings.cookie_string, Time.now.year)
 
       parser.parse_football_draft(settings.espn_football_id)
+
+      {
+        success: true
+      }.to_json
     elsif settings.cookie_string && sport == 'baseball' && settings.espn_baseball_id
       parser = DraftParser.new(settings.cookie_string, Time.now.year)
+
+      parser.parse_baseball_draft(settings.espn_baseball_id)
+
+      {
+        success: true
+      }.to_json
     else
       {
         error: "Missing server configuration"

@@ -55,8 +55,6 @@ class DraftParser
 
       draft_data = parse_draft_data(response_body)
 
-      puts draft_data
-
       if verify_draft_data(draft_data)
         save_draft_data(draft_data, 'football')
         log_message "Draft data for #{@year} saved"
@@ -238,7 +236,6 @@ class DraftParser
       first_name, last_name = parse_player_name(draft_pick_data[:name])
 
       player = Player.find_by_first_name_and_last_name_and_sport(first_name, last_name, sport)
-      puts player
       if(player.nil?)
         player = Player.new({
           first_name: first_name,
@@ -253,7 +250,7 @@ class DraftParser
         position: draft_pick_data[:position],
         pick: draft_pick_data[:pick],
         keeper: draft_pick_data[:keeper],
-        year: YEAR,
+        year: @year,
         sport: sport,
         user: user,
         player: player
