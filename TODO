@@ -1,0 +1,10 @@
+* Move parse football and parse baseball to lib
+* Change bin to be able to run parsing from command line, but calls the lib method
+# Create new route for parsing operations, with env token to verify use
+Create log admin view to show output from parsing operations
+
+* Run parsing operations, log to the database, tag with date of run.
+
+* Add entry in database to say when standings were last updated successfully
+
+Move user_map.json into database, allow to be modified when admin is initiating a draft parsing.

@@ -5,13 +5,13 @@ require 'httparty'
 require 'nokogiri'
 require 'trollop'
 require 'date'
+require 'dotenv/load'
+
 require_relative '../model'
 require_relative '../lib/espn_fantasy'
 
 options = Trollop::options do
 	opt :year, "Year", :default => Time.now.year
-	opt :espn_user, "ESPN User", :short => "u", :type => :string, :required => true
-	opt :espn_password, "ESPN Password", :short => "p", :type => :string, :required => true
 	opt :baseball_league, "Baseball League ID", :short => "b", :type => :int, :required => true
 	opt :max_matchup_length, "Maximum Matchup League", :short => "m", :type => :int, :default => 21
 	opt :number_of_matchups, "Number of matchups", :short => "n", :type => :int, :default => 24
@@ -19,12 +19,11 @@ options = Trollop::options do
 end
 
 YEAR = options[:year]
-ESPN_USER = options[:espn_user]
-ESPN_PASSWORD = options[:espn_password]
 BASEBALL_ID = options[:baseball_league]
 MAX_MATCHUP_LENGTH = options[:max_matchup_length]
 NUMBER_OF_MATCHUPS = options[:number_of_matchups]
 DISPLAY_ALL_STATS = options[:all_stats]
+COOKIE_STRING = ENV["COOKIE_STRING"]
 
 COUNTING = ["R","HR","RBI","SB","QS","W","SV"]
 REVERSE_STATS = ["ERA","WHIP"]
@@ -36,9 +35,7 @@ def parse_baseball
 	for index in 1..NUMBER_OF_MATCHUPS
 		puts "Parsing Week #{index}"
 
-		baseball_url = "http://games.espn.go.com/flb/scoreboard?leagueId=#{BASEBALL_ID}&seasonId=#{YEAR}&matchupPeriodId=#{index}"
-
-		response_body = EspnFantasy.get_page(baseball_url, ESPN_USER, ESPN_PASSWORD);
+		response_body = EspnFantasy.get_baseball_matchup_stats_page(YEAR, BASEBALL_ID, COOKIE_STRING, index);
 		html = Nokogiri::HTML(response_body);
 
 		matchup_length = extract_matchup_length html
