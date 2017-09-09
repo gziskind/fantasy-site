@@ -28,9 +28,8 @@ require_relative 'model/log'
 require_relative 'model/status'
 
 def connect(database, host = 'localhost', port = 27017, user = nil, password = nil)
-	MongoMapper.connection = Mongo::Connection.new(host, port)
-	MongoMapper.database = database
-	MongoMapper.database.authenticate(user, password) if user && password
+	Mongo::Logger.logger.level = ::Logger::INFO
+	MongoMapper.connection = Mongo::Client.new(["#{host}:#{port}"], user: user, password: password, database: database)
 end
 
 def test_connect

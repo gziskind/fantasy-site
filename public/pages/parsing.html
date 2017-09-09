@@ -1,0 +1,21 @@
+<div>
+    <h1>Parsing Tasks</h1>
+    <table class="table table-condensed table-hover">
+        <thead>
+            <tr>
+                <th>Task Name</th>
+                <th>Run Task</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="parser in parsers">
+                <td class="col-md-6">{{parser.name}}</td>
+                <td class="col-md-6">
+                    <button ng-hide="parser.submitted" type="submit" class="btn btn-primary btn-xs" ng-click="runParsingTask(parser)">Run</button>
+                    <img style="position:relative; left:20px;" ng-show="parser.submitted && !parser.confirmed" src="/img/small-loader.gif"/>
+                    <span ng-show="parser.confirmed">{{parser.message}}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

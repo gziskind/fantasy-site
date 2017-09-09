@@ -11,30 +11,12 @@ class ScoreboardParser
     @year = year
   end
 
-  def log_message(message, level = "INFO")
-    log = Log.new({
-      logger: "ScoreboardParser",
-      level: level,
-      log_message: message,
-      time: Time.now
-    });
-    
-    puts message
-    log.save!
-  end
-
   def parse_scoreboard(league_id, matchup = nil)
     # Might need to consider following a redirect
     begin
-      path = "http://games.espn.go.com/ffl/scoreboard?leagueId=#{league_id}&seasonId=#{@year}"
-      if matchup == nil
-        log_message "Parsing Football Scoreboard"
-      else
-        log_message "Parsing Football Scoreboard for week #{matchup}"
-        path += "&matchupPeriodId=#{matchup}"
-      end
+      log_message "Parsing Football Scoreboard"
 
-      response_body = EspnFantasy.get_page(path, @cookie_string);
+      response_body = EspnFantasy.get_football_scoreboard_page(@year, league_id, @cookie_string, matchup);
       html = Nokogiri::HTML(response_body);
 
       matchups = extract_matchups(html)
@@ -55,6 +37,18 @@ class ScoreboardParser
   end
 
   private 
+
+  def log_message(message, level = "INFO")
+    log = Log.new({
+      logger: "ScoreboardParser",
+      level: level,
+      log_message: message,
+      time: Time.now
+    });
+    
+    puts message
+    log.save!
+  end
 
   def extract_week(html)
     week_element = html.css '//em'
@@ -100,7 +94,7 @@ class ScoreboardParser
         matchups.push(matchup)
       }
     else
-      log_message "Not scoreboard data found"
+      log_message "No scoreboard data found"
     end
 
     return matchups
