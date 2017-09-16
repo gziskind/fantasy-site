@@ -1,13 +1,13 @@
 #! /usr/bin/env ruby
 
 require 'trollop'
+require 'dotenv/load'
+
 require_relative '../model'
 require_relative '../lib/scoreboard_parser'
 
 options = Trollop::options do
 	opt :year, "Year", :default => Time.now.year
-	opt :espn_user, "ESPN User", :short => "U", :type => :string, :required => true
-	opt :espn_password, "ESPN Password", :short => "w", :type => :string, :required => true
 	opt :football_league, "Football League ID", :short => "f", :type => :int, :required => true
 	opt :database, "Database", :default => "test_database"
 	opt :db_host, "Database Host", :default => "localhost", :short => "h"
@@ -27,8 +27,9 @@ DB_PORT = options[:db_port]
 DB_USER = options[:db_user]
 DB_PASSWORD = options[:db_password]
 FULL_SEASON = options[:full_season]
+COOKIE_STRING = ENV["COOKIE_STRING"]
 
-parser = ScoreboardParser.new(ESPN_USER, ESPN_PASSWORD, YEAR)
+parser = ScoreboardParser.new(COOKIE_STRING, YEAR)
 connect DATABASE, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD
 
 if(FULL_SEASON)

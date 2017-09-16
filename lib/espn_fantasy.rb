@@ -32,7 +32,7 @@ module EspnFantasy
       path += "&matchupPeriodId=#{matchup}"
     end
 
-    return path
+    return get_page(path, cookie_string)
   end
 
   def self.get_baseball_matchup_stats_page(year, league_id, cookie_string, matchup)
