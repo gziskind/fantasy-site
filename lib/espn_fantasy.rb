@@ -35,6 +35,10 @@ module EspnFantasy
     return get_page(path, cookie_string)
   end
 
+  def self.get_baseball_scoreboard_page(year, league_id, cookie_string, matchup_id) 
+    return get_page("http://games.espn.com/flb/scoreboard?leagueId=#{league_id}&seasonId=#{year}&matchupPeriodId=#{matchup_id}", cookie_string)
+  end
+
   def self.get_baseball_matchup_stats_page(year, league_id, cookie_string, matchup)
     return get_page("http://games.espn.go.com/flb/scoreboard?leagueId=#{league_id}&seasonId=#{year}&matchupPeriodId=#{matchup}", cookie_string)
   end
