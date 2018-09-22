@@ -20,6 +20,11 @@ class FantasyServer
 		erb :adminParsing
 	end
 
+	get '/admin/log', :auth => :admin do
+		@header_index = 'admin'
+		erb :adminLog
+	end
+
 	# API Calls
 	get '/api/admin/roles', :auth => :admin do
 		roles = Role.all
