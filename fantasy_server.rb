@@ -30,6 +30,7 @@ class FantasyServer < Sinatra::Base
 	end
 
 	def self.start
+		puts "Connecting redis to #{settings.redis_host}"
 		use Rack::Session::Moneta, key: 'rack.session',
 			expire_after: 259200000,
 			store: Moneta.new(:Redis, expires: true, :host => settings.redis_host, :port => settings.redis_port, :password => settings.redis_password)
@@ -40,6 +41,7 @@ class FantasyServer < Sinatra::Base
 	end
 
 	def self.init_db
+		puts "Connecting database to #{settings.database} at #{settings.db_host}"
 		Mongo::Logger.logger.level = ::Logger::INFO
 		MongoMapper.connection = Mongo::Client.new(["#{settings.db_host}:#{settings.db_port}"], user: settings.db_user, password: settings.db_password, database: settings.database)
 	end
