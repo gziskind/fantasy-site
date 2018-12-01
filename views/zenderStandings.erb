@@ -47,6 +47,7 @@
 				<table class="table table-condensed table-hover">
 					<thead>
 						<tr>
+							<th><span class="glyphicon" ng-class="{'glyphicon-plus-sign':!allExpanded, 'glyphicon-minus-sign':allExpanded}" ng-click="expandAll(allExpanded = !allExpanded)"></span></th>
 							<th>Place</th>
 							<th ng-show="currentUser">Team Name</th>
 							<th>Owner</th>
@@ -58,7 +59,10 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="standing in standings">
+						<tr ng-repeat-start="standing in standings">
+							<td ng-click="expanded = !expanded" expand>
+								<span class="glyphicon" ng-class="{'glyphicon-plus-sign':!expanded, 'glyphicon-minus-sign':expanded} "></span>
+							</td>
 							<td>{{$index + 1}}</td>
 							<td ng-show="currentUser">{{standing.name}}</td>
 							<td>{{standing.owner}}</td>
@@ -67,6 +71,11 @@
 							<td>{{standing.winPercentage | number:3}}</td>
 							<td>{{standing.points}}</td>
 							<!-- <td>{{getGamesBack(result)}}</td> -->
+						</tr>
+						<tr ng-repeat-end ng-show="expanded">
+							<td colspan=7 style="border-top:0">
+								<p class="weekly-results" ng-repeat="result in standing.results">Week {{$index + 1}}: {{getPlace(result.place)}} ({{result.points}} pts)</p>
+							</td>
 						</tr>
 					</tbody>
 				</table>

@@ -132,7 +132,7 @@ class FantasyServer
 				points: result.points,
 				points_wins: 0,
 				points_losses: 0,
-				results:{}
+				results:[]
 			}
 
 			zender_results[result.user.name][:team_name] = result.team_name if !@user.nil?
@@ -149,10 +149,10 @@ class FantasyServer
 			team_results.reverse!
 
 			team_results.each_with_index {|team_result,index|
-				zender_results[team_result.user.name][:results][week_result.week] = {
+				zender_results[team_result.user.name][:results].push({
 					place: index + 1,
 					points: team_result[:points]
-				}
+				})
 
 				if(index < 6)
 					zender_results[team_result.user.name][:points_wins] += 1
