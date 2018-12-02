@@ -127,7 +127,7 @@ DEPENDENCIES
   trollop
 
 RUBY VERSION
-   ruby 2.2.4p230
+   ruby 2.4.5p335
 
 BUNDLED WITH
-   1.15.2
+   1.16.6
