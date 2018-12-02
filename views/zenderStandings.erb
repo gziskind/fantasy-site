@@ -26,7 +26,7 @@
 			<form class="form-horizontal" role="form">
 				<div class="col-xs-12 col-md-6 row">
 					<div class="col-xs-12 col-md-6 row form-group">
-						<label class="col-xs-7 col-md-7 control-label">Wins Value</label>
+						<label class="col-xs-7 col-md-7 control-label">Win Value</label>
 						<div class="col-xs-5 col-md-5 row" style="padding-top:5px">
 							<!-- <a class="glyphicon glyphicon-chevron-left" ng-click="decrementWinValue()"></a> -->
                             <span style="font-size:20px; padding: 0 4px;">{{winValue}}</span>
@@ -47,7 +47,7 @@
 				<table class="table table-condensed table-hover">
 					<thead>
 						<tr>
-							<th><span class="glyphicon" ng-class="{'glyphicon-plus-sign':!allExpanded, 'glyphicon-minus-sign':allExpanded}" ng-click="expandAll(allExpanded = !allExpanded)"></span></th>
+							<th></th>
 							<th>Place</th>
 							<th ng-show="currentUser">Team Name</th>
 							<th>Owner</th>
@@ -60,7 +60,7 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat-start="standing in standings">
-							<td ng-click="expanded = !expanded" expand>
+							<td ng-click="expanded = !expanded">
 								<span class="glyphicon" ng-class="{'glyphicon-plus-sign':!expanded, 'glyphicon-minus-sign':expanded} "></span>
 							</td>
 							<td>{{$index + 1}}</td>
@@ -74,7 +74,8 @@
 						</tr>
 						<tr ng-repeat-end ng-show="expanded">
 							<td colspan=7 style="border-top:0">
-								<p class="weekly-results" ng-repeat="result in standing.results">Week {{$index + 1}}: {{getPlace(result.place)}} ({{result.points}} pts)</p>
+								<p><span class="win-total-label">Matchup Wins:</span> {{standing.matchupWins}}<span class="win-total-label">Points Wins: </span>{{standing.pointsWins}}</p>
+								<p class="weekly-results" ng-repeat="result in standing.results" ng-class="{'points-win': result.place <= 6, 'points-loss': result.place > 6}">Week {{$index + 1}}: {{getPlace(result.place)}} ({{result.points}} pts)</p>
 							</td>
 						</tr>
 					</tbody>

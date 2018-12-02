@@ -59,12 +59,6 @@ angular.module('aepi-fantasy').controller('ZenderStandingsController', function(
 		}
 	}
 
-	$scope.expandAll = function(expanded) {
-		$scope.$broadcast('onExpandAll', {
-          expanded: expanded
-        });
-	}
-	
 	// Watches
 	$scope.$watch("winValue", getZenderStandings);
 	$scope.$watch('pointsValue', getZenderStandings);
@@ -87,7 +81,9 @@ angular.module('aepi-fantasy').controller('ZenderStandingsController', function(
 					losses: losses,
 					winPercentage: winPercentage,
 					points: result.points,
-					results: result.results
+					results: result.results,
+					matchupWins: result.wins,
+					pointsWins: result.points_wins
 				};
 
 				$scope.standings.push(standing);
@@ -119,14 +115,3 @@ angular.module('aepi-fantasy').controller('ZenderStandingsController', function(
 		});
 	}
 });
-
-angular.module('aepi-fantasy').directive('expand', function () {
-    function link(scope, element, attrs) {
-        scope.$on('onExpandAll', function (event, args) {
-            scope.expanded = args.expanded;
-        });
-    }
-    return {
-        link: link
-    };
-})

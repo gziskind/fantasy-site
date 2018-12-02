@@ -50,3 +50,17 @@
 .weekly-results {
 	margin: 0 140px 0;
 }
+
+.points-win {
+	font-weight: 900;
+}
+
+.points-loss { 
+	font-weight: 300;
+}
+
+
+.win-total-label {
+	padding-left:30px;
+	font-weight:bold;
+}
