@@ -75,7 +75,7 @@
 						<tr ng-repeat-end ng-show="expanded">
 							<td colspan=7 style="border-top:0">
 								<p><span class="win-total-label">Matchup Wins:</span> {{standing.matchupWins}}<span class="win-total-label">Points Wins: </span>{{standing.pointsWins}}</p>
-								<p class="weekly-results" ng-repeat="result in standing.results" ng-class="{'points-win': result.place <= 6, 'points-loss': result.place > 6}">Week {{$index + 1}}: {{getPlace(result.place)}} ({{result.points}} pts)</p>
+								<p class="weekly-results" ng-repeat="result in standing.results" ng-class="{'points-win': result.place <= 6, 'points-loss': result.place > 6}">Week {{$index + 1}}: {{getPlace(result.place)}} ({{result.points}} pts) {{winOrLoss(result.win)}}</p>
 							</td>
 						</tr>
 					</tbody>

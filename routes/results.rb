@@ -141,23 +141,32 @@ class FantasyServer
 		season.week_results.each {|week_result|
 			team_results = []
 			week_result.matchups.each{|matchup|
-				team_results.push(matchup.team_results[0])
-				team_results.push(matchup.team_results[1])
+				win = matchup.team_results[0][:points] > matchup.team_results[1][:points]
+
+				team_results.push({
+					result: matchup.team_results[0],
+					win: win
+				})
+				team_results.push({
+					result: matchup.team_results[1],
+					win: !win
+				})
 			}
 
-			team_results.sort_by! {|team_result| team_result[:points]}
+			team_results.sort_by! {|team_result| team_result[:result][:points]}
 			team_results.reverse!
 
 			team_results.each_with_index {|team_result,index|
-				zender_results[team_result.user.name][:results].push({
+				zender_results[team_result[:result].user.name][:results].push({
 					place: index + 1,
-					points: team_result[:points]
+					points: team_result[:result][:points],
+					win: team_result[:win]
 				})
 
 				if(index < 6)
-					zender_results[team_result.user.name][:points_wins] += 1
+					zender_results[team_result[:result].user.name][:points_wins] += 1
 				else
-					zender_results[team_result.user.name][:points_losses] += 1
+					zender_results[team_result[:result].user.name][:points_losses] += 1
 				end
 			}
 		}

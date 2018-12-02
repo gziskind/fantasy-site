@@ -59,6 +59,14 @@ angular.module('aepi-fantasy').controller('ZenderStandingsController', function(
 		}
 	}
 
+	$scope.winOrLoss = function(win) {
+		if(win) {
+			return 'W'
+		} else {
+			return 'L'
+		}
+	}
+
 	// Watches
 	$scope.$watch("winValue", getZenderStandings);
 	$scope.$watch('pointsValue', getZenderStandings);
