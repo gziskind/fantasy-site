@@ -22,8 +22,8 @@ class DraftParser
         save_draft_data(draft_data, 'football')
         log_message "Draft data for #{@year} saved"
       else
-        log_message "Draft Data Invalid"
-        log_message draft_data
+        log_message "Draft Data Invalid", 'ERROR'
+        log_message draft_data, 'DEBUG'
       end
     rescue Exception => e
       log_message e, "ERROR"
@@ -42,8 +42,8 @@ class DraftParser
         save_draft_data(draft_data, 'baseball')
         log_message "Draft data for #{@year} saved"
       else
-        log_message "Draft Data Invalid"
-        log_message draft_data
+        log_message "Draft Data Invalid", 'ERROR'
+        log_message draft_data, 'DEBUG'
       end
     rescue Exception => e
       log_message e, "ERROR"

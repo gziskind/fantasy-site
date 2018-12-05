@@ -30,8 +30,8 @@ class StandingsParser
 
         Status.update_service("Baseball Standings")
       else
-        log_message "Team info Invalid [#{Time.now}]"
-        log_message team_info
+        log_message "Team info Invalid [#{Time.now}]", "ERROR"
+        log_message team_info, "ERROR"
       end
 
       calculate_points(stats) 
@@ -68,8 +68,8 @@ class StandingsParser
 
         Status.update_service("Football Standings")
       else
-        log_message "Team info Invalid [#{Time.now}]"
-        log_message team_info
+        log_message "Team info Invalid [#{Time.now}]", "ERROR"
+        log_message team_info, "ERROR"
       end
     rescue Exception => e
       log_message e, "ERROR"
@@ -200,9 +200,9 @@ class StandingsParser
 
         team_name.save!
       elsif owner.nil?
-        log_message "Could not find owner [#{team[:owner]}]"
+        log_message "Could not find owner [#{team[:owner]}]", "ERROR"
       else
-        log_message "Team name [#{team[:team_name]}] already in database"
+        log_message "Team name [#{team[:team_name]}] already in database", "DEBUG"
         current_team_name.save!
       end
     }

@@ -27,9 +27,9 @@ class ScoreboardParser
 
         Status.update_service("Football Scoreboard")
       else
-        log_message "Scoreboard data Invalid [#{Time.now}]"
-        log_message matchups
-        log_message html if matchups.size == 0
+        log_message "Scoreboard data Invalid [#{Time.now}]", "ERROR"
+        log_message matchups, "DEBUG"
+        log_message html, "DEBUG" if matchups.size == 0
       end
     rescue Exception => e
       log_message e, "ERROR"
@@ -94,7 +94,7 @@ class ScoreboardParser
         matchups.push(matchup)
       }
     else
-      log_message "No scoreboard data found"
+      log_message "No scoreboard data found", "WARN"
     end
 
     return matchups
@@ -104,7 +104,7 @@ class ScoreboardParser
     valid = true
 
     if(scoreboard_data.size != 6)
-      log_message "Invalid matchup length"
+      log_message "Invalid matchup length", "ERROR"
       valid = false
     end
 
