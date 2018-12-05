@@ -64,3 +64,14 @@
 	padding-left:30px;
 	font-weight:bold;
 }
+
+.terminal {
+	border-width: 1px;
+	height: 700px;
+	background-color: black;
+ 	color: white;
+  	font: 1.3rem Inconsolata, monospace;
+  	padding: 10px 15px;
+  	border: 1px solid white;
+  	overflow-y: scroll
+}

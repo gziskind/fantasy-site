@@ -26,6 +26,23 @@ class FantasyServer
 	end
 
 	# API Calls
+	get '/api/admin/log/:count/:page', :auth => :admin do
+		log_messages = []
+
+		logs = Log.order(:time.desc).limit(params[:count]).skip((params[:page].to_i - 1) * params[:count].to_i).all
+
+		logs.each {|log|
+			log_messages.push({
+				level: log.level,
+				time: log.time,
+				loggerType: log.logger_type,
+				message: log.log_message
+			})
+		}
+
+		log_messages.to_json
+	end
+
 	get '/api/admin/roles', :auth => :admin do
 		roles = Role.all
 

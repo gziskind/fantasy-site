@@ -6,7 +6,7 @@
     <script src="/js/adminLogController.js"></script>
   </head>
 
-  <body ng-app="aepi-fantasy" ng-controller="HomeController" ng-cloak>
+  <body ng-app="aepi-fantasy" ng-controller="AdminLogController" ng-cloak>
 
     <div class="container">
       <!-- Static navbar -->
@@ -14,8 +14,8 @@
       
       <div class="container-fluid">
         <div class="row">
-          <div class="col-sm-12 col-md-12">
-            HELLO
+          <div class="col-sm-12 col-md-12 terminal">
+            <div ng-repeat="message in logMessages | orderBy:'time'">{{message.time | date:"yyyy/MM/dd HH:mm:ss"}} - [{{message.level}}] {{message.message}}</div>
           </div>
         </div>
       </div>
