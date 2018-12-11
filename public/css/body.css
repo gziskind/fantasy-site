@@ -73,5 +73,6 @@
   	font: 1.3rem Inconsolata, monospace;
   	padding: 10px 15px;
   	border: 1px solid white;
-  	overflow-y: scroll
+  	overflow-y: scroll;
+  	margin:10px;
 }

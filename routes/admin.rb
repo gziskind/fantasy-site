@@ -22,14 +22,17 @@ class FantasyServer
 
 	get '/admin/log', :auth => :admin do
 		@header_index = 'admin'
+
+		@logger_types = Log.distinct("logger_type")
+
 		erb :adminLog
 	end
 
 	# API Calls
-	get '/api/admin/log/:count/:page', :auth => :admin do
+	get '/api/admin/log/:type/:count/:page', :auth => :admin do
 		log_messages = []
 
-		logs = Log.order(:time.desc).limit(params[:count]).skip((params[:page].to_i - 1) * params[:count].to_i).all
+		logs = Log.order(:time.desc).limit(params[:count]).skip((params[:page].to_i - 1) * params[:count].to_i).where(logger_type: params[:type])
 
 		logs.each {|log|
 			log_messages.push({
