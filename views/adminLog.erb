@@ -23,7 +23,16 @@
           </div>
 
           <div class="col-sm-9 col-md-10">
-            <div class="terminal">
+            <div class="row">
+              <% @log_levels.each_with_index { |level,index| %>
+              <div class="col-sm-2 form-check">
+                <label>
+                  <input type="checkbox" ng-model="logLevels.<%= level %>" ng-init="logLevels.<%= level %>=false"> <%= level %>
+                </label>
+              </div>
+              <% } %>
+            </div>
+            <div class="row terminal">
               <div ng-repeat="message in logMessages | orderBy:'time'">{{message.time | date:"yyyy/MM/dd HH:mm:ss"}} - [{{message.level}}] {{message.message}}</div>
             </div>
           </div>
