@@ -77,6 +77,28 @@
   	margin:10px;
 }
 
+.levels-row {
+	padding: 15px 0px 5px 10px;
+}
+
+.load-more {
+	text-align: center;
+    top: 10px;
+    position: relative;
+}
+
+.load-more span {
+    cursor: pointer;
+}
+
+.load-more span:hover  {
+	color: #a8a8a8;
+}
+
+.load-more span:active {
+	color: #888888;
+}
+
 .bottom {
 	color:blue;
 }

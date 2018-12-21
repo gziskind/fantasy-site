@@ -1,10 +1,10 @@
 angular.module('aepi-fantasy').controller('AdminLogController', function($scope, $location, $routeParams, $resource) {
 
     // Private variables
-    $scope.logMessages = []
-   
+   	var pageSize = 45;
 
     // Public variables
+    $scope.logMessages = []
     $scope.selectedLoggerType = ""
 
     // Watches
@@ -13,7 +13,7 @@ angular.module('aepi-fantasy').controller('AdminLogController', function($scope,
     // Public Functions
     $scope.selectLogger = function(loggerType) {
     	$scope.selectedLoggerType = loggerType;
-    	refreshLog(loggerType, 45,1, $scope.logLevels)
+    	refreshLog(loggerType, pageSize,1, $scope.logLevels)
     }
 
     $scope.isLoggerSelected = function(loggerType) {
@@ -31,16 +31,31 @@ angular.module('aepi-fantasy').controller('AdminLogController', function($scope,
     		return ""
     	}
     }
+
+    $scope.clearLog = function() {
+    	if($scope.selectedLoggerType) {
+    		var Log = $resource('/api/admin/log/' + $scope.selectedLoggerType)
+    		Log.delete(function(response) {
+    			if(response.success) {
+    				refreshLog($scope.selectedLoggerType, pageSize, 1, $scope.logLevels)
+    			}
+    			console.info("Deleted" + response.success)
+    		})
+    	}
+    }
     
+    $scope.loadMoreLogs = function() {
+    	refreshLog($scope.selectedLoggerType, pageSize, 1, $scope.logLevels, true)
+    }
 
     // Private Functions
     function logLevelChanged() {
     	if($scope.selectedLoggerType) {
-    		refreshLog($scope.selectedLoggerType, 45, 1, $scope.logLevels)
+    		refreshLog($scope.selectedLoggerType, pageSize, 1, $scope.logLevels, true)
     	}
     }
 
-    function refreshLog(type, count, page, levels) {
+    function refreshLog(type, count, page, levels, append) {
 		var Log = $resource('/api/admin/log/' + type + '/'+ count + '/' + page, {}, {
 			getAll: {
 				method: 'post', 

@@ -52,6 +52,15 @@ class FantasyServer
 		log_messages.to_json
 	end
 
+	delete '/api/admin/log/:type', :auth => :admin do
+		logs = Log.where(logger_type: params[:type])
+	 	logs.delete_all
+
+		{
+			success:true
+		}.to_json
+	end
+
 	get '/api/admin/roles', :auth => :admin do
 		roles = Role.all
 
