@@ -86,8 +86,6 @@ class DraftParser
 
       draft_data = parse_draft_data(response_json)
 
-      puts draft_data
-
       if verify_draft_data(draft_data)
         save_draft_data(draft_data, 'baseball')
         log_message "Draft data for #{@year} saved"
