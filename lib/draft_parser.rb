@@ -1,61 +1,13 @@
 require 'json'
-require 'net/http'
-require 'httparty'
 require 'date'
 require_relative '../lib/espn_fantasy'
+require_relative '../lib/parsing_utilities'
 
 class DraftParser
-  POSITIONS_MAP = {
-    1 => "SP",
-    2 => "C",
-    3 => "1B",
-    4 => "2B",
-    5 => "3B",
-    6 => "SS",
-    7 => "OF",
-    8 => "OF",
-    9 => "OF",
-    10 => "DH",
-    11 => "RP"
-  }
 
   def initialize(cookie_string, year) 
     @cookie_string = cookie_string
     @year = year
-  end
-
-  def get_baseball_draft_data_from_file(file)
-    name_map = JSON.parse(File.read("user_map.json"))
-    pick_num = 1
-    draft_data =[]
-
-    File.open(file).each {|line|
-      match_data = line.match(/(\w+)\s-\s([A-Za-z. \-']+)[ ]([(]K\d?[)])?[ ]?(\w+)/)
-
-      if(!match_data.nil?)
-        team = match_data[1]
-        name = match_data[2]
-        keeper = !match_data[3].nil? 
-        position = match_data[4].upcase
-
-        if POSITIONS_MAP.values.include? position
-
-          draft_data.push({
-            name: name.strip,
-            position: position,
-            pick: pick_num,
-            user: name_map[team],
-            keeper: keeper
-          })
-        else
-          puts "Position invalid [#{name}] [#{position}]"
-        end
-
-        pick_num += 1
-      end
-    }
-
-    return draft_data
   end
 
   def parse_football_draft(league_id)
@@ -116,8 +68,8 @@ class DraftParser
   def parse_draft_data(response_json) 
     draft_data = []
 
-    player_index = create_player_index(response_json["players"])
-    user_index = create_user_index(response_json['teams'], response_json['members'])
+    player_index = ParsingUtilities.create_player_index(response_json["players"])
+    user_index = ParsingUtilities.create_user_index(response_json['teams'], response_json['members'])
 
     response_json['draftDetail']['picks'].each {|draft_pick|
       player = player_index[draft_pick['playerId']]
@@ -136,41 +88,7 @@ class DraftParser
     return draft_data
   end
 
-  def create_player_index(players)
-    player_index = {}
-
-    players.each {|player|
-      player_index[player['id']] = {
-        first_name: player['player']['firstName'],
-        last_name: player['player']['lastName'],
-        position: POSITIONS_MAP[player['player']['defaultPositionId']]
-      }
-    }
-
-    return player_index
-  end
-
-  def create_user_index(teams, members)
-    user_index = {}
-
-    member_index = create_member_index(members)
-
-    teams.each {|team|
-      user_index[team['id']] = member_index[team['primaryOwner']]
-    }
-
-    return user_index
-  end
-
-  def create_member_index(members)
-    member_index = {}
-
-    members.each {|member|
-      member_index[member['id']] = "#{member['firstName']} #{member['lastName']}"
-    }
-
-    return member_index
-  end
+  
 
 
   def verify_draft_data(draft_data)
