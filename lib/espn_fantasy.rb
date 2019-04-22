@@ -6,8 +6,13 @@ module EspnFantasy
 
   def self.get_data(espn_url, cookie_string)
     response = HTTParty.get(espn_url, :headers => {"Cookie" => cookie_string});
+    json = JSON.parse(response.body)
 
-    return JSON.parse(response.body)
+    if json['messages'] && !json['messages'].empty? && json['messages'][0].include?("not authorized")
+      raise "Login not working"
+    end
+
+    return json
   end
 
   def self.get_baseball_draft_data(year, league_id, cookie_string)

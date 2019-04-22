@@ -35,4 +35,8 @@ parser = TransactionParser.new(COOKIE_STRING, YEAR)
 connect DATABASE, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD
 
 parser.parse_football_transactions(FOOTBALL_ID) unless FOOTBALL_ID.nil?
-parser.parse_baseball_transactions(BASEBALL_ID) unless BASEBALL_ID.nil?
+transactions = parser.parse_baseball_transactions(BASEBALL_ID) unless BASEBALL_ID.nil?
+
+transactions.each {|transaction|
+    puts parser.slack_format_transaction(transaction)
+}

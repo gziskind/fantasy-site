@@ -18,37 +18,31 @@ class TransactionParser
 
   	transactions = parse_transaction_data(response_json)
 
-    # transactions.each {|transaction|
-    #   puts "User -- #{transaction[:user]}"
-    #   puts " * #{transaction[:bid]}"
-    #   puts " * #{transaction[:execution_type]} - #{transaction[:status]} - #{transaction[:type]}"
-    #   transaction[:items].each {|item|
-    #     puts " * #{item[:type]} -- #{item[:player][:first_name]} #{item[:player][:last_name]}"
-    #   } 
-    # }
-
     transactions.sort_by! {|transaction| [-transaction[:bid], transaction[:suborder]]}
 
-    transactions.each {|transaction|
-      puts format_transaction(transaction)
-    }
+    return transactions
   end
 
-  def format_transaction(transaction) 
+  def slack_format_transaction(transaction) 
     added_player = transaction[:items].find {|player| player[:type] == "ADD" }
     dropped_player = transaction[:items].find {|player| player[:type] == "DROP" }
 
+    # puts transaction[:status]
+    # puts transaction[:type]
+    # puts transaction[:execution_type]
 
-    str = "#{transaction[:user]} bids #{transaction[:bid]} on #{added_player[:player][:first_name]} #{added_player[:player][:last_name]}, #{added_player[:player][:position]}."
+    str = "*#{transaction[:user]}* bids *#{transaction[:bid]}* on *#{added_player[:player][:first_name]} #{added_player[:player][:last_name]}, #{added_player[:player][:position]}*."
     if(transaction[:status] == "EXECUTED")
       str += " Added."
       unless dropped_player.nil?
-        str += " Dropped #{dropped_player[:player][:first_name]} #{dropped_player[:player][:last_name]}, #{dropped_player[:player][:position]}"
+        str += " Dropped *#{dropped_player[:player][:first_name]} #{dropped_player[:player][:last_name]}, #{dropped_player[:player][:position]}*"
       end
     elsif(transaction[:status] == "FAILED_PLAYERALREADYDROPPED")
       str += " Unsuccessful. Reason: A player involved has already been dropped"
     elsif(transaction[:status] == "FAILED_INVALIDPLAYERSOURCE")
       str += " Unsuccessful. Reason: Player has already been added to another team."
+    elsif(transaction[:status] == "FAILED_ROSTERLIMIT")
+      str += " Unsuccessful. Reason: Maximum roster size would be exceeded."
     end
 
     str
@@ -85,7 +79,7 @@ class TransactionParser
         user: user_index[transaction['teamId']],
         suborder: transaction['subOrder'],
         items: items
-      }) if transaction['type'] == 'WAIVER'
+      }) if transaction['type'] == 'WAIVER' && transaction['executionType'] == 'PROCESS'
     }
 
     return transaction_data

@@ -16,4 +16,5 @@ gem 'redis'
 gem 'moneta'
 gem 'sinatra-contrib'
 gem 'dotenv'
+gem 'slack-notifier'
 
