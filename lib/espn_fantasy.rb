@@ -6,8 +6,13 @@ module EspnFantasy
 
   def self.get_data(espn_url, cookie_string)
     response = HTTParty.get(espn_url, :headers => {"Cookie" => cookie_string});
+    json = JSON.parse(response.body)
 
-    return JSON.parse(response.body)
+    if json['messages'] && !json['messages'].empty? && json['messages'][0].include?("not authorized")
+      raise "Login not working"
+    end
+
+    return json
   end
 
   def self.get_baseball_draft_data(year, league_id, cookie_string)
@@ -18,8 +23,8 @@ module EspnFantasy
     return get_data("http://fantasy.espn.com/apis/v3/games/flb/seasons/#{year}/segments/0/leagues/#{league_id}?view=mStatus", cookie_string)
   end
 
-  def self.get_baseball_transaction_data(year, league_id, cookie_string)
-    return get_data("http://fantasy.espn.com/apis/v3/games/flb/seasons/#{year}/segments/0/leagues/#{league_id}?scoringPeriodId=31&view=kona_draft_recap&view=mTeam&view=mTransactions2", cookie_string)
+  def self.get_baseball_transaction_data(year, league_id, scoring_period, cookie_string)
+    return get_data("http://fantasy.espn.com/apis/v3/games/flb/seasons/#{year}/segments/0/leagues/#{league_id}?scoringPeriodId=#{scoring_period}&view=kona_draft_recap&view=mTeam&view=mTransactions2", cookie_string)
   end
 
   def self.get_football_draft_page(year, league_id, cookie_string)

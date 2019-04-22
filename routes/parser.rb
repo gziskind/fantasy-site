@@ -1,6 +1,9 @@
+require 'slack-notifier'
+
 require_relative '../lib/standings_parser'
 require_relative '../lib/scoreboard_parser'
 require_relative '../lib/draft_parser'
+require_relative '../lib/transaction_parser'
 
 class FantasyServer 
 
@@ -79,6 +82,50 @@ class FantasyServer
         error: "Missing server configuration"
       }.to_json
     end
+  end
+
+  post '/api/parser/transaction/:sport/run', :token => true do
+    sport = params[:sport]
+
+    if settings.cookie_string && sport == 'football' && settings.espn_football_id
+      parser = TransactionParser.new(settings.cookie_string, Time.now.year)
+
+      parser.parse_football_transactions(settings.espn_football_id)
+
+      {
+        success: true
+      }.to_json
+    elsif settings.cookie_string && sport == 'baseball' && settings.espn_baseball_id
+      parser = TransactionParser.new(settings.cookie_string, Time.now.year)
+
+      transactions = parser.parse_baseball_transactions(settings.espn_baseball_id)
+
+      transaction_string = ''
+      transactions.each {|transaction|
+        transaction_string += parser.slack_format_transaction(transaction)
+        transaction_string += "\n"
+      }
+      slack.ping transaction_string
+
+      {
+        success: true
+      }.to_json
+    else
+      {
+        error: "Missing server configuration"
+      }.to_json
+    end
+
+  end
+
+  def slack
+    if @slack.nil?
+      @slack = Slack::Notifier.new(settings.slack_url) do
+        defaults username: "Transactions"
+      end
+    end
+
+    @slack
   end
 end
 
