@@ -100,8 +100,15 @@ class FantasyServer
 
       transactions = parser.parse_baseball_transactions(settings.espn_baseball_id)
 
-      transaction_string = ''
+      transaction_string = "*Auction Report for #{Time.now.strftime("%B %d, %Y")}:*\n\n"
+      count = 0
       transactions.each {|transaction|
+        if transaction[:status] == "EXECUTED"
+          count += 1
+          transaction_string += "*%3s.* " % count
+        else
+          transaction_string += "      "
+        end
         transaction_string += parser.slack_format_transaction(transaction)
         transaction_string += "\n"
       }
@@ -120,8 +127,9 @@ class FantasyServer
 
   def slack
     if @slack.nil?
+      channel = settings.slack_channel
       @slack = Slack::Notifier.new(settings.slack_url) do
-        defaults username: "Transactions"
+        defaults username: "Transactions", icon_emoji: ":gavel:", channel: channel
       end
     end
 

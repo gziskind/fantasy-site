@@ -31,7 +31,7 @@ class TransactionParser
     # puts transaction[:type]
     # puts transaction[:execution_type]
 
-    str = "*#{transaction[:user]}* bids *#{transaction[:bid]}* on *#{added_player[:player][:first_name]} #{added_player[:player][:last_name]}, #{added_player[:player][:position]}*."
+    str = "*$#{transaction[:bid]}* bid by *#{transaction[:user]}* on *#{added_player[:player][:first_name]} #{added_player[:player][:last_name]}, #{added_player[:player][:position]}*."
     if(transaction[:status] == "EXECUTED")
       str += " Added."
       unless dropped_player.nil?
