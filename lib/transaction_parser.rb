@@ -62,7 +62,7 @@ class TransactionParser
 
     response_json['transactions'].each {|transaction|
       items = []
-      unless transaction['items'].empty?
+      if transaction.key?("items") 
         transaction['items'].each {|item|
           items.push({
             player: player_index[item['playerId']],
