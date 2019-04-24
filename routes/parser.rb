@@ -105,9 +105,13 @@ class FantasyServer
       transactions.each {|transaction|
         if transaction[:status] == "EXECUTED"
           count += 1
-          transaction_string += "*%3s.* " % count
+          if count < 10
+            transaction_string += "*%4s.* " % count
+          else
+            transaction_string += "*%2s.* " % count
+          end
         else
-          transaction_string += "      "
+          transaction_string += "       "
         end
         transaction_string += parser.slack_format_transaction(transaction)
         transaction_string += "\n"
