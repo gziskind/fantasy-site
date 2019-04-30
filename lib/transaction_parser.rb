@@ -31,11 +31,11 @@ class TransactionParser
     # puts transaction[:type]
     # puts transaction[:execution_type]
 
-    str = "*$#{transaction[:bid]}* bid by *#{transaction[:user]}* on *#{added_player[:player][:first_name]} #{added_player[:player][:last_name]}, #{added_player[:player][:position]}*."
+    str = "*$#{transaction[:bid]}* bid by *#{transaction[:user]}* on *#{added_player[:player][:first_name]} #{added_player[:player][:last_name]} #{added_player[:player][:team][:abbrev]}, #{added_player[:player][:position]}*."
     if(transaction[:status] == "EXECUTED")
       str += " Added."
       unless dropped_player.nil?
-        str += " Dropped *#{dropped_player[:player][:first_name]} #{dropped_player[:player][:last_name]}, #{dropped_player[:player][:position]}*"
+        str += " Dropped *#{dropped_player[:player][:first_name]} #{dropped_player[:player][:last_name]} #{dropped_player[:player][:team][:abbrev]}, #{dropped_player[:player][:position]}*"
       end
     elsif(transaction[:status] == "FAILED_PLAYERALREADYDROPPED")
       str += " Unsuccessful. Reason: A player involved has already been dropped"
@@ -57,7 +57,8 @@ class TransactionParser
   def parse_transaction_data(response_json)
     transaction_data = []
 
-    player_index = ParsingUtilities.create_player_index(response_json["players"])
+    team_index = ParsingUtilities.create_team_index(EspnFantasy.get_team_data('mlb'))
+    player_index = ParsingUtilities.create_player_index(response_json["players"], team_index)
     user_index = ParsingUtilities.create_user_index(response_json['teams'], response_json['members'])
 
     response_json['transactions'].each {|transaction|
