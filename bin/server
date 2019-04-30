@@ -21,6 +21,12 @@ options = Trollop::options do
 	opt :api_token, "API Token", :type => :string, :short => 'a'
 	opt :slack_url, "Slack url hook", :type => :string, :short => 's'
 	opt :slack_channel, "Slack channel for messages", :type => :string, :short => 'c'
+	opt :smtp_server, "SMTP server", :type => :string
+	opt :smtp_port, "SMTP port", :type => :string
+	opt :smtp_user, "SMTP user", :type => :string
+	opt :smtp_password, "SMTP password", :type => :string
+	opt :email_to, "Email address to send to", :type => :string
+
 end
 
 port = ENV["PORT"] || options[:port]
@@ -39,6 +45,11 @@ espn_baseball_id = ENV["ESPN_BASEBALL_ID"] || options[:espn_baseball_id]
 api_token = ENV["API_TOKEN"] || options[:api_token]
 slack_url = ENV['SLACK_URL'] || options[:slack_url]
 slack_channel = ENV['SLACK_CHANNEL'] || options[:slack_channel]
+smtp_server = ENV['SMTP_SERVER'] || options[:smtp_server]
+smtp_port = ENV['SMTP_PORT'] || options[:smtp_port]
+smtp_user = ENV['SMTP_USER'] || options[:smtp_user]
+smtp_password = ENV['SMTP_PASSWORD'] || options[:smtp_password]
+email_to = ENV['EMAIL_TO'] || options[:email_to]
 cookie_string = ENV["COOKIE_STRING"]
 
 FantasyServer.set :bind, '0.0.0.0'
@@ -59,5 +70,10 @@ FantasyServer.set :espn_baseball_id, espn_baseball_id
 FantasyServer.set :api_token, api_token
 FantasyServer.set :slack_url, slack_url
 FantasyServer.set :slack_channel, slack_channel
+FantasyServer.set :smtp_server, smtp_server
+FantasyServer.set :smtp_port, smtp_port
+FantasyServer.set :smtp_user, smtp_user
+FantasyServer.set :smtp_password, smtp_password
+FantasyServer.set :email_to, email_to
 FantasyServer.start
 

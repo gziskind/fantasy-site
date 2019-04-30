@@ -118,6 +118,9 @@ class FantasyServer
       }
       slack.ping transaction_string
 
+      @transactions = transactions
+      mail("Baseball Transaction Report - #{Time.now.strftime("%B %d, %Y")}", erb(:transactionEmail))
+
       {
         success: true
       }.to_json
@@ -139,5 +142,6 @@ class FantasyServer
 
     @slack
   end
+
 end
 

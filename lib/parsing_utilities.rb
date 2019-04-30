@@ -14,14 +14,15 @@ module ParsingUtilities
     11 => "RP"
   }
 
-  def self.create_player_index(players)
+  def self.create_player_index(players, team_index)
     player_index = {}
 
     players.each {|player|
       player_index[player['id']] = {
         first_name: player['player']['firstName'],
         last_name: player['player']['lastName'],
-        position: POSITIONS_MAP[player['player']['defaultPositionId']]
+        position: POSITIONS_MAP[player['player']['defaultPositionId']],
+        team: team_index[player['player']['proTeamId'].to_s]
       }
     }
 
@@ -48,5 +49,21 @@ module ParsingUtilities
     }
 
     return member_index
+  end
+
+  def self.create_team_index(team_data)
+    team_index = {}
+
+    teams = team_data.each {|division|
+      division['teams'].each {|team|
+        team_index[team['id']] = {
+          display_name: team['displayName'],
+          abbrev: team['abbreviation'],
+          short_display_name: team['shortDisplayName']
+        }
+      }
+    }
+
+    return team_index
   end
 end
