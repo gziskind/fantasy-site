@@ -64,6 +64,12 @@ module ParsingUtilities
       }
     }
 
+    team_index["0"] = {
+      display_name: "Free Agent",
+      abbrev: "FA",
+      short_display_name: "Free Agent"
+    }
+
     return team_index
   end
 end

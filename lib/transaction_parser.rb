@@ -27,10 +27,6 @@ class TransactionParser
     added_player = transaction[:items].find {|player| player[:type] == "ADD" }
     dropped_player = transaction[:items].find {|player| player[:type] == "DROP" }
 
-    # puts transaction[:status]
-    # puts transaction[:type]
-    # puts transaction[:execution_type]
-
     str = "*$#{transaction[:bid]}* bid by *#{transaction[:user]}* on *#{added_player[:player][:first_name]} #{added_player[:player][:last_name]} #{added_player[:player][:team][:abbrev]}, #{added_player[:player][:position]}*."
     if(transaction[:status] == "EXECUTED")
       str += " Added."
