@@ -20,8 +20,8 @@ class RotoStat
 	key :ops_points, Float
 	key :quality_starts, String
 	key :quality_starts_points, Float
-	key :wins, String
-	key :wins_points, Float
+	key :innings, String
+	key :innings_points, Float
 	key :saves, String
 	key :saves_points, Float
 	key :era, String
