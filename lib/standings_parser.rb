@@ -18,7 +18,10 @@ class StandingsParser
       standings_data = EspnFantasy.get_baseball_standings_data(@year, league_id, @cookie_string);
 
       league_name = standings_data['settings']['name'];
-      team_info = parse_team_info(standings_data['teams'], standings_data['members'])
+      user_index = ParsingUtilities.create_user_index(standings_data['teams'], standings_data['members'])
+      
+      team_info = parse_team_info(standings_data['teams'], user_index)
+      stats = parse_roto_data(standings_data['teams'], user_index)
 
       if verify_team_baseball_info(team_info)
         log_message "Team info valid [#{Time.now}]"
@@ -30,10 +33,21 @@ class StandingsParser
         log_message "Team info Invalid [#{Time.now}]"
         log_message team_info
       end
+
+      calculate_points(stats) 
+      if verify_roto_stats(stats)
+        log_message "Roto stats valid [#{Time.now}]"
+        stats.each { |stat| stat.save! }
+
+        Status.update_service("Roto Standings")
+      else
+        log_message "Roto stats invalid [#{Time.now}]"
+        log_message stats.to_s
+      end
+
     rescue Exception => e
       log_message e, "ERROR"
       log_message e.backtrace, "ERROR"
-    end
     end
   end
 
@@ -62,35 +76,10 @@ class StandingsParser
     end
   end
 
-  def parse_roto(league_id)
-    begin
-      log_message "Parsing #{@year} Baseball Roto Stats"
-
-      response_body = EspnFantasy.get_baseball_standings_page(@year, league_id, @cookie_string);
-      html = Nokogiri::HTML(response_body);
-
-      stats = parse_roto_data(html)
-
-      if verify_roto_stats(stats)
-        log_message "Roto stats valid [#{Time.now}]"
-        calculate_points(stats) 
-
-        Status.update_service("Roto Standings")
-      else
-        log_message "Roto stats invalid [#{Time.now}]"
-        log_message stats.to_s
-      end
-    rescue Exception => e
-      log_message e, "ERROR"
-    end
-  end
-
   private
 
-  def parse_team_info(teams_data, members_data) 
+  def parse_team_info(teams_data, user_index) 
     teams = []
-
-    user_index = ParsingUtilities.create_user_index(teams_data, members_data)
 
     teams_data.each {|team_data|
       teams.push({
@@ -116,10 +105,6 @@ class StandingsParser
 
     puts message
     log.save!
-  end
-
-  def extract_team_football_info(html)
-    extract_team_info html, true
   end
 
   def save_standings_baseball(league_name, info)
@@ -256,11 +241,13 @@ class StandingsParser
     stats.each {|stat_line| 
       fields = [:name, :total_points, 
         :runs, :runs_points, :homeruns, :homeruns_points, :rbi, :rbi_points, :sb, :sb_points, :average, :average_points, :ops, :ops_points,
-        :quality_starts, :quality_starts_points, :wins, :wins_points, :saves, :saves_points, :era, :era_points, :whip, :whip_points, :k_per_9, :k_per_9_points
+        :quality_starts, :quality_starts_points, :innings, :innings_points, :saves, :saves_points, :era, :era_points, :whip, :whip_points, :k_per_9, :k_per_9_points
       ]
       fields.each{ |field|
         if stat_line[field].nil?
           valid = false
+          puts field
+          puts stat_line[field]
         end
       }
     }
@@ -268,42 +255,33 @@ class StandingsParser
     return valid
   end
 
-  def parse_roto_data(html)
-    teams = html.css "//table[@id='statsTable']/tr[@class='tableBody sortableRow']"
-    
-    parse_teams(teams)
-  end
-
-  def parse_teams(teams)
+  def parse_roto_data(teams_data, user_index)
     stats = []
 
-    teams.each {|team|
-      stat_line = team.css('td')
-
-      name = extract_user(stat_line[1].css('a')[0])
-      user = User.find_by_unique_name(name.to_s);
+    teams_data.each {|team_data|
+      user = User.find_by_unique_name(user_index[team_data['id']]);
 
       stat = RotoStat.find_by_name(user.name)
       stat = RotoStat.new if stat.nil?
 
       stat.name = user.name
-      stat.runs = stat_line[3].content
-      stat.homeruns = stat_line[4].content
-      stat.rbi = stat_line[5].content
-      stat.sb = stat_line[6].content
-      stat.average = stat_line[7].content
-      stat.ops = stat_line[8].content
-      stat.quality_starts = stat_line[10].content
-      stat.wins = stat_line[11].content
-      stat.saves = stat_line[12].content
-      stat.era = stat_line[13].content
-      stat.whip = stat_line[14].content
-      stat.k_per_9 = stat_line[15].content
+      stat.runs = team_data['valuesByStat']['20']
+      stat.homeruns = team_data['valuesByStat']['5']
+      stat.rbi = team_data['valuesByStat']['21']
+      stat.sb = team_data['valuesByStat']['23']
+      stat.average = team_data['valuesByStat']['2']
+      stat.ops = team_data['valuesByStat']['18']
+      stat.quality_starts = team_data['valuesByStat']['63']
+      stat.innings = team_data['valuesByStat']['34']
+      stat.saves = team_data['valuesByStat']['57']
+      stat.era = team_data['valuesByStat']['47']
+      stat.whip = team_data['valuesByStat']['41']
+      stat.k_per_9 = team_data['valuesByStat']['49']
 
       stats.push(stat)
     }
 
-    stats
+    return stats
   end
 
   def calculate_points(stats)
@@ -314,7 +292,7 @@ class StandingsParser
     average_points = calculate_points_from_stat(stats, 'average')
     ops_points = calculate_points_from_stat(stats, 'ops')
     quality_starts_points = calculate_points_from_stat(stats, 'quality_starts')
-    wins_points = calculate_points_from_stat(stats, 'wins')
+    innings_points = calculate_points_from_stat(stats, 'innings')
     saves_points = calculate_points_from_stat(stats, 'saves')
     era_points = calculate_points_from_stat(stats, 'era', true)
     whip_points = calculate_points_from_stat(stats, 'whip', true)
@@ -330,15 +308,13 @@ class StandingsParser
       stat.average_points = average_points[name]
       stat.ops_points = ops_points[name]
       stat.quality_starts_points = quality_starts_points[name]
-      stat.wins_points = wins_points[name]
+      stat.innings_points = innings_points[name]
       stat.saves_points = saves_points[name]
       stat.era_points = era_points[name]
       stat.whip_points = whip_points[name]
       stat.k_per_9_points = k_per_9_points[name]
 
-      stat.total_points = runs_points[name] + homeruns_points[name] + rbi_points[name] + sb_points[name] + average_points[name] + ops_points[name] + quality_starts_points[name] + wins_points[name] + saves_points[name] + era_points[name] + whip_points[name] + k_per_9_points[name]
-
-      stat.save!
+      stat.total_points = runs_points[name] + homeruns_points[name] + rbi_points[name] + sb_points[name] + average_points[name] + ops_points[name] + quality_starts_points[name] + innings_points[name] + saves_points[name] + era_points[name] + whip_points[name] + k_per_9_points[name]
     }
   end
 
@@ -374,12 +350,6 @@ class StandingsParser
     }
 
     run_points
-  end
-
-  def extract_user(a)
-    team_and_user = a.attribute("title").content
-    match_data = team_and_user.match(/.*\((.*)\)/)
-    match_data[1]
   end
 
 end
