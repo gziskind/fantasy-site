@@ -23,7 +23,6 @@ class FantasyServer
 
       parser.parse_football(settings.espn_football_id) if(Time.now.month >= 9)
       parser.parse_baseball(settings.espn_baseball_id) if(Time.now.month >= 4 && Time.now.month <= 9)
-      parser.parse_roto(settings.espn_baseball_id) if(Time.now.month >= 4 && Time.now.month <= 9)
 
       if(Time.now.month >= 4)
         {
