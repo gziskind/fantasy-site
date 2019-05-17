@@ -1,12 +1,10 @@
 require 'net/http'
-require 'httparty'
-require 'nokogiri'
 require 'date'
 require_relative '../lib/espn_fantasy'
+require_relative '../lib/parsing_utilities'
+
 
 class StandingsParser
-
-  ORDER =["C","1B","2B","SS","3B","OF","DH","SP","RP"]
 
   def initialize(cookie_string, year) 
     @cookie_string = cookie_string
@@ -17,11 +15,10 @@ class StandingsParser
     begin
       log_message "Parsing #{@year} Baseball Standings"
 
-      response_body = EspnFantasy.get_baseball_standings_page(@year, league_id, @cookie_string);
+      standings_data = EspnFantasy.get_baseball_standings_data(@year, league_id, @cookie_string);
 
-      html = Nokogiri::HTML(response_body);
-      league_name = extract_league_name html;
-      team_info = extract_team_baseball_info html
+      league_name = standings_data['settings']['name'];
+      team_info = parse_team_info(standings_data['teams'], standings_data['members'])
 
       if verify_team_baseball_info(team_info)
         log_message "Team info valid [#{Time.now}]"
@@ -35,6 +32,8 @@ class StandingsParser
       end
     rescue Exception => e
       log_message e, "ERROR"
+      log_message e.backtrace, "ERROR"
+    end
     end
   end
 
@@ -88,6 +87,25 @@ class StandingsParser
 
   private
 
+  def parse_team_info(teams_data, members_data) 
+    teams = []
+
+    user_index = ParsingUtilities.create_user_index(teams_data, members_data)
+
+    teams_data.each {|team_data|
+      teams.push({
+        team_name: "#{team_data['location']} #{team_data['nickname']}",
+        owner: user_index[team_data['id']],
+        wins: team_data['record']['overall']['wins'],
+        losses: team_data['record']['overall']['losses'],
+        ties: team_data['record']['overall']['ties'],
+        place: team_data['playoffSeed']
+      })
+    }
+
+    return teams
+  end
+
   def log_message(message, level = "INFO")
     log = Log.new({
       logger: "StandingsParser",
@@ -100,75 +118,8 @@ class StandingsParser
     log.save!
   end
 
-  def extract_league_name(html) 
-    name = html.css "//h1";
-
-    name[1].content.sub /(\s(\d{4}) Regular Season Final)? Standings/,""
-  end
-
-  def extract_team_baseball_info(html)
-    extract_team_info html, false
-  end
-
   def extract_team_football_info(html)
     extract_team_info html, true
-  end
-
-  def extract_team_info(html, is_football = false)
-    teams = html.css "//table[@class='tableBody'][1]/tr/td/a"
-
-    team_info = []
-    teams.each {|team|
-      match_data  = team['title'].match(/.*\((.*, )?(.*)\)/)
-
-      team_info.push({
-        team_name: team.content,
-        owner: match_data[2]
-      })
-    }
-
-
-    wins = html.css "//table[@class='tableBody'][1]/tr/td[2]"
-    wins.each_with_index {|win,index|
-      if index > 0
-        team_info[index-1][:wins] = win.content
-      end
-    }
-
-    losses = html.css "//table[@class='tableBody'][1]/tr/td[3]"
-    losses.each_with_index {|loss,index|
-      if index > 0
-        team_info[index-1][:losses] = loss.content
-      end
-    }
-
-    ties = html.css "//table[@class='tableBody'][1]/tr/td[4]"
-    ties.each_with_index {|tie,index|
-      if index > 0
-        team_info[index-1][:ties] = tie.content
-      end
-    }
-
-    if is_football
-      secondary_table = html.css("//table[@class='tableBody']")[1]
-      if !secondary_table.nil?
-        team_points_hash = {}
-
-        team_names = secondary_table.css("/tr/td[1]/a[1]")
-        points = secondary_table.css("/tr/td[2]")
-        points.each_with_index {|point,index|
-          if index > 0
-            team_points_hash[team_names[index-1].content] = point.content
-          end
-        }
-
-        team_info.each {|info|
-          info[:points] = team_points_hash[info[:team_name]];
-        }
-      end
-    end
-
-    return team_info
   end
 
   def save_standings_baseball(league_name, info)
@@ -184,11 +135,11 @@ class StandingsParser
     result_class = BaseballResult if sport == 'baseball'
 
     results = [];
-    info.each_with_index {|team, index|
+    info.each_with_index {|team|
       user = User.find_by_unique_name(team[:owner]);
 
       result_data = {
-        place: index + 1,
+        place: team[:place],
         team_name: team[:team_name],
         wins: team[:wins],
         losses: team[:losses],

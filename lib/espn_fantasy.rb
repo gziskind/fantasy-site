@@ -36,7 +36,7 @@ module EspnFantasy
   end
 
   def self.get_baseball_standings_data(year, league_id, cookie_string)
-    return get_data("http://fantasy.espn.com/apis/v3/games/flb/seasons/#{year}/segments/0/leagues/#{league_id}?view=mTeam", cookie_string)
+    return get_data("http://fantasy.espn.com/apis/v3/games/flb/seasons/#{year}/segments/0/leagues/#{league_id}?view=mTeam&view=mSettings", cookie_string)
   end
 
   def self.get_football_standings_page(year, league_id, cookie_string)
