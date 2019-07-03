@@ -11,6 +11,18 @@ class TransactionParser
     @year = year
   end
 
+   def log_message(message, level = "INFO")
+    log = Log.new({
+      logger: "TransactionParser",
+      level: level,
+      log_message: message,
+      time: Time.now
+    });
+
+    puts message
+    log.save!
+  end
+
   def parse_baseball_transactions(league_id)
   	current_scoring_period = get_current_scoring_period(league_id);
 

@@ -35,8 +35,8 @@
               </div>
               <% } %>
               <button type="submit" style="float:right;" class="btn btn-danger" ng-click="clearLog()">Clear Logs</button>
+              <button type="submit" style="float:right;" class="btn btn-primary" ng-click="loadMoreLogs()">Load More</button>
             </div>
-            <div class="load-more"><span ng-click="loadMoreLogs()">Load more ...</span></div>
             <div class="row terminal">
               <div ng-repeat="message in logMessages | orderBy:'time'">{{message.time | date:"yyyy/MM/dd HH:mm:ss"}} - [{{message.level}}] {{message.message}}</div>
             </div>
