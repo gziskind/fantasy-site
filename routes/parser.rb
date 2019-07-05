@@ -153,10 +153,8 @@ class FantasyServer
         user = User.find_by_unique_name(player[:user]);
 
         if user.slack_username
-          puts user.slack_username
           redis.set("player:#{player[:full_name]}", user.slack_username,{ex: 86400})
         end
-        puts player
       }
 
       redis.close
