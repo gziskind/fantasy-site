@@ -25,6 +25,9 @@ angular.module('aepi-fantasy').controller('AdminParsingController', function($sc
         },{
             name:"Baseball Transactions",
             id:"transaction/baseball"
+        },{
+            name:"Baseball Players",
+            id:"players/baseball"
         }
     ]
 

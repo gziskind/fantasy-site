@@ -18,4 +18,3 @@ gem 'sinatra-contrib'
 gem 'dotenv'
 gem 'slack-notifier'
 gem 'pony'
-

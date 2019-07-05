@@ -1,9 +1,11 @@
 require 'slack-notifier'
+require 'redis'
 
 require_relative '../lib/standings_parser'
 require_relative '../lib/scoreboard_parser'
 require_relative '../lib/draft_parser'
 require_relative '../lib/transaction_parser'
+require_relative '../lib/player_parser'
 
 class FantasyServer 
 
@@ -129,6 +131,44 @@ class FantasyServer
       }.to_json
     end
 
+  end
+
+  post '/api/parser/players/:sport/run', :token => true do
+    sport = params[:sport]
+
+     if settings.cookie_string && sport == 'football' && settings.espn_football_id
+      # Do Nothing
+
+      {
+        success: true
+      }.to_json
+    elsif settings.cookie_string && sport == 'baseball' && settings.espn_baseball_id
+      parser = PlayerParser.new(settings.cookie_string, Time.now.year)
+
+      players = parser.parse_baseball_players(settings.espn_baseball_id)
+
+      redis = Redis.new({host: settings.redis_host, port: settings.redis_port, password: settings.redis_password})
+
+      players.each {|player|
+        user = User.find_by_unique_name(player[:user]);
+
+        if user.slack_username
+          puts user.slack_username
+          redis.set("player:#{player[:full_name]}", user.slack_username,{ex: 86400})
+        end
+        puts player
+      }
+
+      redis.close
+
+      {
+        success: true
+      }.to_json
+    else
+      {
+        error: "Missing server configuration"
+      }.to_json
+    end
   end
 
   def slack
