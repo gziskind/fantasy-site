@@ -10,6 +10,7 @@ class User
 	key :role_ids, Array
 	key :image_url, String
 	key :bio, String
+	key :slack_id, String
 
 	many :roles, :in => :role_ids
 	many :team_names

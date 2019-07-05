@@ -27,6 +27,10 @@ module EspnFantasy
     return get_data("http://fantasy.espn.com/apis/v3/games/flb/seasons/#{year}/segments/0/leagues/#{league_id}?scoringPeriodId=#{scoring_period}&view=kona_draft_recap&view=mTeam&view=mTransactions2", cookie_string)
   end
 
+  def self.get_baseball_player_data(year, league_id, cookie_string)
+    return get_data("http://fantasy.espn.com/apis/v3/games/flb/seasons/#{year}/segments/0/leagues/#{league_id}?view=kona_draft_recap&view=mTeam", cookie_string)
+  end
+
   def self.get_team_data(sport)
     return get_data("https://site.web.api.espn.com/apis/site/v2/teams?region=us&lang=en&leagues=#{sport}")[sport]
   end

@@ -14,6 +14,7 @@ module ParsingUtilities
     11 => "RP"
   }
 
+  # Create map of player id to player info
   def self.create_player_index(players, team_index)
     player_index = {}
 
@@ -29,6 +30,7 @@ module ParsingUtilities
     return player_index
   end
 
+  # Creates map of user team id to member name
   def self.create_user_index(teams, members)
     user_index = {}
 
@@ -41,6 +43,7 @@ module ParsingUtilities
     return user_index
   end
 
+  # Creates map of member id to member name
   def self.create_member_index(members)
     member_index = {}
 
@@ -51,6 +54,7 @@ module ParsingUtilities
     return member_index
   end
 
+  # Creates map of mlb team id to mlb team info
   def self.create_team_index(team_data)
     team_index = {}
 
