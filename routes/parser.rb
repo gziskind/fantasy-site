@@ -152,8 +152,8 @@ class FantasyServer
       players.each {|player|
         user = User.find_by_unique_name(player[:user]);
 
-        if user.slack_username
-          redis.set("player:#{player[:full_name]}", user.slack_username,{ex: 86400})
+        if user.slack_id
+          redis.set("player:#{player[:full_name]}", user.slack_id,{ex: 86400})
         end
       }
 
