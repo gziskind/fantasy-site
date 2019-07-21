@@ -32,6 +32,7 @@ class PlayerParser
           full_name: player['player']['fullName'],
           first_name: player['player']['firstName'],
           last_name: player['player']['lastName'],
+          position: ParsingUtilities.positions_map[player['player']['defaultPositionId']],
           user: user
         }) 
       end

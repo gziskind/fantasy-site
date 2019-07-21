@@ -14,6 +14,10 @@ module ParsingUtilities
     11 => "RP"
   }
 
+  def self.positions_map
+    POSITIONS_MAP
+  end
+
   # Create map of player id to player info
   def self.create_player_index(players, team_index)
     player_index = {}

@@ -150,10 +150,12 @@ class FantasyServer
       redis = Redis.new({host: settings.redis_host, port: settings.redis_port, password: settings.redis_password})
 
       players.each {|player|
-        user = User.find_by_unique_name(player[:user]);
+        unless player[:position] == 'SP' || player[:position] == 'RP'
+          user = User.find_by_unique_name(player[:user]);
 
-        if user.slack_id
-          redis.set("player:#{player[:full_name]}", user.slack_id,{ex: 86400})
+          if user.slack_id
+            redis.set("player:#{player[:full_name]}", user.slack_id,{ex: 86400})
+          end
         end
       }
 
