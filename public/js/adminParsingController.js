@@ -1,5 +1,10 @@
 angular.module('aepi-fantasy').controller('AdminParsingController', function($scope, $location, $routeParams, $resource) {
 
+    // Public variables
+    $scope.playerMappings = getPlayerMappings();
+    $scope.createMappingMessage = '';
+    $scope.mapping = {}
+
     // Private variables
     var api_token = null
     var Token = $resource('/api/parser/token')
@@ -50,8 +55,34 @@ angular.module('aepi-fantasy').controller('AdminParsingController', function($sc
                 parser.message = "Parsing complete"
             }
         })
+    }
 
+    $scope.createMapping = function() {
+        var PlayerMapping = $resource('/api/admin/playerMapping');
+        PlayerMapping.save($scope.mapping, function(response) {
+            $scope.createMappingMessage = 'Mapping Created.'
+            $scope.playerMappings.push({espn_name: $scope.mapping.espnName, twitter_name: $scope.mapping.twitterName})
+            $scope.mapping = {};
+        })
+    }
+
+    $scope.deleteMapping = function(mapping) {
+        mapping.deleteSubmitted = true;
+        var PlayerMapping = $resource('/api/admin/playerMapping/' + mapping.espn_name);
+        PlayerMapping.remove(function(response) {
+            if(response.success) {
+                mapping.deleteConfirmed = true;
+            } else {
+                mapping.deleteSubmitted = false;
+            }
+        })
     }
 
     // Private Functions
+    function getPlayerMappings() {
+        var PlayerMapping = $resource('/api/admin/playerMapping')
+        var results = PlayerMapping.query();
+
+        return results;
+    }
 });

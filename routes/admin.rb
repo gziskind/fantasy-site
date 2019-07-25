@@ -158,4 +158,31 @@ class FantasyServer
 			success: success
 		}.to_json
 	end
+
+	get '/api/admin/playerMapping', :auth => :admin do
+		mappings = PlayerMapping.all
+
+		mappings.to_json
+	end
+
+	post '/api/admin/playerMapping', :auth => :admin do
+		player_json = JSON.parse(request.body.read)
+
+		player_mapping = PlayerMapping.new({espn_name: player_json["espnName"], twitter_name: player_json["twitterName"]})
+		player_mapping.save!
+
+		{
+			success: true
+		}.to_json
+	end
+
+	delete '/api/admin/playerMapping/:espn_name', :auth => :admin do
+		player_mapping = PlayerMapping.find_by_espn_name(params[:espn_name]);
+
+		player_mapping.destroy
+
+		{
+			success: true
+		}.to_json
+	end
 end
