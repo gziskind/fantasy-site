@@ -153,8 +153,12 @@ class FantasyServer
         unless player[:position] == 'SP' || player[:position] == 'RP'
           user = User.find_by_unique_name(player[:user]);
 
+          name = player[:full_name]
+          player_mapping = PlayerMapping.find_by_espn_name(name)
+          name = player_mapping.twitter_name if player_mapping
+
           if user.slack_id
-            redis.set("player:#{player[:full_name]}", user.slack_id,{ex: 86400})
+            redis.set("player:#{name}", user.slack_id,{ex: 86400})
           end
         end
       }

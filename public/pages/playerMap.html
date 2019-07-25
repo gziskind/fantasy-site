@@ -1,0 +1,44 @@
+<div>
+	<form class="form-horizontal" role="form">
+		<h1>Player Map</h1>
+		<table class="table table-condensed table-hover">
+			<thead>
+				<tr>
+					<th>Twitter Name</th>
+					<th>ESPN Name</th>
+					<th>Delete</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="mapping in playerMappings">
+					<td>{{mapping.twitter_name}}</td>
+					<td>{{mapping.espn_name}}</td>
+					<td>
+						<button ng-hide="mapping.deleteSubmitted" type="submit" class="btn btn-danger btn-xs" ng-click="deleteMapping(mapping)">Delete</button>
+						<img style="position:relative; left:20px;" ng-show="mapping.deleteSubmitted && !mapping.deleteConfirmed" src="/img/small-loader.gif"/>
+						<span ng-show="mapping.deleteConfirmed">Deleted.</span>			
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="form-group">
+		    <label for="championshipScore" class="col-sm-2 control-label" style="padding-left:0; padding-right:0;">Twitter Name</label>
+		    <div class="col-sm-3">
+		    	<input type="text" class="form-control" id="twitterName" ng-model="mapping.twitterName"/>
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="championshipScore" class="col-sm-2 control-label" style="padding-left:0; padding-right:0;">ESPN Name</label>
+		    <div class="col-sm-3">
+		    	<input type="text" class="form-control" id="espnName" ng-model="mapping.espnName"/>
+		    </div>
+		</div>
+		<div class="form-group">
+		    <div class="col-sm-2">
+		      <button type="submit" class="btn btn-default" ng-click="createMapping()">Create Mapping</button>
+		    </div>
+		    <div class="col-sm-4">
+		    	<span class="password-message">{{createMappingMessage}}</span>
+		    </div>
+		</div>
+</div>
