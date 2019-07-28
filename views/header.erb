@@ -68,10 +68,11 @@
         <button type="submit" class="btn btn-sm" style="color:white" ng-click="signIn()">Sign in</button>
       </form>
       <ul class="nav navbar-nav pull-right" ng-show="loginSubmitted">
-        <li ng-show="currentUser">
+        <li ng-show="currentUser" class="<%= is_user_active %>">
           <a class="dropdown-toggle" data-toggle="dropdown">Logged in as: {{currentUser.username}} <span class="badge pull-right">{{getAlerts(['user'])}}</span></a>
           <ul class="dropdown-menu">
             <li><a href="/user/changePassword" style="padding-right:0">Change Password<span class="badge">{{getAlerts(['user','changePassword'])}}</span></a><li>
+            <li><a href="/user/notifications" style="padding-right:0">Notifications</a><li>
             <li><a ng-click="logout()">Logout</a></li>
           </ul>
         </li>

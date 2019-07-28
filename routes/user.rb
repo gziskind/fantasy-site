@@ -12,15 +12,6 @@ class FantasyServer
 		end
 	end
 
-
-	# Views
-	get '/user/changePassword', :auth => :user do
-		event "UserChangePassword"
-		@header_index = 'admin'
-		erb :changePassword
-	end 
-
-
 	# API Calls
 	get '/api/allusers/:sport' do
 		role = Role.find_by_name(params[:sport])
