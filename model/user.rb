@@ -12,6 +12,9 @@ class User
 	key :bio, String
 	key :slack_id, String
 
+	key :notification_homeruns_team, Boolean
+	key :notification_steals_team, Boolean
+
 	many :roles, :in => :role_ids
 	many :team_names
 

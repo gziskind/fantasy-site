@@ -4,20 +4,20 @@ var https = require('https');
 var redis = require('redis');
 
 exports.handler = (event, context, callback) => {
-    var bomb = parseTweet(event.tweet) 
+    var info = null;
+    if(event.stat == "homerun") {
+      info = parseBombTweet(event.tweet);
+    } else if(event.stat == "steal") {
+      info = parseStealTweet(event.tweet);
+    }
     
-    getPlayerUser(bomb.fullName, function(user) {
-      var message = bomb.fullName + " has BOMBED!!! (" + bomb.count + ")";
-      if(user) {
-        message += " - <@" + user + ">";
+    getPlayerUser(info.fullName, function(user) {
+      var data = null;
+      if(event.stat == "homerun") {
+        data = getBombMessage(info, user)
+      } else if(event.stat == "steal") {
+        data = getStealMessage(info, user)
       }
-      
-      var data = JSON.stringify({
-        text: message,
-        icon_emoji:":bomb:",
-        username:"Bombs",
-        channel: "#bombs"
-      });
       
       var options = {
         host: 'hooks.slack.com',
@@ -60,7 +60,39 @@ exports.handler = (event, context, callback) => {
         
 };
 
-function parseTweet(tweet) {
+function getBombMessage(info, user) {
+  var message = info.fullName + " has BOMBED!!! (" + info.count + ")";
+  if(user) {
+    message += " - <@" + user + ">";
+  }
+  
+  var data = JSON.stringify({
+    text: message,
+    icon_emoji:":bomb:",
+    username:"Bombs",
+    channel: "#bombs"
+  });
+  
+  return data;
+}
+
+function getStealMessage(info, user) {
+  var message = info.fullName + " has stolen a base!";
+  if(user) {
+    message += " - <@" + user + ">";
+  }
+  
+  var data = JSON.stringify({
+    text: message,
+    icon_emoji:":steal:",
+    username:"Steals",
+    channel: "#steals"
+  });
+  
+  return data
+}
+
+function parseBombTweet(tweet) {
   var match = tweet.match(/(([A-Za-z\-.]+)\s(.*))\s-\s(.+)\s[(](\d+)[)]/);
   
   return {
@@ -69,6 +101,16 @@ function parseTweet(tweet) {
     lastName: match[3],
     team: match[4],
     count: match[5]
+  }
+}
+
+function parseStealTweet(tweet) {
+  var match = tweet.match(/(([A-Za-z\-.]+)\s(.*))\s-\s(.+)/);
+  
+  return {
+    fullName: match[1],
+    firstName: match[2],
+    lastName: match[3]
   }
 }
 

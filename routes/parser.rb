@@ -158,7 +158,8 @@ class FantasyServer
           name = player_mapping.twitter_name if player_mapping
 
           if user.slack_id
-            redis.set("player:#{name}", user.slack_id,{ex: 86400})
+            redis.set("player-homerun:#{name}", user.slack_id,{ex: 86400}) if user.notification_homeruns_team.nil? || user.notification_homeruns_team
+            redis.set("player-steal:#{name}", user.slack_id,{ex: 86400}) if user.notification_steals_team.nil? || user.notification_steals_team
           end
         end
       }

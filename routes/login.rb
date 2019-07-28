@@ -1,5 +1,18 @@
 class FantasyServer 
 
+	# Views
+	get '/user/changePassword', :auth => :user do
+		event "UserChangePassword"
+		@header_index = 'user'
+		erb :changePassword
+	end 
+
+	get '/user/notifications', :auth => :user do
+		event "UserNotifications"
+		@header_index = 'user'
+		erb :notifications
+	end
+
 	# API Calls
 	post '/api/login' do
 		login = JSON.parse(request.body.read)
@@ -49,5 +62,30 @@ class FantasyServer
 				message: "Password Change successful"
 			}.to_json
 		end
+	end
+
+	get '/api/user/notifications', :auth => :user do
+		notifications = {
+			homeruns_team: @user.notification_homeruns_team.nil? ? true : @user.notification_homeruns_team,
+			steals_team: @user.notification_steals_team.nil? ? true : @user.notification_steals_team
+		}
+
+		notifications.to_json
+	end
+
+	post '/api/user/notifications', :auth => :user do
+		event "ChangeNotifications"
+
+		notifications = JSON.parse(request.body.read)
+
+		@user.notification_homeruns_team = notifications["homeruns_team"]
+		@user.notification_steals_team = notifications["steals_team"]
+
+		@user.save!
+
+		{
+			success:true,
+			message: "Notifications updated."
+		}.to_json
 	end
 end

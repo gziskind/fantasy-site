@@ -41,7 +41,9 @@ class FantasyServer
 			name: user_json["name"],
 			unique_name: user_json["uniqueName"],
 			roles: roles,
-			password: password_hash
+			password: password_hash,
+			notification_homeruns_team: true,
+			notification_steals_team: true
 		}
 
 		User.new(user_data).save!
