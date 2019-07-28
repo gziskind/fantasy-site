@@ -67,7 +67,9 @@ class FantasyServer
 	get '/api/user/notifications', :auth => :user do
 		notifications = {
 			homeruns_team: @user.notification_homeruns_team.nil? ? true : @user.notification_homeruns_team,
-			steals_team: @user.notification_steals_team.nil? ? true : @user.notification_steals_team
+			homeruns_opponent: @user.notification_homeruns_opponent.nil? ? true : @user.notification_homeruns_opponent,
+			steals_team: @user.notification_steals_team.nil? ? true : @user.notification_steals_team,
+			steals_opponent: @user.notification_steals_opponent.nil? ? true : @user.notification_steals_opponent
 		}
 
 		notifications.to_json
@@ -79,7 +81,9 @@ class FantasyServer
 		notifications = JSON.parse(request.body.read)
 
 		@user.notification_homeruns_team = notifications["homeruns_team"]
+		@user.notification_homeruns_opponent = notifications["homeruns_opponent"]
 		@user.notification_steals_team = notifications["steals_team"]
+		@user.notification_steals_opponent = notifications["steals_opponent"]
 
 		@user.save!
 
