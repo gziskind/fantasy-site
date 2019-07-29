@@ -18,6 +18,29 @@ module ParsingUtilities
     POSITIONS_MAP
   end
 
+  # Create a map of matchupPeriodId to opponent_id of team for each team_id
+  # {
+  #   "<team-id>":{
+  #     "<matchup-id>":"<opponent-team-id>",
+  #     ...
+  #   },
+  #   ...
+  # }
+  def self.create_opponent_index(schedule) 
+    opponent_index = {}
+    schedule.each {|matchup|
+      away_id =matchup['away']['teamId']
+      home_id = matchup['home']['teamId']
+      opponent_index[away_id] = {} if opponent_index[away_id].nil?
+      opponent_index[home_id] = {} if opponent_index[home_id].nil?
+
+      opponent_index[away_id][matchup['matchupPeriodId']] = home_id
+      opponent_index[home_id][matchup['matchupPeriodId']] = away_id
+    }
+
+    return opponent_index
+  end
+
   # Create map of player id to player info
   def self.create_player_index(players, team_index)
     player_index = {}
