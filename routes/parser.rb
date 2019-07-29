@@ -152,15 +152,27 @@ class FantasyServer
       players.each {|player|
         unless player[:position] == 'SP' || player[:position] == 'RP'
           user = User.find_by_unique_name(player[:user]);
+          opponent = User.find_by_unique_name(player[:opponent])
 
           name = player[:full_name]
           player_mapping = PlayerMapping.find_by_espn_name(name)
           name = player_mapping.twitter_name if player_mapping
 
+          homerun_slack_ids = []
+          steal_slack_ids = []
+
           if user.slack_id
-            redis.set("player-homerun:#{name}", user.slack_id,{ex: 86400}) if user.notification_homeruns_team.nil? || user.notification_homeruns_team
-            redis.set("player-steal:#{name}", user.slack_id,{ex: 86400}) if user.notification_steals_team.nil? || user.notification_steals_team
+            homerun_slack_ids.push(user.slack_id) if user.notification_homeruns_team.nil? || user.notification_homeruns_team
+            steal_slack_ids.push(user.slack_id) if user.notification_steals_team.nil? || user.notification_steals_team
           end
+
+          if opponent.slack_id
+            homerun_slack_ids.push(opponent.slack_id) if opponent.notification_homeruns_opponent.nil? || opponent.notification_homeruns_opponent
+            steal_slack_ids.push(opponent.slack_id) if opponent.notification_steals_opponent.nil? || opponent.notification_steals_opponent
+          end
+
+          redis.set("player-homerun:#{name}", homerun_slack_ids.join(','), {ex: 86400}) 
+          redis.set("player-steal:#{name}", steal_slack_ids.join(','), {ex: 86400}) 
         end
       }
 
