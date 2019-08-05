@@ -98,8 +98,19 @@ class FantasyServer
       }.to_json
     elsif settings.cookie_string && sport == 'baseball' && settings.espn_baseball_id
       parser = TransactionParser.new(settings.cookie_string, Time.now.year)
+      retry_attempts = 0
 
-      transactions = parser.parse_baseball_transactions(settings.espn_baseball_id)
+      transactions = []
+      while transactions.length == 0 && retry_attempts < settings.transaction_retries
+        if retry_attempts > 0
+          puts "Transactions empty. Trying again in #{settings.transaction_time} seconds (attempt #{retry_attempts})"
+          sleep(settings.transaction_time.to_i)
+        end
+        transactions = parser.parse_baseball_transactions(settings.espn_baseball_id)
+        retry_attempts += 1
+      end
+
+      puts "No transactions found after #{settings.transaction_retries} attempts" if transactions.length == 0
 
       transaction_string = "*Auction Report for #{Time.now.strftime("%B %d, %Y")}:*\n\n"
       count = 0
