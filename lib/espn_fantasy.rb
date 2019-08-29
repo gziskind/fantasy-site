@@ -35,8 +35,8 @@ module EspnFantasy
     return get_data("https://site.web.api.espn.com/apis/site/v2/teams?region=us&lang=en&leagues=#{sport}")[sport]
   end
 
-  def self.get_football_draft_page(year, league_id, cookie_string)
-    return get_data("http://games.espn.go.com/ffl/tools/draftrecap?leagueId=#{league_id}&seasonId=#{year}", cookie_string)
+  def self.get_football_draft_data(year, league_id, cookie_string)
+    return get_data("https://fantasy.espn.com/apis/v3/games/ffl/seasons/#{year}/segments/0/leagues/#{league_id}?view=mDraftDetail&view=players_wl&view=mTeam", cookie_string)
   end
 
   def self.get_baseball_standings_data(year, league_id, cookie_string)
