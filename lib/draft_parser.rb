@@ -14,9 +14,9 @@ class DraftParser
     begin
       log_message "Parsing #{@year} Football Draft"
 
-      response_body = EspnFantasy.get_football_draft_page(@year, league_id, @cookie_string);
+      response_json = EspnFantasy.get_football_draft_data(@year, league_id, @cookie_string);
 
-      draft_data = parse_draft_data(response_body)
+      draft_data = parse_draft_data(response_json, 'football')
 
       if verify_draft_data(draft_data)
         save_draft_data(draft_data, 'football')
@@ -27,6 +27,7 @@ class DraftParser
       end
     rescue Exception => e
       log_message e, "ERROR"
+      log_message e.backtrace, "ERROR"
     end
   end
 
@@ -36,7 +37,7 @@ class DraftParser
 
       response_json = EspnFantasy.get_baseball_draft_data(@year, league_id, @cookie_string);
 
-      draft_data = parse_draft_data(response_json)
+      draft_data = parse_draft_data(response_json, 'baseball')
 
       if verify_draft_data(draft_data)
         save_draft_data(draft_data, 'baseball')
@@ -65,10 +66,11 @@ class DraftParser
     log.save!
   end
 
-  def parse_draft_data(response_json) 
+  def parse_draft_data(response_json, sport) 
     draft_data = []
 
-    player_index = ParsingUtilities.create_player_index(response_json["players"])
+    team_index = ParsingUtilities.create_team_index(EspnFantasy.get_team_data('nfl'))
+    player_index = ParsingUtilities.create_player_index(response_json["players"], team_index, sport)
     user_index = ParsingUtilities.create_user_index(response_json['teams'], response_json['members'])
 
     response_json['draftDetail']['picks'].each {|draft_pick|
@@ -98,7 +100,7 @@ class DraftParser
   def save_draft_data(draft_data, sport)
     draft_data.each {|draft_pick_data|
       user = User.find_by_unique_name(draft_pick_data[:user]);
-      raise "Could not find user by unique name" if user.nil?
+      raise "Could not find user by unique name [#{draft_pick_data[:user]}" if user.nil?
 
       first_name = draft_pick_data[:first_name]
       last_name = draft_pick_data[:last_name]

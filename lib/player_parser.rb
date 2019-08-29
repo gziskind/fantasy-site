@@ -35,7 +35,7 @@ class PlayerParser
           full_name: player['player']['fullName'],
           first_name: player['player']['firstName'],
           last_name: player['player']['lastName'],
-          position: ParsingUtilities.positions_map[player['player']['defaultPositionId']],
+          position: ParsingUtilities.baseball_positions_map[player['player']['defaultPositionId']],
           user: user,
           opponent: opponent
         }) 

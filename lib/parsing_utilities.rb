@@ -1,6 +1,6 @@
 module ParsingUtilities
 
-  POSITIONS_MAP = {
+  BASEBALL_POSITIONS_MAP = {
     1 => "SP",
     2 => "C",
     3 => "1B",
@@ -14,8 +14,19 @@ module ParsingUtilities
     11 => "RP"
   }
 
-  def self.positions_map
-    POSITIONS_MAP
+  FOOTBALL_POSITIONS_MAP = {
+    1 => "QB",
+    2 => "RB",
+    3 => "WR",
+    4 => "TE"
+  }
+
+  def self.baseball_positions_map
+    BASEBALL_POSITIONS_MAP
+  end
+
+  def self.FOOTBALL_POSITIONS_MAP
+    FOOTBALL_POSITIONS_MAP
   end
 
   # Create a map of matchupPeriodId to opponent_id of team for each team_id
@@ -42,14 +53,19 @@ module ParsingUtilities
   end
 
   # Create map of player id to player info
-  def self.create_player_index(players, team_index)
+  def self.create_player_index(players, team_index, sport)
     player_index = {}
+    if sport == 'baseball'
+      positions_map = BASEBALL_POSITIONS_MAP
+    else
+      positions_map = FOOTBALL_POSITIONS_MAP
+    end
 
     players.each {|player|
-      player_index[player['id']] = {
+      player_index[player['player']['id']] = {
         first_name: player['player']['firstName'],
         last_name: player['player']['lastName'],
-        position: POSITIONS_MAP[player['player']['defaultPositionId']],
+        position: positions_map[player['player']['defaultPositionId']],
         team: team_index[player['player']['proTeamId'].to_s]
       }
     }
