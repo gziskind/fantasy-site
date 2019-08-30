@@ -25,6 +25,9 @@ angular.module('aepi-fantasy').controller('AdminParsingController', function($sc
             name:"Football Draft",
             id: "draft/football"
         },{
+            name:"Football Transactions",
+            id:"transaction/football"
+        },{
             name:"Baseball Draft",
             id: 'draft/baseball'
         },{

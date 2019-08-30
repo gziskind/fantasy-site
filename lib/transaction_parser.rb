@@ -11,12 +11,18 @@ class TransactionParser
     @year = year
   end
 
-  def parse_baseball_transactions(league_id)
-  	current_scoring_period = get_current_scoring_period(league_id);
+  def parse_transactions(league_id, sport)
+    if sport == 'baseball'
+      league_type = 'flb'
+    else
+      league_type = 'ffl'
+    end
 
-  	response_json = EspnFantasy.get_baseball_transaction_data(@year, league_id, current_scoring_period, @cookie_string)
+  	current_scoring_period, last_waiver_time = get_current_scoring_period_and_waiver_time(league_id, league_type);
 
-  	transactions = parse_transaction_data(response_json)
+  	response_json = EspnFantasy.get_league_transaction_data(@year, league_id, current_scoring_period, @cookie_string, league_type)
+
+  	transactions = parse_transaction_data(response_json, Time.at(last_waiver_time/1000), sport)
 
     transactions.sort_by! {|transaction| [-transaction[:bid], transaction[:suborder]]}
 
@@ -44,17 +50,23 @@ class TransactionParser
     str
   end
  
-  def get_current_scoring_period(league_id)
- 	  status = EspnFantasy.get_baseball_status(@year, league_id, @cookie_string)
+  def get_current_scoring_period_and_waiver_time(league_id, league_type)
+ 	  status = EspnFantasy.get_league_status(@year, league_id, @cookie_string, league_type)
 
- 	  return status['status']['latestScoringPeriod']
+ 	  return status['status']['latestScoringPeriod'], status['status']['waiverLastExecutionDate']
   end
 
-  def parse_transaction_data(response_json)
+  def parse_transaction_data(response_json, last_waiver_time, sport)
     transaction_data = []
 
-    team_index = ParsingUtilities.create_team_index(EspnFantasy.get_team_data('mlb'))
-    player_index = ParsingUtilities.create_player_index(response_json["players"], team_index)
+    if sport == 'baseball'
+      league = 'mlb'
+    else
+      league = 'nfl'
+    end
+
+    team_index = ParsingUtilities.create_team_index(EspnFantasy.get_team_data(league))
+    player_index = ParsingUtilities.create_player_index(response_json["players"], team_index, sport)
     user_index = ParsingUtilities.create_user_index(response_json['teams'], response_json['members'])
 
     response_json['transactions'].each {|transaction|
@@ -68,6 +80,8 @@ class TransactionParser
         }
       end
 
+      transaction_time = Time.at(transaction['processDate'].to_i/1000)
+
       transaction_data.push({
         bid: transaction['bidAmount'],
         execution_type: transaction['executionType'],
@@ -76,7 +90,7 @@ class TransactionParser
         user: user_index[transaction['teamId']],
         suborder: transaction['subOrder'],
         items: items
-      }) if transaction['type'] == 'WAIVER' && transaction['executionType'] == 'PROCESS'
+      }) if transaction['type'] == 'WAIVER' && transaction['executionType'] == 'PROCESS' && transaction_time.between?(last_waiver_time - 600, last_waiver_time + 600)
     }
 
     return transaction_data
