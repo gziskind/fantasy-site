@@ -90,14 +90,6 @@ class FantasyServer
 
     if settings.cookie_string && sport == 'football' && settings.espn_football_id
       parser = TransactionParser.new(settings.cookie_string, Time.now.year)
-
-      parser.parse_football_transactions(settings.espn_football_id)
-
-      {
-        success: true
-      }.to_json
-    elsif settings.cookie_string && sport == 'baseball' && settings.espn_baseball_id
-      parser = TransactionParser.new(settings.cookie_string, Time.now.year)
       retry_attempts = 0
 
       transactions = []
@@ -106,7 +98,7 @@ class FantasyServer
           puts "Transactions empty. Trying again in #{settings.transaction_time} seconds (attempt #{retry_attempts})"
           sleep(settings.transaction_time.to_i)
         end
-        transactions = parser.parse_baseball_transactions(settings.espn_baseball_id)
+        transactions = parser.parse_transactions(settings.espn_football_id, 'football')
         retry_attempts += 1
       end
 
@@ -131,7 +123,47 @@ class FantasyServer
       slack.ping transaction_string
 
       @transactions = transactions
-      mail("Baseball Transaction Report - #{Time.now.strftime("%B %d, %Y")}", erb(:transactionEmail))
+      mail("Football Transaction Report - #{Time.now.strftime("%B %d, %Y")}", erb(:transactionEmail, locals: { bgcolor: '#6dbb75'}))
+
+      {
+        success: true
+      }.to_json
+    elsif settings.cookie_string && sport == 'baseball' && settings.espn_baseball_id
+      parser = TransactionParser.new(settings.cookie_string, Time.now.year)
+      retry_attempts = 0
+
+      transactions = []
+      while transactions.length == 0 && retry_attempts < settings.transaction_retries
+        if retry_attempts > 0
+          puts "Transactions empty. Trying again in #{settings.transaction_time} seconds (attempt #{retry_attempts})"
+          sleep(settings.transaction_time.to_i)
+        end
+        transactions = parser.parse_transactions(settings.espn_baseball_id,'baseball')
+        retry_attempts += 1
+      end
+
+      puts "No transactions found after #{settings.transaction_retries} attempts" if transactions.length == 0
+
+      transaction_string = "*Auction Report for #{Time.now.strftime("%B %d, %Y")}:*\n\n"
+      count = 0
+      transactions.each {|transaction|
+        if transaction[:status] == "EXECUTED"
+          count += 1
+          if count < 10
+            transaction_string += "*%4s.* " % count
+          else
+            transaction_string += "*%2s.* " % count
+          end
+        else
+          transaction_string += "       "
+        end
+        transaction_string += parser.slack_format_transaction(transaction)
+        transaction_string += "\n"
+      }
+      slack.ping transaction_string
+
+      @transactions = transactions
+      mail("Baseball Transaction Report - #{Time.now.strftime("%B %d, %Y")}", erb(:transactionEmail, locals: { bgcolor: '#76a7ea'}))
 
       {
         success: true

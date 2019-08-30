@@ -16,16 +16,43 @@ module EspnFantasy
   end
 
   def self.get_baseball_draft_data(year, league_id, cookie_string)
-    return get_data("http://fantasy.espn.com/apis/v3/games/flb/seasons/#{year}/segments/0/leagues/#{league_id}?view=mDraftDetail&view=mTeam&view=kona_draft_recap", cookie_string)
+    return get_league_draft_data(year, league_id, cookie_string, 'flb')
   end
+  
+  def self.get_football_draft_data(year, league_id, cookie_string)
+    return get_league_draft_data(year, league_id, cookie_string, 'ffl')
+  end
+
+  def get_league_draft_data(year, league_id, cookie_string, league_type)
+    return get_data("http://fantasy.espn.com/apis/v3/games/#{league_type}/seasons/#{year}/segments/0/leagues/#{league_id}?view=mDraftDetail&view=mTeam&view=kona_draft_recap", cookie_string)
+  end
+
 
   def self.get_baseball_status(year, league_id, cookie_string)
-    return get_data("http://fantasy.espn.com/apis/v3/games/flb/seasons/#{year}/segments/0/leagues/#{league_id}?view=mStatus", cookie_string)
+    return get_league_status(year, league_id, cookie_string, 'flb')
   end
 
-  def self.get_baseball_transaction_data(year, league_id, scoring_period, cookie_string)
-    return get_data("http://fantasy.espn.com/apis/v3/games/flb/seasons/#{year}/segments/0/leagues/#{league_id}?scoringPeriodId=#{scoring_period}&view=kona_draft_recap&view=mTeam&view=mTransactions2", cookie_string)
+  def self.get_football_status(year, league_id, cookie_string)
+    return get_league_status(year, league_id, cookie_string, 'ffl')
   end
+
+  def self.get_league_status(year, league_id, cookie_string, league_type)
+    return get_data("http://fantasy.espn.com/apis/v3/games/#{league_type}/seasons/#{year}/segments/0/leagues/#{league_id}?view=mStatus", cookie_string)
+  end
+
+
+  def self.get_baseball_transaction_data(year, league_id, scoring_period, cookie_string)
+    return get_league_transaction_data(year, league_id, scoring_period, cookie_string, 'flb')
+  end
+  
+  def self.get_football_transaction_data(year, league_id, scoring_period, cookie_string)
+    return get_league_transaction_data(year, league_id, scoring_period, cookie_string, 'ffl')
+  end
+
+  def self.get_league_transaction_data(year, league_id, scoring_period, cookie_string, league_type)
+    return get_data("http://fantasy.espn.com/apis/v3/games/#{league_type}/seasons/#{year}/segments/0/leagues/#{league_id}?scoringPeriodId=#{scoring_period}&view=kona_draft_recap&view=mTeam&view=mTransactions2", cookie_string)
+  end
+
 
   def self.get_baseball_player_data(year, league_id, cookie_string)
     return get_data("http://fantasy.espn.com/apis/v3/games/flb/seasons/#{year}/segments/0/leagues/#{league_id}?view=kona_draft_recap&view=mTeam&view=mMatchupScore", cookie_string)
@@ -33,10 +60,6 @@ module EspnFantasy
 
   def self.get_team_data(sport)
     return get_data("https://site.web.api.espn.com/apis/site/v2/teams?region=us&lang=en&leagues=#{sport}")[sport]
-  end
-
-  def self.get_football_draft_data(year, league_id, cookie_string)
-    return get_data("https://fantasy.espn.com/apis/v3/games/ffl/seasons/#{year}/segments/0/leagues/#{league_id}?view=mDraftDetail&view=players_wl&view=mTeam", cookie_string)
   end
 
   def self.get_baseball_standings_data(year, league_id, cookie_string)
