@@ -40,13 +40,15 @@ module ParsingUtilities
   def self.create_opponent_index(schedule) 
     opponent_index = {}
     schedule.each {|matchup|
-      away_id =matchup['away']['teamId']
       home_id = matchup['home']['teamId']
-      opponent_index[away_id] = {} if opponent_index[away_id].nil?
       opponent_index[home_id] = {} if opponent_index[home_id].nil?
 
-      opponent_index[away_id][matchup['matchupPeriodId']] = home_id
-      opponent_index[home_id][matchup['matchupPeriodId']] = away_id
+      if matchup['away']
+        away_id = matchup['away']['teamId']
+        opponent_index[home_id][matchup['matchupPeriodId']] = away_id
+        opponent_index[away_id] = {} if opponent_index[away_id].nil?
+        opponent_index[away_id][matchup['matchupPeriodId']] = home_id
+      end
     }
 
     return opponent_index

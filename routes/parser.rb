@@ -209,7 +209,7 @@ class FantasyServer
             steal_slack_ids.push(user.slack_id) if user.notification_steals_team.nil? || user.notification_steals_team
           end
 
-          if opponent.slack_id
+          if !opponent.nil? && opponent.slack_id
             homerun_slack_ids.push(opponent.slack_id) if opponent.notification_homeruns_opponent.nil? || opponent.notification_homeruns_opponent
             steal_slack_ids.push(opponent.slack_id) if opponent.notification_steals_opponent.nil? || opponent.notification_steals_opponent
           end
