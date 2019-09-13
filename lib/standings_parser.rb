@@ -55,11 +55,12 @@ class StandingsParser
     begin
       log_message "Parsing #{@year} Football Standings"
 
-      response_body = EspnFantasy.get_football_standings_page(@year, league_id, @cookie_string);
+      standings_data = EspnFantasy.get_football_standings_data(@year, league_id, @cookie_string)
 
-      html = Nokogiri::HTML(response_body);
-      league_name = extract_league_name html;
-      team_info = extract_team_info html, true
+      league_name = standings_data['settings']['name']
+      user_index = ParsingUtilities.create_user_index(standings_data['teams'], standings_data['members'])
+
+      team_info = parse_team_info(standings_data['teams'], user_index)
 
       if verify_team_football_info(team_info)
         log_message "Team info valid [#{Time.now}]"
@@ -73,6 +74,7 @@ class StandingsParser
       end
     rescue Exception => e
       log_message e, "ERROR"
+      log_message e.backtrace, "ERROR"
     end
   end
 
@@ -82,13 +84,15 @@ class StandingsParser
     teams = []
 
     teams_data.each {|team_data|
+
       teams.push({
         team_name: "#{team_data['location']} #{team_data['nickname']}",
         owner: user_index[team_data['id']],
         wins: team_data['record']['overall']['wins'],
         losses: team_data['record']['overall']['losses'],
         ties: team_data['record']['overall']['ties'],
-        place: team_data['playoffSeed']
+        place: team_data['playoffSeed'],
+        points: team_data['points'] > 0 ? team_data['points'] : nil
       })
     }
 
