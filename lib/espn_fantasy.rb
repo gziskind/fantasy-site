@@ -62,6 +62,7 @@ module EspnFantasy
     return get_data("https://site.web.api.espn.com/apis/site/v2/teams?region=us&lang=en&leagues=#{sport}")[sport]
   end
 
+
   def self.get_baseball_standings_data(year, league_id, cookie_string)
     return get_league_standings_data(year, league_id, cookie_string, 'flb')
   end
@@ -74,13 +75,9 @@ module EspnFantasy
     return get_data("http://fantasy.espn.com/apis/v3/games/#{league_type}/seasons/#{year}/segments/0/leagues/#{league_id}?view=mTeam&view=mSettings", cookie_string)
   end
 
-  def self.get_football_scoreboard_page(year, league_id, cookie_string, matchup = nil)
-    path = "http://games.espn.go.com/ffl/scoreboard?leagueId=#{league_id}&seasonId=#{year}"
-    unless matchup == nil
-      path += "&matchupPeriodId=#{matchup}"
-    end
 
-    return get_data(path, cookie_string)
+  def self.get_football_scoreboard_data(year, league_id, cookie_string, matchup = nil)
+    return get_data("https://fantasy.espn.com/apis/v3/games/ffl/seasons/#{year}/segments/0/leagues/#{league_id}?view=mMatchupScore&view=mRoster&view=mTeam", cookie_string)
   end
 
   def self.get_baseball_scoreboard_data(year, league_id, cookie_string)
