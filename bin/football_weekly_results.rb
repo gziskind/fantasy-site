@@ -15,6 +15,7 @@ options = Trollop::options do
 	opt :db_user, "Database User", :short => "u", :type => :string
 	opt :db_password, "Database Password", :short => "p", :type => :string
 	opt :full_season, "Full Season", :short => "s", :type => :boolean, :default => false
+	opt :matchup, "Matchup", :short => "m", :type => :int
 end
 
 YEAR = options[:year]
@@ -27,6 +28,7 @@ DB_PORT = options[:db_port]
 DB_USER = options[:db_user]
 DB_PASSWORD = options[:db_password]
 FULL_SEASON = options[:full_season]
+MATCHUP = options[:matchup]
 COOKIE_STRING = ENV["COOKIE_STRING"]
 
 parser = ScoreboardParser.new(COOKIE_STRING, YEAR)
@@ -36,6 +38,8 @@ if(FULL_SEASON)
 	13.times{|x|
 		parser.parse_scoreboard(FOOTBALL_ID, x+1)
 	}
+elsif(MATCHUP)
+	parser.parse_scoreboard(FOOTBALL_ID, MATCHUP)
 else
 	parser.parse_scoreboard(FOOTBALL_ID)
 end
