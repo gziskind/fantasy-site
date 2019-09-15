@@ -87,7 +87,7 @@ class StandingsParser
 
       teams.push({
         team_name: "#{team_data['location']} #{team_data['nickname']}",
-        owner: user_index[team_data['id']],
+        owner: user_index[team_data['id']]['user'],
         wins: team_data['record']['overall']['wins'],
         losses: team_data['record']['overall']['losses'],
         ties: team_data['record']['overall']['ties'],
@@ -263,7 +263,7 @@ class StandingsParser
     stats = []
 
     teams_data.each {|team_data|
-      user = User.find_by_unique_name(user_index[team_data['id']]);
+      user = User.find_by_unique_name(user_index[team_data['id']]['user']);
 
       stat = RotoStat.find_by_name(user.name)
       stat = RotoStat.new if stat.nil?

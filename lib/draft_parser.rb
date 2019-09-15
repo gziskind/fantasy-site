@@ -83,7 +83,7 @@ class DraftParser
         pick: draft_pick['overallPickNumber'],
         keeper: draft_pick['keeper'],
         amount: draft_pick['bidAmount'],
-        user: user_index[draft_pick['teamId']]
+        user: user_index[draft_pick['teamId']]['user']
       });
     }
     

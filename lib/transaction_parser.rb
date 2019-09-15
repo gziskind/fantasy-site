@@ -87,7 +87,8 @@ class TransactionParser
         execution_type: transaction['executionType'],
         status: transaction['status'],
         type: transaction['type'],
-        user: user_index[transaction['teamId']],
+        user: user_index[transaction['teamId']]['user'],
+        team_name: user_index[transaction['teamId']]['team_name'],
         suborder: transaction['subOrder'],
         items: items
       }) if transaction['type'] == 'WAIVER' && transaction['executionType'] == 'PROCESS' && transaction_time.between?(last_waiver_time - 600, last_waiver_time + 600)
