@@ -120,7 +120,7 @@ class FantasyServer
         transaction_string += parser.slack_format_transaction(transaction)
         transaction_string += "\n"
       }
-      slack.ping transaction_string
+      slack(settings.slack_football_channel).ping transaction_string
 
       @transactions = transactions
       mail("Football Transaction Report - #{Time.now.strftime("%B %d, %Y")}", erb(:transactionEmail, locals: { bgcolor: '#6dbb75'}))
@@ -160,7 +160,7 @@ class FantasyServer
         transaction_string += parser.slack_format_transaction(transaction)
         transaction_string += "\n"
       }
-      slack.ping transaction_string
+      slack(settings.slack_baseball_channel).ping transaction_string
 
       @transactions = transactions
       mail("Baseball Transaction Report - #{Time.now.strftime("%B %d, %Y")}", erb(:transactionEmail, locals: { bgcolor: '#76a7ea'}))
@@ -231,9 +231,8 @@ class FantasyServer
     end
   end
 
-  def slack
+  def slack(channel)
     if @slack.nil?
-      channel = settings.slack_channel
       @slack = Slack::Notifier.new(settings.slack_url) do
         defaults username: "Transactions", icon_emoji: ":gavel:", channel: channel
       end

@@ -27,9 +27,9 @@ class PlayerParser
 
     response_json['players'].each {|player|
       if(player['onTeamId'] != 0) 
-        user = user_index[player['onTeamId']]
+        user = user_index[player['onTeamId']]['user']
         opponent_team = opponent_index[player['onTeamId']][response_json['status']['currentMatchupPeriod']]
-        opponent = user_index[opponent_team]
+        opponent = user_index[opponent_team]['user']
 
         player_data.push({
           full_name: player['player']['fullName'],

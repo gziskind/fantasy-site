@@ -20,7 +20,8 @@ options = Trollop::options do
 	opt :espn_baseball_id, "Espn Baseball League ID", :type => :string, :short => 'b'
 	opt :api_token, "API Token", :type => :string, :short => 'a'
 	opt :slack_url, "Slack url hook", :type => :string, :short => 's'
-	opt :slack_channel, "Slack channel for messages", :type => :string, :short => 'c'
+	opt :slack_football_channel, "Slack channel for football messages", :type => :string
+	opt :slack_baseball_channel, "Slack channel for baseball messages", :type => :string
 	opt :smtp_server, "SMTP server", :type => :string
 	opt :smtp_port, "SMTP port", :type => :string
 	opt :smtp_user, "SMTP user", :type => :string
@@ -45,7 +46,8 @@ espn_football_id = ENV["ESPN_FOOTBALL_ID"] || options[:espn_football_id]
 espn_baseball_id = ENV["ESPN_BASEBALL_ID"] || options[:espn_baseball_id] 
 api_token = ENV["API_TOKEN"] || options[:api_token]
 slack_url = ENV['SLACK_URL'] || options[:slack_url]
-slack_channel = ENV['SLACK_CHANNEL'] || options[:slack_channel]
+slack_football_channel = ENV['SLACK_FOOTBALL_CHANNEL'] || options[:slack_football_channel]
+slack_baseball_channel = ENV['SLACK_BASEBALL_CHANNEL'] || options[:slack_baseball_channel]
 smtp_server = ENV['SMTP_SERVER'] || options[:smtp_server]
 smtp_port = ENV['SMTP_PORT'] || options[:smtp_port]
 smtp_user = ENV['SMTP_USER'] || options[:smtp_user]
@@ -72,7 +74,8 @@ FantasyServer.set :espn_football_id, espn_football_id
 FantasyServer.set :espn_baseball_id, espn_baseball_id
 FantasyServer.set :api_token, api_token
 FantasyServer.set :slack_url, slack_url
-FantasyServer.set :slack_channel, slack_channel
+FantasyServer.set :slack_football_channel, slack_football_channel
+FantasyServer.set :slack_baseball_channel, slack_baseball_channel
 FantasyServer.set :smtp_server, smtp_server
 FantasyServer.set :smtp_port, smtp_port
 FantasyServer.set :smtp_user, smtp_user

@@ -57,8 +57,8 @@ class ScoreboardParser
     schedule = json['schedule'].select {|item| item['matchupPeriodId'] == week }
     schedule.each { |matchup_json|
       matchups.push({
-        user1: user_index[matchup_json['away']['teamId']],
-        user2: user_index[matchup_json['home']['teamId']],
+        user1: user_index[matchup_json['away']['teamId']]['user'],
+        user2: user_index[matchup_json['home']['teamId']]['user'],
         points1: matchup_json['away']['totalPoints'],
         points2: matchup_json['home']['totalPoints']
       })
