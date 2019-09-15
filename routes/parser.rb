@@ -120,10 +120,12 @@ class FantasyServer
         transaction_string += parser.slack_format_transaction(transaction)
         transaction_string += "\n"
       }
-      slack(settings.slack_football_channel).ping transaction_string
+      slack(settings.slack_football_channel).ping transaction_string if transactions.length > 0
 
       @transactions = transactions
-      mail("Football Transaction Report - #{Time.now.strftime("%B %d, %Y")}", erb(:transactionEmail, locals: { bgcolor: '#6dbb75'}))
+      emailTemplate = :transactionEmail
+      emailTemplate = :noTransactionsEmail if transactions.length == 0
+      mail("Football Transaction Report - #{Time.now.strftime("%B %d, %Y")}", erb(emailTemplate, locals: { bgcolor: '#6dbb75'}))
 
       {
         success: true
@@ -160,7 +162,7 @@ class FantasyServer
         transaction_string += parser.slack_format_transaction(transaction)
         transaction_string += "\n"
       }
-      slack(settings.slack_baseball_channel).ping transaction_string
+      slack(settings.slack_baseball_channel).ping transaction_string if transactions.length > 0
 
       @transactions = transactions
       mail("Baseball Transaction Report - #{Time.now.strftime("%B %d, %Y")}", erb(:transactionEmail, locals: { bgcolor: '#76a7ea'}))
