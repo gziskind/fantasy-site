@@ -18,7 +18,7 @@ class ScoreboardParser
 
       response_json = EspnFantasy.get_football_scoreboard_data(@year, league_id, @cookie_string);
 
-      week = response_json['status']['currentMatchupPeriod'] if week.nil?
+      week = response_json['status']['currentMatchupPeriod'] - 1 if week.nil?
       matchups = parse_matchups(response_json, week)
       if verify_scoreboard_data(matchups)
         log_message "Scoreboard data valid [#{Time.now}]"
