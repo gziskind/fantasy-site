@@ -23,7 +23,7 @@ module EspnFantasy
     return get_league_draft_data(year, league_id, cookie_string, 'ffl')
   end
 
-  def get_league_draft_data(year, league_id, cookie_string, league_type)
+  def self.get_league_draft_data(year, league_id, cookie_string, league_type)
     return get_data("http://fantasy.espn.com/apis/v3/games/#{league_type}/seasons/#{year}/segments/0/leagues/#{league_id}?view=mDraftDetail&view=mTeam&view=kona_draft_recap", cookie_string)
   end
 
