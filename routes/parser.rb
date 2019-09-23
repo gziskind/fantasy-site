@@ -6,6 +6,7 @@ require_relative '../lib/scoreboard_parser'
 require_relative '../lib/draft_parser'
 require_relative '../lib/transaction_parser'
 require_relative '../lib/player_parser'
+require_relative '../lib/common'
 
 class FantasyServer 
 
@@ -48,6 +49,8 @@ class FantasyServer
       parser = ScoreboardParser.new(settings.cookie_string, Time.now.year)
 
       parser.parse_scoreboard(settings.espn_football_id)
+
+      # send_football_standings_email()
 
       {
         success: true
@@ -241,6 +244,13 @@ class FantasyServer
     end
 
     @slack
+  end
+
+  def send_football_standings_email
+    zender_results = Common.get_zender_results(Time.now.year, true)
+
+    mail("Football Standings - #{Time.now.strftime("%B %d, %Y")}", erb(:zenderEmail, locals: {results: zender_results}))
+
   end
 
 end
