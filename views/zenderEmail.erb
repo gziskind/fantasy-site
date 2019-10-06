@@ -1,0 +1,45 @@
+<html>
+<head>
+	
+<style>
+	th {
+		background-color:#6dbb75;
+		color: white;
+		padding: 0 4px;
+	}
+
+	td {
+		padding: 4px;
+	}
+
+</style>
+</head>
+<body>
+<table>
+	<thead>
+		<tr>
+			<th>Place</th>
+			<th>Team Name</th>
+			<th>Owner</th>
+			<th>Wins</th>
+			<th>Losses</th>
+			<th>Win Percentage</th>
+			<th>Points</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% results.each_with_index {|(name, result), index| %>
+		<tr style="background-color:<%= index % 2 == 1 ? "#f2f2f2" : "white" %>">
+			<td><%= index + 1 %></td>
+			<td><%= result[:team_name] %></td>
+			<td><%= name %></td>
+			<td><%= result[:wins] * 2 + result[:points_wins] %></td>
+			<td><%= result[:losses] * 2 + result[:points_losses] %></td>
+			<td><%= '%.3f' % result[:win_percentage] %></td>
+			<td><%= '%.1f' % result[:points] %></td>
+		</tr>
+		<% } %>
+	</tbody>
+</table>
+</body>
+</html>
