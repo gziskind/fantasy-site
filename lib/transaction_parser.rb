@@ -45,6 +45,8 @@ class TransactionParser
       str += " Unsuccessful. Reason: Player has already been added to another team."
     elsif(transaction[:status] == "FAILED_ROSTERLIMIT")
       str += " Unsuccessful. Reason: Maximum roster size would be exceeded."
+    elsif(transaction[:status] == "FAILED_ROSTERLOCK")
+      str += " Unsuccessful. Reason: Unable to process, rosters are locked."
     end
 
     str

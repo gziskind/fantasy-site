@@ -33,8 +33,10 @@
    	<span class="error" style="font-weight:normal">Unsuccessful.</span> <em>Reason: A player involved has already been dropped.</em>
    	<% elsif(transaction[:status] == "FAILED_INVALIDPLAYERSOURCE") %>
    	<span class="error" style="font-weight:normal">Unsuccessful.</span> <em>Reason: Player has already been added to another team.</em>
-   	<% elsif(transaction[:status] == "FAILED_ROSTERLIMIT") %>
-   	<span class="error" style="font-weight:normal">Unsuccessful.</span> <em>Reason: Maximum roster size would be exceeded.</em>
+    <% elsif(transaction[:status] == "FAILED_ROSTERLIMIT") %>
+    <span class="error" style="font-weight:normal">Unsuccessful.</span> <em>Reason: Maximum roster size would be exceeded.</em>
+   	<% elsif(transaction[:status] == "FAILED_ROSTERLOCK") %>
+   	<span class="error" style="font-weight:normal">Unsuccessful.</span> <em>Unsuccessful. Reason: Unable to process, rosters are locked.</em>
    	<% end %>
   </tr>
   <% } %>
