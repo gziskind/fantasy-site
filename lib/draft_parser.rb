@@ -69,13 +69,18 @@ class DraftParser
   def parse_draft_data(response_json, sport) 
     draft_data = []
 
+    player_data = EspnFantasy.get_player_data(@year)
+
     team_index = ParsingUtilities.create_team_index(EspnFantasy.get_team_data('nfl'))
-    player_index = ParsingUtilities.create_player_index(response_json["players"], team_index, sport)
+    player_index = ParsingUtilities.create_player_index(player_data, team_index, sport)
     user_index = ParsingUtilities.create_user_index(response_json['teams'], response_json['members'])
 
+
     response_json['draftDetail']['picks'].each {|draft_pick|
+      puts draft_pick
       player = player_index[draft_pick['playerId']]
 
+      puts player
       draft_data.push({
         first_name: player[:first_name],
         last_name: player[:last_name],

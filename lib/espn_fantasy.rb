@@ -15,6 +15,12 @@ module EspnFantasy
     return json
   end
 
+  def self.get_player_data(year)
+    response = HTTParty.get("https://fantasy.espn.com/apis/v3/games/ffl/seasons/#{year}/players?view=players_wl", :headers => {"x-fantasy-filter" => '{"filterActive":null}'})
+    
+    return JSON.parse(response.body)
+  end
+
   def self.get_baseball_draft_data(year, league_id, cookie_string)
     return get_league_draft_data(year, league_id, cookie_string, 'flb')
   end

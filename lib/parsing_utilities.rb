@@ -64,11 +64,11 @@ module ParsingUtilities
     end
 
     players.each {|player|
-      player_index[player['player']['id']] = {
-        first_name: player['player']['firstName'],
-        last_name: player['player']['lastName'],
-        position: positions_map[player['player']['defaultPositionId']],
-        team: team_index[player['player']['proTeamId'].to_s]
+      player_index[player['id']] = {
+        first_name: player['firstName'],
+        last_name: player['lastName'],
+        position: positions_map[player['defaultPositionId']],
+        team: team_index[player['proTeamId'].to_s]
       }
     }
 
