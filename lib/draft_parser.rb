@@ -77,10 +77,8 @@ class DraftParser
 
 
     response_json['draftDetail']['picks'].each {|draft_pick|
-      puts draft_pick
       player = player_index[draft_pick['playerId']]
 
-      puts player
       draft_data.push({
         first_name: player[:first_name],
         last_name: player[:last_name],
