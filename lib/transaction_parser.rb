@@ -67,8 +67,10 @@ class TransactionParser
       league = 'nfl'
     end
 
+    player_data = EspnFantasy.get_player_data(@year)
+
     team_index = ParsingUtilities.create_team_index(EspnFantasy.get_team_data(league))
-    player_index = ParsingUtilities.create_player_index(response_json["players"], team_index, sport)
+    player_index = ParsingUtilities.create_player_index(player_data, team_index, sport)
     user_index = ParsingUtilities.create_user_index(response_json['teams'], response_json['members'])
 
     response_json['transactions'].each {|transaction|
