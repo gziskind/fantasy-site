@@ -94,7 +94,7 @@ module Helpers
   def mail(subject, body)
     if Pony.options.size == 0
       Pony.options = {
-        to: settings.email_to,
+        to: settings.email_to.split(','),
         via: :smtp,
         via_options:{
           address: settings.smtp_server,
