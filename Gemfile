@@ -7,6 +7,7 @@ gem 'active_model_serializers'
 gem 'trollop'
 gem 'sinatra'
 # gem 'mongo_mapper', "0.13.1"
+gem 'mongo', '~> 2.5'
 gem 'mongo_mapper', git: "https://github.com/fcheung/mongomapper", branch: 'mongo-2.x'
 gem 'plucky', git: "https://github.com/fcheung/plucky.git", branch: 'mongo-2.x'
 gem 'httparty'
