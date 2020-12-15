@@ -29,7 +29,7 @@
 					<td>{{result.wins}}</td>
 					<td>{{result.losses}}</td>
 					<td>{{result.ties}}</td>
-					<td ng-show="{{$parent.getSportType() == 'football'}}">{{result.points}}</td>
+					<td ng-show="{{$parent.getSportType() == 'football'}}">{{result.points | number:2}}</td>
 					<td ng-hide="isFinal">{{getGamesBack(result)}}
 				</tr>
 			</tbody>

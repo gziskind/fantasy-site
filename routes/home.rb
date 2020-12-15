@@ -53,13 +53,11 @@ class FantasyServer
 
 		@team_names = []
 		team_names.each {|team_name|
-			rating = get_total_rating(team_name)
-
-			if !rating.nil?
+			if !team_name.total_rating.nil?
 				@team_names.push({
 					name: team_name.name,
 					owner: team_name.owner.name,
-					rating: rating
+					rating: team_name.total_rating
 				})
 			end
 		}
@@ -71,13 +69,12 @@ class FantasyServer
 		@new_team_names = []
 		new_team_names = team_names.sort_by {|team_name| team_name.created_at}
 		new_team_names.each {|team_name| 
-			rating = get_total_rating(team_name)
 			userRating = Rating.find_by_team_name_id_and_user_id(team_name._id, @user._id) if !@user.nil?
 
 			new_team_name = {
 				teamName: team_name.name,
 				owner: team_name.owner.name,
-				rating: rating,
+				rating: team_name.total_rating,
 				sport: team_name.sport
 			}
 			new_team_name[:myRating] = userRating.rating if !userRating.nil?
@@ -118,21 +115,6 @@ class FantasyServer
 		end
 		
 		result.to_json
-	end
-
-	def get_total_rating(team) 
-		total_rating = 0
-		ratings = Rating.find_all_by_team_name_id(team._id)
-		ratings.each {|rating|
-			total_rating += rating.rating
-		}
-		if ratings.length > 0
-			total_rating = total_rating / ratings.length.to_f
-		else
-			total_rating = nil
-		end
-
-		total_rating
 	end
 
 
