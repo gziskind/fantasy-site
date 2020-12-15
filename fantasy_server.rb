@@ -43,7 +43,9 @@ class FantasyServer < Sinatra::Base
 	def self.init_db
 		puts "Connecting database to #{settings.database} at #{settings.db_host}"
 		Mongo::Logger.logger.level = ::Logger::INFO
-		MongoMapper.connection = Mongo::Client.new("mongodb+srv://#{settings.db_user}:#{settings.db_password}@#{settings.db_host}/#{settings.database}")
+		mongo_url = "mongodb+srv://#{settings.db_user}:#{settings.db_password}@#{settings.db_host}/#{settings.database}"
+		mongo_url = "mongodb://#{settings.db_host}/#{settings.database}" if settings.db_host == 'localhost'
+		MongoMapper.connection = Mongo::Client.new(mongo_url)
 	end
 
 	helpers Helpers
