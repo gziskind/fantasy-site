@@ -236,6 +236,23 @@ class FantasyServer
     end
   end
 
+  post '/api/parser/teamnames/run', :token => true do
+    team_names = TeamName.all
+
+    team_names.each {|team_name|
+      rating = get_total_rating team_name
+
+      if !rating.nil?
+        team_name.total_rating = rating
+        team_name.save!
+      end
+    }
+
+    {
+        success: true
+    }.to_json
+  end
+
   def slack(channel)
     if @slack.nil?
       @slack = Slack::Notifier.new(settings.slack_url) do
@@ -257,6 +274,21 @@ class FantasyServer
 
     mail("Football Standings - #{Time.now.strftime("%B %d, %Y")}", erb(:zenderEmail, locals: {results: zender_results, base_url: settings.base_url}))
 
+  end
+
+  def get_total_rating(team) 
+    total_rating = 0
+    ratings = Rating.find_all_by_team_name_id(team._id)
+    ratings.each {|rating|
+      total_rating += rating.rating
+    }
+    if ratings.length > 0
+      total_rating = total_rating / ratings.length.to_f
+    else
+      total_rating = nil
+    end
+
+    total_rating
   end
 
 end

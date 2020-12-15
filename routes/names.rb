@@ -40,12 +40,10 @@ class FantasyServer
 
 				recent_name = names[0]
 
-				total_rating = get_total_rating(recent_name)
-
 				team_name_info = {
 					owner: user.name,
 					teamName: recent_name.name,
-					rating: total_rating
+					rating: recent_name.total_rating
 				}
 
 				if is_user?
@@ -76,12 +74,11 @@ class FantasyServer
 		names.reverse!
 
 		names.map! {|name|
-			total_rating = get_total_rating(name)
 
 			team_name_info = {
 				owner: user.name,
 				teamName: name.name,
-				rating: total_rating
+				rating: name.total_rating
 			}
 			if name.year.nil?
 				team_name_info[:year] = name.created_at.year
@@ -116,6 +113,9 @@ class FantasyServer
 		rating.save!
 
 		total_rating = get_total_rating team_name
+
+		team_name.total_rating = total_rating
+		team_name.save!
 
 		{
 			success:true,

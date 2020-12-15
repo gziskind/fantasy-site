@@ -36,6 +36,9 @@ angular.module('aepi-fantasy').controller('AdminParsingController', function($sc
         },{
             name:"Baseball Players",
             id:"players/baseball"
+        },{
+            name:"Calculate Team Ratings",
+            id:'teamnames'
         }
     ]
 
