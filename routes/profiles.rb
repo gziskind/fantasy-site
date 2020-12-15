@@ -57,12 +57,11 @@ class FantasyServer
 
 		team_names = TeamName.find_all_by_owner_id(user._id);
 		team_names_json = team_names.map {|team_name|
-			rating = get_total_rating(team_name);
 
 			{
 				team_name: team_name.name,
 				sport: team_name.sport,
-				rating: rating
+				rating: team_name.total_ratings
 			}
 		}
 
@@ -143,21 +142,6 @@ class FantasyServer
 		else
 			redirect '/unauthorized'
 		end
-	end
-
-	def get_total_rating(team) 
-		total_rating = 0
-		ratings = Rating.find_all_by_team_name_id(team._id)
-		ratings.each {|rating|
-			total_rating += rating.rating
-		}
-		if ratings.length > 0
-			total_rating = total_rating / ratings.length.to_f
-		else
-			total_rating = nil
-		end
-
-		total_rating
 	end
 
 	
