@@ -61,7 +61,7 @@ class FantasyServer
 			{
 				team_name: team_name.name,
 				sport: team_name.sport,
-				rating: team_name.total_ratings
+				rating: team_name.total_rating
 			}
 		}
 
