@@ -25,7 +25,8 @@ options = Trollop::options do
 	opt :smtp_port, "SMTP port", :type => :string
 	opt :smtp_user, "SMTP user", :type => :string
 	opt :smtp_password, "SMTP password", :type => :string
-	opt :email_to, "Email address to send to", :type => :string
+	opt :baseball_email_to, "Email address to send to for baseball", :type => :string
+	opt :football_email_to, "Email address to send to for football", :type => :string
 	opt :transaction_retries, "Number of retries for transaction parsing", :type => :integer, :default => 10
 	opt :transaction_time, "Seconds in between retries", :type => :integer, :default => 30
 end
@@ -50,7 +51,8 @@ smtp_server = ENV['SMTP_SERVER'] || options[:smtp_server]
 smtp_port = ENV['SMTP_PORT'] || options[:smtp_port]
 smtp_user = ENV['SMTP_USER'] || options[:smtp_user]
 smtp_password = ENV['SMTP_PASSWORD'] || options[:smtp_password]
-email_to = ENV['EMAIL_TO'] || options[:email_to]
+baseball_email_to = ENV['BASEBALL_EMAIL_TO'] || options[:baseball_email_to]
+football_email_to = ENV['FOOTBALL_EMAIL_TO'] || options[:football_email_to]
 transaction_retries = ENV['TRANSACTION_RETRIES'] || options[:transaction_retries]
 transaction_time = ENV['TRANSACTION_TIME'] || options[:transaction_time]
 cookie_string = ENV["COOKIE_STRING"]
@@ -78,7 +80,8 @@ FantasyServer.set :smtp_server, smtp_server
 FantasyServer.set :smtp_port, smtp_port
 FantasyServer.set :smtp_user, smtp_user
 FantasyServer.set :smtp_password, smtp_password
-FantasyServer.set :email_to, email_to
+FantasyServer.set :baseball_email_to, baseball_email_to
+FantasyServer.set :football_email_to, football_email_to
 FantasyServer.set :transaction_retries, transaction_retries
 FantasyServer.set :transaction_time, transaction_time
 FantasyServer.set :base_url, base_url

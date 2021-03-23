@@ -91,10 +91,10 @@ module Helpers
     settings.ga_token
   end
 
-  def mail(subject, body)
+  def mail(subject, body, email_to)
     if Pony.options.size == 0
       Pony.options = {
-        to: settings.email_to.split(','),
+        to: email_to.split(','),
         via: :smtp,
         via_options:{
           address: settings.smtp_server,
