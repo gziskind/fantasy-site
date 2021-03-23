@@ -69,7 +69,7 @@ class DraftParser
   def parse_draft_data(response_json, sport) 
     draft_data = []
 
-    player_data = EspnFantasy.get_player_data(@year)
+    player_data = EspnFantasy.get_player_data(@year, sport)
 
     team_index = ParsingUtilities.create_team_index(EspnFantasy.get_team_data('nfl'))
     player_index = ParsingUtilities.create_player_index(player_data, team_index, sport)
