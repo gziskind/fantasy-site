@@ -67,7 +67,7 @@ class TransactionParser
       league = 'nfl'
     end
 
-    player_data = EspnFantasy.get_player_data(@year)
+    player_data = EspnFantasy.get_player_data(@year, sport)
 
     team_index = ParsingUtilities.create_team_index(EspnFantasy.get_team_data(league))
     player_index = ParsingUtilities.create_player_index(player_data, team_index, sport)
