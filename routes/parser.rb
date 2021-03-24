@@ -25,7 +25,7 @@ class FantasyServer
       parser = StandingsParser.new(settings.cookie_string, Time.now.year)
 
       parser.parse_football(settings.espn_football_id) if(Time.now.month >= 9)
-      parser.parse_baseball(settings.espn_baseball_id) if(Time.now.month >= 4 && Time.now.month <= 9)
+      parser.parse_baseball(settings.espn_baseball_id) if(Time.now.month >= 3 && Time.now.month <= 9)
 
       if(Time.now.month >= 4)
         {
