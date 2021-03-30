@@ -37,6 +37,7 @@ class StandingsParser
       calculate_points(stats) 
       if verify_roto_stats(stats)
         log_message "Roto stats valid [#{Time.now}]"
+        RotoStat.destroy_all
         stats.each { |stat| stat.save! }
 
         Status.update_service("Roto Standings")
@@ -265,8 +266,7 @@ class StandingsParser
     teams_data.each {|team_data|
       user = User.find_by_unique_name(user_index[team_data['id']]['user']);
 
-      stat = RotoStat.find_by_name(user.name)
-      stat = RotoStat.new if stat.nil?
+      stat = RotoStat.new
 
       stat.name = user.name
       stat.runs = team_data['valuesByStat']['20']
