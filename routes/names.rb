@@ -24,7 +24,9 @@ class FantasyServer
 
 	# API Calls
 	get '/api/:sport/names', :auth => :user do
-		users = User.all
+		season = Season.find_by_year_and_sport(Time.now.year, params[:sport])
+
+		users = season ? season.results.map { |result| result.user } : []
 
 		team_names = []
 
