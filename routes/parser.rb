@@ -168,7 +168,9 @@ class FantasyServer
       slack(settings.slack_baseball_channel).ping transaction_string if transactions.length > 0
 
       @transactions = transactions
-      mail("Baseball Transaction Report - #{Time.now.strftime("%B %d, %Y")}", erb(:transactionEmail, locals: { bgcolor: '#76a7ea'}), settings.baseball_email_to)
+      emailTemplate = :transactionEmail
+      emailTemplate = :noTransactionsEmail if transactions.length == 0
+      mail("Baseball Transaction Report - #{Time.now.strftime("%B %d, %Y")}", erb(emailTemplate, locals: { bgcolor: '#76a7ea'}), settings.baseball_email_to)
 
       {
         success: true
