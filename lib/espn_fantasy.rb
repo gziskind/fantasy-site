@@ -67,7 +67,7 @@ module EspnFantasy
 
 
   def self.get_baseball_player_data(year, league_id, cookie_string)
-    return get_data("http://fantasy.espn.com/apis/v3/games/flb/seasons/#{year}/segments/0/leagues/#{league_id}?view=kona_draft_recap&view=mTeam&view=mMatchupScore", cookie_string)
+    return get_data("https://fantasy.espn.com/apis/v3/games/flb/seasons/#{year}/segments/0/leagues/#{league_id}?view=mMatchupScore&view=mRoster&view=mTeam", cookie_string)
   end
 
   def self.get_team_data(sport)

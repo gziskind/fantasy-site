@@ -25,25 +25,26 @@ class PlayerParser
     user_index = ParsingUtilities.create_user_index(response_json['teams'], response_json['members'])
     opponent_index = ParsingUtilities.create_opponent_index(response_json['schedule']);
 
-    response_json['players'].each {|player|
-      if(player['onTeamId'] != 0) 
-        user = user_index[player['onTeamId']]['user']
-        opponent_team = opponent_index[player['onTeamId']][response_json['status']['currentMatchupPeriod']]
-        opponent = user_index[opponent_team]['user']
+    response_json['teams'].each {|team|
+      user = user_index[team['id']]['user']
+      opponent_team = opponent_index[team['id']][response_json['status']['currentMatchupPeriod']]
+      opponent = user_index[opponent_team]['user']
+
+      team['roster']['entries'].each {|entry|
+        player = entry['playerPoolEntry']['player']
 
         player_data.push({
-          full_name: player['player']['fullName'],
-          first_name: player['player']['firstName'],
-          last_name: player['player']['lastName'],
-          position: ParsingUtilities.baseball_positions_map[player['player']['defaultPositionId']],
+          full_name: player['fullName'],
+          first_name: player['firstName'],
+          last_name: player['lastName'],
+          position: ParsingUtilities.baseball_positions_map[player['defaultPositionId']],
           user: user,
           opponent: opponent
-        }) 
-      end
+        })
+      }
     }
 
     return player_data
   end
 end
-
 
