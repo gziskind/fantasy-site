@@ -2,8 +2,114 @@
 
 var https = require('https');
 var redis = require('redis');
+var querystring = require('querystring')
+var async = require('async')
 
 exports.handler = (event, context, callback) => {
+  var client = redis.createClient({
+    host: process.env.redisHost,
+    port: process.env.redisPort,
+    password: process.env.redisPassword
+  });
+  
+  client.get("twitter:last_id" , function(err, value) {
+    queryTwitter(value, callback)
+    client.end(true)
+  });
+}
+
+function queryTwitter(last_id, callback) {
+  var queryObj = {
+    'query': 'from:mlbhr OR from:mlbsteals',
+    'tweet.fields': 'author_id',
+    "max_results": 100
+  }
+
+  if(last_id) {
+    queryObj['since_id'] = last_id
+  }
+
+  var query = querystring.encode(queryObj)
+
+  var options = {
+      host: 'api.twitter.com',
+      port: 443,
+      path: `/2/tweets/search/recent?${query}`,
+      method: 'GET',
+      headers: {
+          "User-Agent": "v2RecentSearchJS",
+          "authorization": `Bearer ${process.env.twitterToken}`
+      }
+  }
+
+  var req = https.request(options, function(res) {
+      var data = '';
+
+      res.on('data', function(chunk) {
+          data += chunk;
+      })
+
+      res.on('end', function() {
+        parseTwitter(JSON.parse(data), callback)
+      })
+  })
+
+  req.end();
+}
+
+function parseTwitter(data, callback) {
+  if(data.meta.result_count > 0) {
+    var client = redis.createClient({
+      host: process.env.redisHost,
+      port: process.env.redisPort,
+      password: process.env.redisPassword
+    });
+    
+    client.set("twitter:last_id" , data.meta.newest_id, function(err, res) {
+      var asyncTasks = []
+      data.data.reverse().forEach(function(stat) {
+        asyncTasks.push(function(callback) {
+          var event = { tweet: stat.text }
+          if(stat.author_id == 612985010) {
+            event.stat = 'homerun'
+          } else {
+            event.stat = 'steal'
+          }
+
+          sendToSlack(event, {}, callback)
+        })
+      })
+
+      async.series(asyncTasks, function() {
+        var response = {
+          "statusCode": 200,
+          "headers": {
+              "Content-type": "application/json"
+          },
+          "body": JSON.stringify({message: 'Success!'}),
+          "isBase64Encoded": false
+        };
+        
+        callback(null, response); 
+      })
+
+      client.end(true)
+    });
+  } else {
+    var response = {
+      "statusCode": 200,
+      "headers": {
+          "Content-type": "application/json"
+      },
+      "body": JSON.stringify({message: 'No new updates'}),
+      "isBase64Encoded": false
+    };
+            
+    callback(null, response); 
+  }
+}
+
+function sendToSlack(event, context, callback) {
     var info = null;
     if(event.stat == "homerun") {
       info = parseBombTweet(event.tweet);
@@ -40,16 +146,7 @@ exports.handler = (event, context, callback) => {
         res.on('end',function() {
             console.log("Received response " + data);
             
-            var response = {
-              "statusCode": 200,
-              "headers": {
-                  "Content-type": "application/json"
-              },
-              "body": JSON.stringify({message: 'Hello from Lambda!'}),
-              "isBase64Encoded": false
-            };
-            
-            callback(null, response); 
+            callback(); 
         });
       });
       
