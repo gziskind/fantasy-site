@@ -76,6 +76,8 @@ function parseTwitter(data, callback) {
             event.stat = 'steal'
           }
 
+          console.log("Got tweet: " + stat.text)
+
           sendToSlack(event, {}, callback)
         })
       })
@@ -137,15 +139,12 @@ function sendToSlack(event, context, callback) {
       };
   
       var req = https.request(options, function(res) {
-        console.log("Request made");
         var data = "";
         res.on('data', function(chunk) {
           data += chunk;
         });
         
         res.on('end',function() {
-            console.log("Received response " + data);
-            
             callback(); 
         });
       });
@@ -172,6 +171,8 @@ function getBombMessage(info, users) {
     username:"Bombs",
     channel: "#bombs"
   });
+
+  console.log(message)
   
   return data;
 }
@@ -191,6 +192,8 @@ function getStealMessage(info, users) {
     username:"Steals",
     channel: "#steals"
   });
+
+  console.log(message)
   
   return data
 }
