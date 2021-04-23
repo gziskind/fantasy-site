@@ -90,8 +90,20 @@ class FantasyServer
 
   post '/api/parser/transaction/:sport/run', :token => true do
     sport = params[:sport]
+    if sport == 'football'
+      league_id = settings.espn_football_id
+      slack_channel = settings.slack_football_channel
+      email_to = settings.football_email_to
+      email_color = '#6dbb75'
+    elsif sport == 'baseball'
+      league_id = settings.espn_baseball_id
+      slack_channel = settings.slack_baseball_channel
+      email_to = settings.baseball_email_to
+      email_color = '#76a7ea'
+    end
 
-    if settings.cookie_string && sport == 'football' && settings.espn_football_id
+
+    if settings.cookie_string && league_id
       parser = TransactionParser.new(settings.cookie_string, Time.now.year)
       retry_attempts = 0
 
@@ -101,7 +113,7 @@ class FantasyServer
           puts "Transactions empty. Trying again in #{settings.transaction_time} seconds (attempt #{retry_attempts})"
           sleep(settings.transaction_time.to_i)
         end
-        transactions = parser.parse_transactions(settings.espn_football_id, 'football')
+        transactions = parser.parse_transactions(league_id, sport)
         retry_attempts += 1
       end
 
@@ -123,54 +135,12 @@ class FantasyServer
         transaction_string += parser.slack_format_transaction(transaction)
         transaction_string += "\n"
       }
-      slack(settings.slack_football_channel).ping transaction_string if transactions.length > 0
+      slack(slack_channel).ping transaction_string if transactions.length > 0
 
       @transactions = transactions
       emailTemplate = :transactionEmail
       emailTemplate = :noTransactionsEmail if transactions.length == 0
-      mail("Football Transaction Report - #{Time.now.strftime("%B %d, %Y")}", erb(emailTemplate, locals: { bgcolor: '#6dbb75'}), settings.football_email_to)
-
-      {
-        success: true
-      }.to_json
-    elsif settings.cookie_string && sport == 'baseball' && settings.espn_baseball_id
-      parser = TransactionParser.new(settings.cookie_string, Time.now.year)
-      retry_attempts = 0
-
-      transactions = []
-      while transactions.length == 0 && retry_attempts < settings.transaction_retries
-        if retry_attempts > 0
-          puts "Transactions empty. Trying again in #{settings.transaction_time} seconds (attempt #{retry_attempts})"
-          sleep(settings.transaction_time.to_i)
-        end
-        transactions = parser.parse_transactions(settings.espn_baseball_id,'baseball')
-        retry_attempts += 1
-      end
-
-      puts "No transactions found after #{settings.transaction_retries} attempts" if transactions.length == 0
-
-      transaction_string = "*Auction Report for #{Time.now.strftime("%B %d, %Y")}:*\n\n"
-      count = 0
-      transactions.each {|transaction|
-        if transaction[:status] == "EXECUTED"
-          count += 1
-          if count < 10
-            transaction_string += "*%4s.* " % count
-          else
-            transaction_string += "*%2s.* " % count
-          end
-        else
-          transaction_string += "       "
-        end
-        transaction_string += parser.slack_format_transaction(transaction)
-        transaction_string += "\n"
-      }
-      slack(settings.slack_baseball_channel).ping transaction_string if transactions.length > 0
-
-      @transactions = transactions
-      emailTemplate = :transactionEmail
-      emailTemplate = :noTransactionsEmail if transactions.length == 0
-      mail("Baseball Transaction Report - #{Time.now.strftime("%B %d, %Y")}", erb(emailTemplate, locals: { bgcolor: '#76a7ea'}), settings.baseball_email_to)
+      mail("#{sport.capitalize} Transaction Report - #{Time.now.strftime("%B %d, %Y")}", erb(emailTemplate, locals: { bgcolor: email_color}), email_to)
 
       {
         success: true
