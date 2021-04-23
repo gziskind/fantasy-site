@@ -83,6 +83,11 @@ angular.module('aepi-fantasy',['ngRoute','ngResource','ipCookie','ui.sortable','
 		controller: 'AdminParsingController',
 		templateUrl: '/pages/playerMap.html'
 	});
+
+	$routeProvider.when('/admin/seasonDates',{
+		controller: 'AdminParsingController',
+		templateUrl: '/pages/seasonDates.html'
+	});
 	
 	$routeProvider.when('/draft/:year',{
 		controller: 'DraftResultsController',

@@ -201,6 +201,8 @@ class FantasyServer
 
       players.each {|player|
         unless player[:position] == 'SP' || player[:position] == 'RP'
+          puts player
+          puts player[:user]
           user = User.find_by_unique_name(player[:user]);
           opponent = User.find_by_unique_name(player[:opponent])
 

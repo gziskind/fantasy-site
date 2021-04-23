@@ -148,6 +148,10 @@ angular.module('aepi-fantasy').controller('HomeController', function($scope, $lo
 		return activeUrlCompare('admin/playerMap')
 	}
 
+	$scope.isAdminSeasonDates = function() {
+		return activeUrlCompare('admin/seasonDates')
+	}
+
 	$scope.getSportType = function() {
 		var path = window.location.pathname;
 		if(path.indexOf('football') != -1) {

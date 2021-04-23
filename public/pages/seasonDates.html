@@ -1,0 +1,39 @@
+<div>
+	<form class="form-horizontal" role="form">
+		<h1>Season Dates</h1>
+			<h3>Baseball</h3>
+			<div class="form-group">
+			    <label class="col-sm-2 control-label" style="padding-left:0; padding-right:0;">Start Date</label>
+			    <div class="col-sm-3">
+			    	<input type="text" class="form-control" id="baseballStartDate" ng-model="baseball.startDate"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			    <label class="col-sm-2 control-label" style="padding-left:0; padding-right:0;">End Date</label>
+			    <div class="col-sm-3">
+			    	<input type="text" class="form-control" id="baseballEndDate" ng-model="baseball.endDate"/>
+			    </div>
+			</div>
+			<h3>Football</h3>
+			<div class="form-group">
+			    <label class="col-sm-2 control-label" style="padding-left:0; padding-right:0;">Start Date</label>
+			    <div class="col-sm-3">
+			    	<input type="text" class="form-control" id="footballStartDate" ng-model="football.startDate"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			    <label class="col-sm-2 control-label" style="padding-left:0; padding-right:0;">End Date</label>
+			    <div class="col-sm-3">
+			    	<input type="text" class="form-control" id="footballEndDate" ng-model="football.endDate"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			    <div class="col-sm-2">
+			      <button type="submit" class="btn btn-default" ng-click="createMapping()">Create Mapping</button>
+			    </div>
+			    <div class="col-sm-4">
+			    	<span class="password-message">{{createMappingMessage}}</span>
+			    </div>
+			</div>
+	</form>
+</div>

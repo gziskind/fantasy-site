@@ -4,6 +4,8 @@ angular.module('aepi-fantasy').controller('AdminParsingController', function($sc
     $scope.playerMappings = getPlayerMappings();
     $scope.createMappingMessage = '';
     $scope.mapping = {}
+    $scope.baseball = {}
+    $scope.football = {}
 
     // Private variables
     var api_token = null
