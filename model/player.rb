@@ -8,4 +8,5 @@ class Player
     key :sport, String
 
     many :draft_picks
+    many :transactions
 end

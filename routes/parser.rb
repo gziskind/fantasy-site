@@ -117,6 +117,8 @@ class FantasyServer
         retry_attempts += 1
       end
 
+      save_transactions(transactions, sport)
+
       puts "No transactions found after #{settings.transaction_retries} attempts" if transactions.length == 0
 
       transaction_string = "*Auction Report for #{Time.now.strftime("%B %d, %Y")}:*\n\n"
@@ -261,6 +263,37 @@ class FantasyServer
     end
 
     total_rating
+  end
+
+  def save_transactions(transactions, sport) 
+    transactions.each {|transaction|
+      if transaction[:status] == "EXECUTED"
+        user = User.find_by_unique_name(transaction[:user])
+        transaction[:items].each { |add_or_drop| 
+          player = Player.find_by_first_name_and_last_name_and_sport(add_or_drop[:player][:first_name], add_or_drop[:player][:last_name], sport)
+
+          if player.nil?
+            player = Player.new({
+              first_name: add_or_drop[:player][:first_name],
+              last_name: add_or_drop[:player][:last_name],
+              sport: sport
+            })
+
+            player.save!
+          end
+
+          transaction = Transaction.new({
+            type: add_or_drop[:type],
+            bid: add_or_drop[:type] == 'ADD' ? transaction[:bid] : nil,
+            date: Time.now,
+            user: user,
+            player:player
+          })
+
+          transaction.save!
+        }
+      end
+    }
   end
 
 end

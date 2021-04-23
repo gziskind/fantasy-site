@@ -27,6 +27,7 @@ require_relative 'model/player_mapping'
 require_relative 'model/draft_pick'
 require_relative 'model/log'
 require_relative 'model/status'
+require_relative 'model/transaction'
 
 def connect(database, host = 'localhost', port = 27017, user = nil, password = nil)
 	Mongo::Logger.logger.level = ::Logger::INFO
