@@ -5,7 +5,7 @@ class Transaction
 
     key :type, String
     key :bid, Integer
-    key :date, Time
+    key :date, Date
 
     belongs_to :user
     belongs_to :player

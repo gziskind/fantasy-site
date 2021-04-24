@@ -282,15 +282,19 @@ class FantasyServer
             player.save!
           end
 
-          transaction = Transaction.new({
-            type: add_or_drop[:type],
-            bid: add_or_drop[:type] == 'ADD' ? transaction[:bid] : nil,
-            date: Time.now,
-            user: user,
-            player:player
-          })
+          transactionNew = Transaction.find_by_player_id_and_date(player._id, Date.today)
+          if transactionNew.nil?
+            transactionNew = Transaction.new({
+              type: add_or_drop[:type],
+              bid: add_or_drop[:type] == 'ADD' ? transaction[:bid] : nil,
+              date: Date.today,
+              user: user,
+              player:player
+            })
 
-          transaction.save!
+            transactionNew.save!
+          end
+
         }
       end
     }
