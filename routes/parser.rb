@@ -173,8 +173,8 @@ class FantasyServer
 
       players.each {|player|
         unless player[:position] == 'SP' || player[:position] == 'RP'
-          user = User.find_by_unique_name(player[:user]);
-          opponent = User.find_by_unique_name(player[:opponent])
+          user = User.find_by_unique_name(/#{player[:user]}/i);
+          opponent = User.find_by_unique_name(/#{player[:opponent]}/i)
 
           name = player[:full_name]
           player_mapping = PlayerMapping.find_by_espn_name(name)
@@ -268,7 +268,7 @@ class FantasyServer
   def save_transactions(transactions, sport) 
     transactions.each {|transaction|
       if transaction[:status] == "EXECUTED"
-        user = User.find_by_unique_name(transaction[:user])
+        user = User.find_by_unique_name(/#{transaction[:user]}/i)
         transaction[:items].each { |add_or_drop| 
           player = Player.find_by_first_name_and_last_name_and_sport(add_or_drop[:player][:first_name], add_or_drop[:player][:last_name], sport)
 

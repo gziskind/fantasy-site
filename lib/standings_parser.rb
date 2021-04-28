@@ -126,7 +126,7 @@ class StandingsParser
 
     results = [];
     info.each_with_index {|team|
-      user = User.find_by_unique_name(team[:owner]);
+      user = User.find_by_unique_name(/#{team[:owner]}/i);
 
       result_data = {
         place: team[:place],
@@ -187,10 +187,10 @@ class StandingsParser
 
   def save_team_names(info, sport) 
     info.each {|team|
-      owner = User.find_by_unique_name(team[:owner]);
+      owner = User.find_by_unique_name(/#{team[:owner]}/i);
 
       current_team_name = TeamName.find_by_name_and_sport(team[:team_name], sport)
-      if(!owner.nil? && (current_team_name.nil? || current_team_name.owner.unique_name != team[:owner]))
+      if(!owner.nil? && (current_team_name.nil? || current_team_name.owner.unique_name.downcase != team[:owner].downcase))
         team_name = TeamName.new({
           owner: owner,
           name: team[:team_name],
@@ -264,7 +264,7 @@ class StandingsParser
     stats = []
 
     teams_data.each {|team_data|
-      user = User.find_by_unique_name(user_index[team_data['id']]['user']);
+      user = User.find_by_unique_name(/#{user_index[team_data['id']]['user']}/i);
 
       stat = RotoStat.new
 

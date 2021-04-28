@@ -95,8 +95,8 @@ class ScoreboardParser
     if(week_result.nil?)
       matchups = []
       matchup_data.each{|matchup_data|
-        user1 = User.find_by_unique_name(matchup_data[:user1]);
-        user2 = User.find_by_unique_name(matchup_data[:user2]);
+        user1 = User.find_by_unique_name(/#{matchup_data[:user1]}/i);
+        user2 = User.find_by_unique_name(/#{matchup_data[:user2]}/i);
 
         result1 = TeamResult.new({points: matchup_data[:points1], user: user1})
         result2 = TeamResult.new({points: matchup_data[:points2], user: user2})
@@ -109,8 +109,8 @@ class ScoreboardParser
     else
       week_result.week = week
       week_result.matchups.each_with_index {|matchup, index|
-        user1 = User.find_by_unique_name(matchup_data[index][:user1]);
-        user2 = User.find_by_unique_name(matchup_data[index][:user2]);
+        user1 = User.find_by_unique_name(/#{matchup_data[index][:user1]}/i);
+        user2 = User.find_by_unique_name(/#{matchup_data[index][:user2]}/i);
 
         matchup.team_results[0].points = matchup_data[index][:points1]
         matchup.team_results[0].user = user1
