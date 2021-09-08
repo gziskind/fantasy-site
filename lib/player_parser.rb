@@ -28,20 +28,22 @@ class PlayerParser
     response_json['teams'].each {|team|
       user = user_index[team['id']]['user']
       opponent_team = opponent_index[team['id']][response_json['status']['currentMatchupPeriod']]
-      opponent = user_index[opponent_team]['user']
+      unless opponent_team.nil?
+        opponent = user_index[opponent_team]['user']
 
-      team['roster']['entries'].each {|entry|
-        player = entry['playerPoolEntry']['player']
+        team['roster']['entries'].each {|entry|
+          player = entry['playerPoolEntry']['player']
 
-        player_data.push({
-          full_name: player['fullName'],
-          first_name: player['firstName'],
-          last_name: player['lastName'],
-          position: ParsingUtilities.baseball_positions_map[player['defaultPositionId']],
-          user: user,
-          opponent: opponent
-        })
-      }
+          player_data.push({
+            full_name: player['fullName'],
+            first_name: player['firstName'],
+            last_name: player['lastName'],
+            position: ParsingUtilities.baseball_positions_map[player['defaultPositionId']],
+            user: user,
+            opponent: opponent
+          })
+        }
+      end
     }
 
     return player_data
