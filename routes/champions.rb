@@ -9,28 +9,30 @@ class FantasyServer
 
 		seasons = Season.find_all_by_sport(@sport);
 		@seasons = seasons.map {|season|
-			winner_index = season.results.find_index {|result|
-				result.place == 1
-			}
+			if !season.championship_score.nil?
+				winner_index = season.results.find_index {|result|
+					result.place == 1
+				}
 
-			winner = season.results[winner_index]
+				winner = season.results[winner_index]
 
-			runner_up_index = season.results.find_index {|result|
-				result.place == 2
-			}
-			runner_up = season.results[runner_up_index]
+				runner_up_index = season.results.find_index {|result|
+					result.place == 2
+				}
+				runner_up = season.results[runner_up_index]
 
-			champion = {
-				year: season.year,
-				winner: winner.user.name,
-				record: winner.record,
-				result: season.championship_score,
-				runner_up: runner_up.user.name
-			}
+				champion = {
+					year: season.year,
+					winner: winner.user.name,
+					record: winner.record,
+					result: season.championship_score,
+					runner_up: runner_up.user.name
+				}
 
-			champion[:team_name] = winner.team_name if @user != nil
+				champion[:team_name] = winner.team_name if @user != nil
 
-			@champions.push(champion) if !season.championship_score.nil?
+				@champions.push(champion)
+			end
 		}
 
 		@champions.sort_by! {|champion| champion[:year]}
