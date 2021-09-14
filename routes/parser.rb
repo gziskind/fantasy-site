@@ -246,7 +246,7 @@ class FantasyServer
     zender_results = zender_results.sort_by {|name, result| [-result[:win_percentage], -result[:points]]}
 
 
-    mail("Football Standings - #{Time.now.strftime("%B %d, %Y")}", erb(:zenderEmail, locals: {results: zender_results, base_url: settings.base_url}))
+    mail("Football Standings - #{Time.now.strftime("%B %d, %Y")}", erb(:zenderEmail, locals: {results: zender_results, base_url: settings.base_url}), settings.football_email_to)
 
   end
 
