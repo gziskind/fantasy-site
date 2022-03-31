@@ -102,7 +102,7 @@ class DraftParser
 
   def save_draft_data(draft_data, sport)
     draft_data.each {|draft_pick_data|
-      user = User.find_by_unique_name(draft_pick_data[:user]);
+      user = User.find_by_unique_name(/#{draft_pick_data[:user]}/i);
       raise "Could not find user by unique name [#{draft_pick_data[:user]}" if user.nil?
 
       first_name = draft_pick_data[:first_name]
