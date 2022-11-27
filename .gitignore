@@ -4,3 +4,4 @@ logs
 /dump
 *.zip
 node_modules
+*.secrets

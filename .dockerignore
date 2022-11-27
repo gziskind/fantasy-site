@@ -1,0 +1,7 @@
+# flyctl launch added from .gitignore
+**/logs
+.env
+user_map.json
+dump
+**/*.zip
+**/node_modules
