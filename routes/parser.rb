@@ -180,21 +180,27 @@ class FantasyServer
           player_mapping = PlayerMapping.find_by_espn_name(name)
           name = player_mapping.twitter_name if player_mapping
 
-          homerun_slack_ids = []
-          steal_slack_ids = []
+          homerun_ids = []
+          steal_ids = []
 
-          if user.slack_id
-            homerun_slack_ids.push(user.slack_id) if user.notification_homeruns_team.nil? || user.notification_homeruns_team
-            steal_slack_ids.push(user.slack_id) if user.notification_steals_team.nil? || user.notification_steals_team
+          if user.slack_id || user.telegram_id
+            id = user.slack_id
+            id = user.telegram_id unless user.telegram_id.nil?
+
+            homerun_ids.push(id) if user.notification_homeruns_team.nil? || user.notification_homeruns_team
+            steal_ids.push(id) if user.notification_steals_team.nil? || user.notification_steals_team
           end
 
-          if !opponent.nil? && opponent.slack_id
-            homerun_slack_ids.push(opponent.slack_id) if opponent.notification_homeruns_opponent.nil? || opponent.notification_homeruns_opponent
-            steal_slack_ids.push(opponent.slack_id) if opponent.notification_steals_opponent.nil? || opponent.notification_steals_opponent
+          if(!opponent.nil? && (opponent.slack_id || opponent.telegram_id))
+            id = opponent.slack_id
+            id = opponent.telegram_id unless opponent.telegram_id.nil?
+
+            homerun_ids.push(id) if opponent.notification_homeruns_opponent.nil? || opponent.notification_homeruns_opponent
+            steal_ids.push(id) if opponent.notification_steals_opponent.nil? || opponent.notification_steals_opponent
           end
 
-          redis.set("player-homerun:#{name}", homerun_slack_ids.join(','), {ex: 86400}) 
-          redis.set("player-steal:#{name}", steal_slack_ids.join(','), {ex: 86400}) 
+          redis.set("player-homerun:#{name}", homerun_ids.join(','), {ex: 86400}) 
+          redis.set("player-steal:#{name}", steal_ids.join(','), {ex: 86400}) 
         end
       }
 

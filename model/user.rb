@@ -11,6 +11,7 @@ class User
 	key :image_url, String
 	key :bio, String
 	key :slack_id, String
+	key :telegram_id, String
 
 	key :notification_homeruns_team, Boolean
 	key :notification_homeruns_opponent, Boolean
