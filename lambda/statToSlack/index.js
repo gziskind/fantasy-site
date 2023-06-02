@@ -75,10 +75,10 @@ function parseTwitter(data, callback) {
           } else {
             event.stat = 'steal'
           }
-
+          
           console.log("Got tweet: " + stat.text)
 
-          sendToSlack(event, {}, callback)
+          sendAlert(event, {}, callback)
         })
       })
 
@@ -88,7 +88,7 @@ function parseTwitter(data, callback) {
           "headers": {
               "Content-type": "application/json"
           },
-          "body": JSON.stringify({message: 'Success!'}),
+          "body": JSON.stringify({message: 'Hello from Lambda!'}),
           "isBase64Encoded": false
         };
         
@@ -111,7 +111,7 @@ function parseTwitter(data, callback) {
   }
 }
 
-function sendToSlack(event, context, callback) {
+function sendAlert(event, context, callback) {
     var info = null;
     if(event.stat == "homerun") {
       info = parseBombTweet(event.tweet);
@@ -120,43 +120,140 @@ function sendToSlack(event, context, callback) {
     }
     
     getPlayerUsers(info.fullName, event.stat, function(users) {
-      var data = null;
-      if(event.stat == "homerun") {
-        data = getBombMessage(info, users)
-      } else if(event.stat == "steal") {
-        data = getStealMessage(info, users)
+      var slack_users = getSlackUsers(users)
+      var telegram_users = getTelegramUsers(users)
+      
+      var asyncTasks = []
+      
+      if(slack_users.length > 0) {
+        asyncTasks.push(function(asyncCallback) {
+          sendToSlack(info, slack_users, event.stat, asyncCallback)
+        })
       }
       
+      if(telegram_users.length > 0) {
+        asyncTasks.push(function(asyncCallback) {
+          sendToTelegram(info, telegram_users, event.stat, asyncCallback)
+        })
+      }
+      
+      async.parallel(asyncTasks, function() {
+        callback()
+      })
+    })
+        
+};
+
+function getSlackUsers(users) {
+  var slackUsers = []
+  
+  users.forEach(function(user) {
+    if(user.startsWith("U")) {
+      slackUsers.push(user)
+    }
+  })
+  
+  return users
+}
+
+function getTelegramUsers(users) {
+  var telegramUsers = []
+  
+  users.forEach(function(user) {
+    if(!user.startsWith("U")) {
+      telegramUsers.push(user)
+    }
+  })
+  
+  return users;
+}
+
+function sendToTelegram(info, users, stat, callback) {
+  var asyncTasks = []
+  
+  users.forEach(function(user) {
+    asyncTasks.push(function(asyncCallback) {
+      var message = null;
+      if(stat == "homerun") {
+        message = info.fullName + " has BOMBED!!! (" + info.count + ")";
+      } else if(stat == "steal") {
+        message = info.fullName + " has stolen a base!";
+      }
+      
+      var data = JSON.stringify({
+        text: message,
+        chat_id: user
+      });
+      
+      console.log(message)
+      
       var options = {
-        host: 'hooks.slack.com',
+        host: "api.telegram.org",
         port: 443,
-        path: '/services/' + process.env.slackToken,
+        path: '/bot' + process.env.telegramToken + "/sendMessage",
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Content-Length': data.length
         }
-      };
-  
+      }
+      
       var req = https.request(options, function(res) {
-        var data = "";
+        var response = "";
         res.on('data', function(chunk) {
-          data += chunk;
+          response += chunk;
         });
         
         res.on('end',function() {
-            callback(); 
+            asyncCallback(); 
         });
       });
-      
+    
       req.write(data);
       req.end();
-      
     })
-        
-};
+  })
+  
+  async.parallel(asyncTasks, function() {
+    callback()
+  })
+}
 
-function getBombMessage(info, users) {
+function sendToSlack(info, users, stat, callback) {
+  var data = null;
+  if(stat == "homerun") {
+    data = getBombMessageForSlack(info, users)
+  } else if(event.stat == "steal") {
+    data = getStealMessageForSlack(info, users)
+  }
+  
+  var options = {
+    host: 'hooks.slack.com',
+    port: 443,
+    path: '/services/' + process.env.slackToken,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': data.length
+    }
+  };
+
+  var req = https.request(options, function(res) {
+    var response = "";
+    res.on('data', function(chunk) {
+      response += chunk;
+    });
+    
+    res.on('end',function() {
+        callback(); 
+    });
+  });
+  
+  req.write(data);
+  req.end();
+}
+
+function getBombMessageForSlack(info, users) {
   var message = info.fullName + " has BOMBED!!! (" + info.count + ")";
   if(users.length > 0) {
     message += " -"
@@ -171,13 +268,13 @@ function getBombMessage(info, users) {
     username:"Bombs",
     channel: "#bombs"
   });
-
+  
   console.log(message)
   
   return data;
 }
 
-function getStealMessage(info, users) {
+function getStealMessageForSlack(info, users) {
   var message = info.fullName + " has stolen a base!";
   if(users.length > 0) {
     message += " -"
@@ -192,7 +289,7 @@ function getStealMessage(info, users) {
     username:"Steals",
     channel: "#steals"
   });
-
+  
   console.log(message)
   
   return data
