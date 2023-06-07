@@ -153,7 +153,7 @@ function getSlackUsers(users) {
     }
   })
   
-  return users
+  return slackUsers
 }
 
 function getTelegramUsers(users) {
@@ -165,7 +165,7 @@ function getTelegramUsers(users) {
     }
   })
   
-  return users;
+  return telegramUsers;
 }
 
 function sendToTelegram(info, users, stat, callback) {
@@ -184,8 +184,6 @@ function sendToTelegram(info, users, stat, callback) {
         text: message,
         chat_id: user
       });
-      
-      console.log(message)
       
       var options = {
         host: "api.telegram.org",
@@ -208,7 +206,7 @@ function sendToTelegram(info, users, stat, callback) {
             asyncCallback(); 
         });
       });
-    
+
       req.write(data);
       req.end();
     })
@@ -223,7 +221,7 @@ function sendToSlack(info, users, stat, callback) {
   var data = null;
   if(stat == "homerun") {
     data = getBombMessageForSlack(info, users)
-  } else if(event.stat == "steal") {
+  } else if(stat == "steal") {
     data = getStealMessageForSlack(info, users)
   }
   
