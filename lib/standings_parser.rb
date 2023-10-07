@@ -87,7 +87,7 @@ class StandingsParser
     teams_data.each {|team_data|
 
       teams.push({
-        team_name: "#{team_data['location']} #{team_data['nickname']}",
+        team_name: team_data['name'],
         owner: user_index[team_data['id']]['user'],
         wins: team_data['record']['overall']['wins'],
         losses: team_data['record']['overall']['losses'],
