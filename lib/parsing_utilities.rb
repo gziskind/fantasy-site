@@ -84,7 +84,7 @@ module ParsingUtilities
     teams.each {|team|
       user_index[team['id']] = {
         'user' => member_index[team['primaryOwner']],
-        'team_name' => "#{team['location']} #{team['nickname']}"
+        'team_name' => team['name']
       }
     }
 
