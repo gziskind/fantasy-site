@@ -25,7 +25,7 @@ class FantasyServer
       parser = StandingsParser.new(settings.cookie_string, Time.now.year)
 
       parser.parse_football(settings.espn_football_id) if(Time.now.month >= 9)
-      parser.parse_baseball(settings.espn_baseball_id) if(Time.now.month >= 3 && Time.now.month <= 9)
+      # parser.parse_baseball(settings.espn_baseball_id) if(Time.now.month >= 3 && Time.now.month <= 9)
 
       if(Time.now.month >= 4)
         {
@@ -62,11 +62,17 @@ class FantasyServer
     end
   end
 
-  post '/api/parser/draft/:sport/run', :token => true do
-    sport = params[:sport]
+  post '/api/parser/draft/:sport/:year/run', :token => true do
+    parse_draft(params[:sport], params[:year])
+  end
 
+  post '/api/parser/draft/:sport/run', :token => true do
+    parse_draft(params[:sport], Time.now.year)
+  end
+
+  def parse_draft(sport, year) 
     if settings.cookie_string && sport == 'football' && settings.espn_football_id
-      parser = DraftParser.new(settings.cookie_string, Time.now.year)
+      parser = DraftParser.new(settings.cookie_string, year)
 
       parser.parse_football_draft(settings.espn_football_id)
 
